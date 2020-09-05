@@ -1,2 +1,2 @@
 AUTOMAKE_OPTIONS=foreign
-SUBDIRS = qca examples
+SUBDIRS = qcat examples

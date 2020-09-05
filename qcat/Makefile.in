@@ -92,7 +92,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = qca
+subdir = qcat
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -132,14 +132,14 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libqca_la_LIBADD =
+libqcat_la_LIBADD =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_libqca_la_OBJECTS = src/libqca_la-rw.lo \
-	src/libqca_la-ByteToolkit.lo \
-	src/libqca_la-DynamicFloatArray.lo \
-	src/libqca_la-DynamicDoubleArray.lo \
-	src/libqca_la-qca_gnuplot.lo
-libqca_la_OBJECTS = $(am_libqca_la_OBJECTS)
+am_libqcat_la_OBJECTS = src/libqcat_la-rw.lo \
+	src/libqcat_la-ByteToolkit.lo \
+	src/libqcat_la-DynamicFloatArray.lo \
+	src/libqcat_la-DynamicDoubleArray.lo \
+	src/libqcat_la-qcat_gnuplot.lo
+libqcat_la_OBJECTS = $(am_libqcat_la_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -178,8 +178,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libqca_la_SOURCES)
-DIST_SOURCES = $(libqca_la_SOURCES)
+SOURCES = $(libqcat_la_SOURCES)
+DIST_SOURCES = $(libqcat_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -327,13 +327,13 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-include_HEADERS = include/rw.h include/ByteToolkit.h include/DynamicFloatArray.h include/DynamicDoubleArray.h include/qca_gnuplot.h
-lib_LTLIBRARIES = libqca.la
-libqca_la_CFLAGS = -I./include
-libqca_la_LDFLAGS = -version-info  0:1:0
-libqca_la_LIDADD = 
-libqca_la_SOURCES = src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qca_gnuplot.c
-libqca_la_LINK = $(AM_V_CC)$(LIBTOOL) --tag=CC --mode=link $(CCLD) $(libqca_la_CFLAGS) -O3 $(libqca_la_LDFLAGS) -o $(lib_LTLIBRARIES)
+include_HEADERS = include/rw.h include/ByteToolkit.h include/DynamicFloatArray.h include/DynamicDoubleArray.h include/qcat_gnuplot.h
+lib_LTLIBRARIES = libqcat.la
+libqcat_la_CFLAGS = -I./include
+libqcat_la_LDFLAGS = -version-info  0:1:0
+libqcat_la_LIDADD = 
+libqcat_la_SOURCES = src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qcat_gnuplot.c
+libqcat_la_LINK = $(AM_V_CC)$(LIBTOOL) --tag=CC --mode=link $(CCLD) $(libqcat_la_CFLAGS) -O3 $(libqcat_la_LDFLAGS) -o $(lib_LTLIBRARIES)
 all: all-am
 
 .SUFFIXES:
@@ -347,9 +347,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign qca/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign qcat/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign qca/Makefile
+	  $(AUTOMAKE) --foreign qcat/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -408,18 +408,19 @@ src/$(am__dirstamp):
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/libqca_la-rw.lo: src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/libqca_la-ByteToolkit.lo: src/$(am__dirstamp) \
+src/libqcat_la-rw.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/libqca_la-DynamicFloatArray.lo: src/$(am__dirstamp) \
+src/libqcat_la-ByteToolkit.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/libqca_la-DynamicDoubleArray.lo: src/$(am__dirstamp) \
+src/libqcat_la-DynamicFloatArray.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/libqca_la-qca_gnuplot.lo: src/$(am__dirstamp) \
+src/libqcat_la-DynamicDoubleArray.lo: src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/libqcat_la-qcat_gnuplot.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 
-libqca.la: $(libqca_la_OBJECTS) $(libqca_la_DEPENDENCIES) $(EXTRA_libqca_la_DEPENDENCIES) 
-	$(AM_V_GEN)$(libqca_la_LINK) -rpath $(libdir) $(libqca_la_OBJECTS) $(libqca_la_LIBADD) $(LIBS)
+libqcat.la: $(libqcat_la_OBJECTS) $(libqcat_la_DEPENDENCIES) $(EXTRA_libqcat_la_DEPENDENCIES) 
+	$(AM_V_GEN)$(libqcat_la_LINK) -rpath $(libdir) $(libqcat_la_OBJECTS) $(libqcat_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -429,11 +430,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqca_la-ByteToolkit.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqca_la-DynamicDoubleArray.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqca_la-DynamicFloatArray.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqca_la-qca_gnuplot.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqca_la-rw.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-ByteToolkit.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-rw.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -459,40 +460,40 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
-src/libqca_la-rw.lo: src/rw.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -MT src/libqca_la-rw.lo -MD -MP -MF src/$(DEPDIR)/libqca_la-rw.Tpo -c -o src/libqca_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqca_la-rw.Tpo src/$(DEPDIR)/libqca_la-rw.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rw.c' object='src/libqca_la-rw.lo' libtool=yes @AMDEPBACKSLASH@
+src/libqcat_la-rw.lo: src/rw.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-rw.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-rw.Tpo -c -o src/libqcat_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-rw.Tpo src/$(DEPDIR)/libqcat_la-rw.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rw.c' object='src/libqcat_la-rw.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -c -o src/libqca_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
 
-src/libqca_la-ByteToolkit.lo: src/ByteToolkit.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -MT src/libqca_la-ByteToolkit.lo -MD -MP -MF src/$(DEPDIR)/libqca_la-ByteToolkit.Tpo -c -o src/libqca_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqca_la-ByteToolkit.Tpo src/$(DEPDIR)/libqca_la-ByteToolkit.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/ByteToolkit.c' object='src/libqca_la-ByteToolkit.lo' libtool=yes @AMDEPBACKSLASH@
+src/libqcat_la-ByteToolkit.lo: src/ByteToolkit.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-ByteToolkit.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-ByteToolkit.Tpo -c -o src/libqcat_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-ByteToolkit.Tpo src/$(DEPDIR)/libqcat_la-ByteToolkit.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/ByteToolkit.c' object='src/libqcat_la-ByteToolkit.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -c -o src/libqca_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
 
-src/libqca_la-DynamicFloatArray.lo: src/DynamicFloatArray.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -MT src/libqca_la-DynamicFloatArray.lo -MD -MP -MF src/$(DEPDIR)/libqca_la-DynamicFloatArray.Tpo -c -o src/libqca_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqca_la-DynamicFloatArray.Tpo src/$(DEPDIR)/libqca_la-DynamicFloatArray.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicFloatArray.c' object='src/libqca_la-DynamicFloatArray.lo' libtool=yes @AMDEPBACKSLASH@
+src/libqcat_la-DynamicFloatArray.lo: src/DynamicFloatArray.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicFloatArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Tpo -c -o src/libqcat_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Tpo src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicFloatArray.c' object='src/libqcat_la-DynamicFloatArray.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -c -o src/libqca_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
 
-src/libqca_la-DynamicDoubleArray.lo: src/DynamicDoubleArray.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -MT src/libqca_la-DynamicDoubleArray.lo -MD -MP -MF src/$(DEPDIR)/libqca_la-DynamicDoubleArray.Tpo -c -o src/libqca_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqca_la-DynamicDoubleArray.Tpo src/$(DEPDIR)/libqca_la-DynamicDoubleArray.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicDoubleArray.c' object='src/libqca_la-DynamicDoubleArray.lo' libtool=yes @AMDEPBACKSLASH@
+src/libqcat_la-DynamicDoubleArray.lo: src/DynamicDoubleArray.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicDoubleArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Tpo -c -o src/libqcat_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Tpo src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicDoubleArray.c' object='src/libqcat_la-DynamicDoubleArray.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -c -o src/libqca_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
 
-src/libqca_la-qca_gnuplot.lo: src/qca_gnuplot.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -MT src/libqca_la-qca_gnuplot.lo -MD -MP -MF src/$(DEPDIR)/libqca_la-qca_gnuplot.Tpo -c -o src/libqca_la-qca_gnuplot.lo `test -f 'src/qca_gnuplot.c' || echo '$(srcdir)/'`src/qca_gnuplot.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqca_la-qca_gnuplot.Tpo src/$(DEPDIR)/libqca_la-qca_gnuplot.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qca_gnuplot.c' object='src/libqca_la-qca_gnuplot.lo' libtool=yes @AMDEPBACKSLASH@
+src/libqcat_la-qcat_gnuplot.lo: src/qcat_gnuplot.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_gnuplot.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Tpo -c -o src/libqcat_la-qcat_gnuplot.lo `test -f 'src/qcat_gnuplot.c' || echo '$(srcdir)/'`src/qcat_gnuplot.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Tpo src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qcat_gnuplot.c' object='src/libqcat_la-qcat_gnuplot.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqca_la_CFLAGS) $(CFLAGS) -c -o src/libqca_la-qca_gnuplot.lo `test -f 'src/qca_gnuplot.c' || echo '$(srcdir)/'`src/qca_gnuplot.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_gnuplot.lo `test -f 'src/qcat_gnuplot.c' || echo '$(srcdir)/'`src/qcat_gnuplot.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

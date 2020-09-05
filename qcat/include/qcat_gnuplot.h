@@ -1,5 +1,5 @@
 /**
- *  @file QCA_GNUPLOT.h
+ *  @file QCAT_GNUPLOT.h
  *  @author Sheng Di
  *  @date July, 2019
  *  @brief Header file for the SDA_GNUPLOT.c.
@@ -8,8 +8,8 @@
  */
 
 
-#ifndef _QCA_GNUPLOT_H
-#define _QCA_GNUPLOT_H
+#ifndef _QCAT_GNUPLOT_H
+#define _QCAT_GNUPLOT_H
 
 #include <stdio.h>
 #include <stdint.h>
@@ -35,5 +35,5 @@ double* generateSliceDiff_double(int plotDim, int sliceNumber, size_t r3, size_t
 }
 #endif
 
-#endif /* ----- #ifndef _QCA_GNUPLOT_H  ----- */
+#endif /* ----- #ifndef _QCAT_GNUPLOT_H  ----- */
 

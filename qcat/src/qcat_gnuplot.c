@@ -1,5 +1,5 @@
 /**
- *  @file qca_gnuplot.c
+ *  @file qcat_gnuplot.c
  *  @author Sheng Di
  *  @date July, 2019
  *  @brief gnuplot related operations
@@ -7,7 +7,7 @@
  *      See COPYRIGHT in top-level directory.
  */
 
-#include "qca_gnuplot.h"
+#include "qcat_gnuplot.h"
 #include <stdio.h> 
 #include <math.h>
 #include <string.h> 

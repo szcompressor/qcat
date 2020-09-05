@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h> 
 #include "rw.h"
-#include "qca_gnuplot.h"
+#include "qcat_gnuplot.h"
 
 void usage()
 {
