@@ -14,9 +14,9 @@ make install
 ```bash
 [sdi@sdihost qca-0.1]$ cd qca-0.1-install/bin
 [sdi@sdihost bin]$ ls
-changeDataSize           convertBytesToTxtFloat  convertTxtToBytesDouble  generateRandomData   PlotSliceImage
-convertBytesToTxtDouble  convertDataToLogDouble  convertTxtToBytesFloat   generateRandomData2  splitComplexData
-[sdi@sdihost bin]$ PlotSliceImage 
+changeDataSize  convertBytesToTxtDouble  convertDataToLogDouble  convertFloatToDouble     convertTxtToBytesFloat  generateRandomData   PlotSliceImage
+compareData     convertBytesToTxtFloat   convertDoubleToFloat    convertTxtToBytesDouble  generateIndexData       generateRandomData2  splitComplexData
+[sdi@sdihost bin]$ ./PlotSliceImage 
 Usage: PlotSliceImage <options>
 Options:
 *DataType:
@@ -45,31 +45,31 @@ Examples:
 	PlotSliceImage -f -i /root/usecases/Hurricane/Uf48.dat -3 500 500 100 -m INDV -n ORI -s 50 -o /root/usecases/Hurricane/Uf48.png
 	PlotSliceImage -f -i /root/usecases/CESM/CLDHGH_1_1800_3600.dat -x /root/usecases/CESM/CLDHGH_1_1800_3600.dat.sz.out -2 3600 1800 -m DIFF -n ORI -o /root/usecases/CESM/CLDHGH_1_1800_3600-diff.png
 
-[sdi@sdihost examples]$ compareData
+[sdi@sdihost bin]$ ./compareData
 Test case: compareData [datatype (-f or -d)] [original data file] [decompressed data file]
 			-f means single precision; -d means double precision
 Example: compareData -f testfloat_8_8_128.dat testfloat_8_8_128.dat.sz.out
 
-[sdi@sdihost bin]$ convertTxtToBytesDouble 
+[sdi@sdihost bin]$ ./convertTxtToBytesDouble 
 Test case: convertTxtToBytesDouble [srcFilePath] [tgtFilePath]
 Example: convertTxtToBytesDouble testfloat_8_8_128.txt testfloat_8_8_128.dat
-[sdi@sdihost bin]$ convertTxtToBytesFloat
+[sdi@sdihost bin]$ ./convertTxtToBytesFloat
 Test case: convertTxtToBytesFloat [srcFilePath] [tgtFilePath]
 Example: convertTxtToBytesFloat testfloat_8_8_128.txt testfloat_8_8_128.dat
-[sdi@sdihost bin]$ convertBytesToTxtDouble 
+[sdi@sdihost bin]$ ./convertBytesToTxtDouble 
 Test case: convertBytesToTxtDouble [srcFilePath] newsize [tgtFilePath]
 Example: convertBytesToTxtDouble testfloat_8_8_128.dat 200 testfloat_8_8_128.xls
-[sdi@sdihost bin]$ convertBytesToTxtFloat 
+[sdi@sdihost bin]$ ./convertBytesToTxtFloat 
 Test case: convertBytesToTxtFloat [srcFilePath] newsize [tgtFilePath]
 Example: convertBytesToTxtFloat testfloat_8_8_128.dat 200 testfloat_8_8_128.xls
 Example: convertBytesToTxtFloat testfloat_8_8_128.dat -1 testfloat_8_8_128.xls
-[sdi@sdihost bin]$ changeDataSize
+[sdi@sdihost bin]$ ./changeDataSize
 Test case: changeDataSize [srcFilePath] newsize
 Example: changeDataSize testfloat_8_8_128.dat 200
-[sdi@sdihost examples]$ convertFloatToDouble 
+[sdi@sdihost bin]$ ./convertFloatToDouble 
 Test case: convertFloatToDouble [srcFilePath] [tgtFilePath]
 Example: convertFloatToDouble testfloat_8_8_128.dat testdouble_8_8_128.f64 
-[sdi@sdihost examples]$ convertDoubleToFloat 
+[sdi@sdihost bin]$ ./convertDoubleToFloat 
 Test case: convertDoubleToFloat [srcFilePath] [tgtFilePath]
 Example: convertDoubleToFloat testdouble_8_8_128.dat testfloat_8_8_128.dat
 ```
