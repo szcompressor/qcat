@@ -3,8 +3,8 @@
 QCA is a lightweight tool to analyze the data in the context of lossy compression. You can use it to change the size of data file in binary, convert binary data files to texture files and vice versa. You can also plot the raw data file and decompressed data file and visualize the difference by using the executable 'PlotSliceImage' for 2D and 3D datasets in different directions. 
 
 ## Installation
-./configure --prefix=[install path]
-make
+./configure --prefix=[install path];
+make;
 make install 
 
 ## Quick Start
