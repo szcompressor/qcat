@@ -1,0 +1,33 @@
+AUTOMAKE_OPTIONS=foreign
+AM_CFLAGS = -I../qca/include
+
+bin_PROGRAMS=changeDataSize generateIndexData generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData
+
+changeDataSize_SOURCES=changeDataSize.c
+changeDataSize_LDADD=../qca/.libs/libqca.a -lm
+generateIndexData_SOURCES=generateIndexData.c
+generateIndexData_LDADD=../qca/.libs/libqca.a -lm
+generateRandomData_SOURCES=generateRandomData.c
+generateRandomData_LDADD=../qca/.libs/libqca.a -lm
+generateRandomData2_SOURCES=generateRandomData2.c
+generateRandomData2_LDADD=../qca/.libs/libqca.a -lm
+convertBytesToTxtFloat_SOURCES=convertBytesToTxtFloat.c
+convertBytesToTxtFloat_LDADD=../qca/.libs/libqca.a -lm
+convertBytesToTxtDouble_SOURCES=convertBytesToTxtDouble.c
+convertBytesToTxtDouble_LDADD=../qca/.libs/libqca.a -lm
+splitComplexData_SOURCES=splitComplexData.c
+splitComplexData_LDADD=../qca/.libs/libqca.a -lm
+convertDataToLogDouble_SOURCES=convertDataToLogDouble.c
+convertDataToLogDouble_LDADD=../qca/.libs/libqca.a -lm
+convertTxtToBytesDouble_SOURCES=convertTxtToBytesDouble.c
+convertTxtToBytesDouble_LDADD=../qca/.libs/libqca.a -lm
+convertTxtToBytesFloat_SOURCES=convertTxtToBytesFloat.c
+convertTxtToBytesFloat_LDADD=../qca/.libs/libqca.a -lm
+PlotSliceImage_SOURCES=PlotSliceImage.c
+PlotSliceImage_LDADD=../qca/.libs/libqca.a -lm
+convertFloatToDouble_SOURCES=convertFloatToDouble.c
+convertFloatToDouble_LDADD=../qca/.libs/libqca.a -lm
+convertDoubleToFloat_SOURCES=convertDoubleToFloat.c
+convertDoubleToFloat_LDADD=../qca/.libs/libqca.a -lm
+compareData_SOURCES=compareData.c
+compareData_LDADD=../qca/.libs/libqca.a -lm
