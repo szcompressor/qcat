@@ -9,6 +9,7 @@ make install
 
 ## Quick Start
 
+```bash
 [sdi@sdihost sda-0.1]$ cd sda-0.1-install/bin
 [sdi@sdihost bin]$ ls
 changeDataSize           convertBytesToTxtFloat  convertTxtToBytesDouble  generateRandomData   PlotSliceImage
@@ -69,5 +70,5 @@ Example: convertFloatToDouble testfloat_8_8_128.dat testdouble_8_8_128.f64
 [sdi@sdihost examples]$ convertDoubleToFloat 
 Test case: convertDoubleToFloat [srcFilePath] [tgtFilePath]
 Example: convertDoubleToFloat testdouble_8_8_128.dat testfloat_8_8_128.dat
-
+```
 Contact: sdi@anl.gov
