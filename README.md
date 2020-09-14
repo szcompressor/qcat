@@ -2,6 +2,11 @@
 
 QCAT is a lightweight tool to analyze the data in the context of lossy compression. You can use it to change the size of data file in binary, convert binary data files to texture files and vice versa. You can also plot the raw data file and decompressed data file and visualize the difference by using the executable 'PlotSliceImage' for 2D and 3D datasets in different directions. 
 
+# Dependency
+
+Gnuplot (http://www.gnuplot.info/)
+
+
 ## Installation
 ./configure --prefix=[install path]; (e.g., ./configure --prefix=/home/sdi/qcat-0.1-install)
 
