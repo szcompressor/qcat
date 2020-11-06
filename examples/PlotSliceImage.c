@@ -253,10 +253,35 @@ int main(int argc, char * argv[])
 			sprintf(gnuScriptFilePath, "%s.difp", oriFilePath);			
 		}
 
-		SDA_writeData_genuplotImage(sliceData, dataType, r2, r1, gnuDataFilePath);	
+		switch(plotDim)
+		{
+			case 3:
+				SDA_writeData_genuplotImage(sliceData, dataType, r2, r1, gnuDataFilePath);
+				break;
+			case 2:
+				SDA_writeData_genuplotImage(sliceData, dataType, r3, r1, gnuDataFilePath);
+				break;
+			case 1:
+				SDA_writeData_genuplotImage(sliceData, dataType, r3, r2, gnuDataFilePath);
+				break;
+		}
+			
 		free(sliceData);
-		
-		char** sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath);
+
+		char** sliceImageStrs = NULL;
+		switch(plotDim)
+		{
+			case 3:
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath);
+				break;
+			case 2:
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r1, outputFilePath);
+				break;
+			case 1:
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r2, outputFilePath);
+				break;
+		}
+
 		SDA_writeStrings(10, sliceImageStrs, gnuScriptFilePath);
 		for(i=0;i<10;i++)
 			free(sliceImageStrs[i]);
