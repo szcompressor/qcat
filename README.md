@@ -5,6 +5,7 @@ QCAT is a lightweight tool to analyze the data in the context of lossy compressi
 ## Dependency
 
 Gnuplot (http://www.gnuplot.info/)
+After installing Gnuplot, please make sure that gnuplot can be executed anywhere (to this end, you need to modify the environment variable PATH in ~/.bashrc).
 
 
 ## Installation
