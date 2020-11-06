@@ -1,12 +1,10 @@
 AUTOMAKE_OPTIONS=foreign
 AM_CFLAGS = -I../qcat/include
 
-bin_PROGRAMS=changeDataSize generateIndexData generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData
+bin_PROGRAMS=changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData
 
 changeDataSize_SOURCES=changeDataSize.c
 changeDataSize_LDADD=../qcat/.libs/libqcat.a -lm
-generateIndexData_SOURCES=generateIndexData.c
-generateIndexData_LDADD=../qcat/.libs/libqcat.a -lm
 generateRandomData_SOURCES=generateRandomData.c
 generateRandomData_LDADD=../qcat/.libs/libqcat.a -lm
 generateRandomData2_SOURCES=generateRandomData2.c

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(QCAT, 0.1, sdi1@anl.gov)
+AC_INIT(QCAT, 1.1, sdi1@anl.gov)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 AC_CONFIG_SRCDIR([qcat/src/rw.c])
 AC_CONFIG_HEADERS([config.h])

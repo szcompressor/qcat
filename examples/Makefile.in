@@ -88,9 +88,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = changeDataSize$(EXEEXT) generateIndexData$(EXEEXT) \
-	generateRandomData$(EXEEXT) generateRandomData2$(EXEEXT) \
-	convertBytesToTxtFloat$(EXEEXT) \
+bin_PROGRAMS = changeDataSize$(EXEEXT) generateRandomData$(EXEEXT) \
+	generateRandomData2$(EXEEXT) convertBytesToTxtFloat$(EXEEXT) \
 	convertBytesToTxtDouble$(EXEEXT) splitComplexData$(EXEEXT) \
 	convertDataToLogDouble$(EXEEXT) \
 	convertTxtToBytesDouble$(EXEEXT) \
@@ -147,9 +146,6 @@ convertTxtToBytesDouble_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_convertTxtToBytesFloat_OBJECTS = convertTxtToBytesFloat.$(OBJEXT)
 convertTxtToBytesFloat_OBJECTS = $(am_convertTxtToBytesFloat_OBJECTS)
 convertTxtToBytesFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a
-am_generateIndexData_OBJECTS = generateIndexData.$(OBJEXT)
-generateIndexData_OBJECTS = $(am_generateIndexData_OBJECTS)
-generateIndexData_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_generateRandomData_OBJECTS = generateRandomData.$(OBJEXT)
 generateRandomData_OBJECTS = $(am_generateRandomData_OBJECTS)
 generateRandomData_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -200,7 +196,7 @@ SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
-	$(convertTxtToBytesFloat_SOURCES) $(generateIndexData_SOURCES) \
+	$(convertTxtToBytesFloat_SOURCES) \
 	$(generateRandomData_SOURCES) $(generateRandomData2_SOURCES) \
 	$(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
@@ -210,7 +206,7 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
-	$(convertTxtToBytesFloat_SOURCES) $(generateIndexData_SOURCES) \
+	$(convertTxtToBytesFloat_SOURCES) \
 	$(generateRandomData_SOURCES) $(generateRandomData2_SOURCES) \
 	$(splitComplexData_SOURCES)
 am__can_run_installinfo = \
@@ -362,8 +358,6 @@ AUTOMAKE_OPTIONS = foreign
 AM_CFLAGS = -I../qcat/include
 changeDataSize_SOURCES = changeDataSize.c
 changeDataSize_LDADD = ../qcat/.libs/libqcat.a -lm
-generateIndexData_SOURCES = generateIndexData.c
-generateIndexData_LDADD = ../qcat/.libs/libqcat.a -lm
 generateRandomData_SOURCES = generateRandomData.c
 generateRandomData_LDADD = ../qcat/.libs/libqcat.a -lm
 generateRandomData2_SOURCES = generateRandomData2.c
@@ -511,10 +505,6 @@ convertTxtToBytesFloat$(EXEEXT): $(convertTxtToBytesFloat_OBJECTS) $(convertTxtT
 	@rm -f convertTxtToBytesFloat$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(convertTxtToBytesFloat_OBJECTS) $(convertTxtToBytesFloat_LDADD) $(LIBS)
 
-generateIndexData$(EXEEXT): $(generateIndexData_OBJECTS) $(generateIndexData_DEPENDENCIES) $(EXTRA_generateIndexData_DEPENDENCIES) 
-	@rm -f generateIndexData$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(generateIndexData_OBJECTS) $(generateIndexData_LDADD) $(LIBS)
-
 generateRandomData$(EXEEXT): $(generateRandomData_OBJECTS) $(generateRandomData_DEPENDENCIES) $(EXTRA_generateRandomData_DEPENDENCIES) 
 	@rm -f generateRandomData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(generateRandomData_OBJECTS) $(generateRandomData_LDADD) $(LIBS)
@@ -543,7 +533,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertFloatToDouble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesDouble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesFloat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateIndexData.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splitComplexData.Po@am__quote@
