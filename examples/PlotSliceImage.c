@@ -26,6 +26,7 @@ void usage()
 	printf("		LOG : log_10 domain of the data\n");
 	printf("	-p <dimension> : along which dimension for plotting the slice. (options: 1, 2 or 3; default setting: 3\n");
 	printf("	-s <slice number>: slice number if input is a 3D dataset\n");
+	printf("	-r <min> <max> : specify the value range (i.e., min and max) for the plotting\n");
 
 	printf("* Output: \n");
 	printf("	-o <output image file> : Specify the output image file (.png format)\n");
@@ -48,6 +49,7 @@ int main(int argc, char * argv[])
 	char gnuDataFilePath[640], gnuScriptFilePath[640];
 	size_t r3 = 0, r2 = 0, r1 = 0;
 	int plotDim = 3;
+	float range_min = 0, range_max = 0;
 	
 	if(argc==1)
 	{
@@ -90,6 +92,11 @@ int main(int argc, char * argv[])
 			if (++i == argc || sscanf(argv[i], "%d", &plotDim) != 1)
 				usage();
 			break;
+		case 'r':
+			if (++i == argc || sscanf(argv[i], "%f", &range_min) != 1 ||
+				++i == argc || sscanf(argv[i], "%f", &range_max) != 1)
+				usage();
+			break;						
 		case 'i':
 			if (++i == argc)
 				usage();
@@ -272,13 +279,13 @@ int main(int argc, char * argv[])
 		switch(plotDim)
 		{
 			case 3:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath, range_min, range_max);
 				break;
 			case 2:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r1, outputFilePath);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r1, outputFilePath, range_min, range_max);
 				break;
 			case 1:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r2, outputFilePath);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r2, outputFilePath, range_min, range_max);
 				break;
 		}
 

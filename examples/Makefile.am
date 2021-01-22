@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS=foreign
 AM_CFLAGS = -I../qcat/include
 
-bin_PROGRAMS=changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData
+bin_PROGRAMS=changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D
 
 changeDataSize_SOURCES=changeDataSize.c
 changeDataSize_LDADD=../qcat/.libs/libqcat.a -lm
@@ -29,3 +29,5 @@ convertDoubleToFloat_SOURCES=convertDoubleToFloat.c
 convertDoubleToFloat_LDADD=../qcat/.libs/libqcat.a -lm
 compareData_SOURCES=compareData.c
 compareData_LDADD=../qcat/.libs/libqcat.a -lm
+extractSliceFrom3D_SOURCES=extractSliceFrom3D.c
+extractSliceFrom3D_LDADD=../qcat/.libs/libqcat.a -lm

@@ -95,7 +95,7 @@ bin_PROGRAMS = changeDataSize$(EXEEXT) generateRandomData$(EXEEXT) \
 	convertTxtToBytesDouble$(EXEEXT) \
 	convertTxtToBytesFloat$(EXEEXT) PlotSliceImage$(EXEEXT) \
 	convertFloatToDouble$(EXEEXT) convertDoubleToFloat$(EXEEXT) \
-	compareData$(EXEEXT)
+	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -146,6 +146,9 @@ convertTxtToBytesDouble_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_convertTxtToBytesFloat_OBJECTS = convertTxtToBytesFloat.$(OBJEXT)
 convertTxtToBytesFloat_OBJECTS = $(am_convertTxtToBytesFloat_OBJECTS)
 convertTxtToBytesFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_extractSliceFrom3D_OBJECTS = extractSliceFrom3D.$(OBJEXT)
+extractSliceFrom3D_OBJECTS = $(am_extractSliceFrom3D_OBJECTS)
+extractSliceFrom3D_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_generateRandomData_OBJECTS = generateRandomData.$(OBJEXT)
 generateRandomData_OBJECTS = $(am_generateRandomData_OBJECTS)
 generateRandomData_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -197,8 +200,8 @@ SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
-	$(generateRandomData_SOURCES) $(generateRandomData2_SOURCES) \
-	$(splitComplexData_SOURCES)
+	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
+	$(generateRandomData2_SOURCES) $(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
@@ -207,8 +210,8 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
-	$(generateRandomData_SOURCES) $(generateRandomData2_SOURCES) \
-	$(splitComplexData_SOURCES)
+	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
+	$(generateRandomData2_SOURCES) $(splitComplexData_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -382,6 +385,8 @@ convertDoubleToFloat_SOURCES = convertDoubleToFloat.c
 convertDoubleToFloat_LDADD = ../qcat/.libs/libqcat.a -lm
 compareData_SOURCES = compareData.c
 compareData_LDADD = ../qcat/.libs/libqcat.a -lm
+extractSliceFrom3D_SOURCES = extractSliceFrom3D.c
+extractSliceFrom3D_LDADD = ../qcat/.libs/libqcat.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -505,6 +510,10 @@ convertTxtToBytesFloat$(EXEEXT): $(convertTxtToBytesFloat_OBJECTS) $(convertTxtT
 	@rm -f convertTxtToBytesFloat$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(convertTxtToBytesFloat_OBJECTS) $(convertTxtToBytesFloat_LDADD) $(LIBS)
 
+extractSliceFrom3D$(EXEEXT): $(extractSliceFrom3D_OBJECTS) $(extractSliceFrom3D_DEPENDENCIES) $(EXTRA_extractSliceFrom3D_DEPENDENCIES) 
+	@rm -f extractSliceFrom3D$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(extractSliceFrom3D_OBJECTS) $(extractSliceFrom3D_LDADD) $(LIBS)
+
 generateRandomData$(EXEEXT): $(generateRandomData_OBJECTS) $(generateRandomData_DEPENDENCIES) $(EXTRA_generateRandomData_DEPENDENCIES) 
 	@rm -f generateRandomData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(generateRandomData_OBJECTS) $(generateRandomData_LDADD) $(LIBS)
@@ -533,6 +542,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertFloatToDouble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesDouble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesFloat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extractSliceFrom3D.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splitComplexData.Po@am__quote@

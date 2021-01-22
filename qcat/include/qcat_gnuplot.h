@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, char* imageFileName);
+char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, char* imageFileName, float range_min, float range_max);
 float* computeSlice2DLog_float(size_t r2, size_t r1, float* data);
 float* computeSlice3DLog_float(int sliceNumber, size_t r3, size_t r2, size_t r1, float* data);
 double* computeSlice2DLog_double(size_t r2, size_t r1, double* data);

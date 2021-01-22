@@ -15,7 +15,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, char* imageFileName)
+char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, char* imageFileName, float range_min, float range_max)
 {
 	char** lines = (char**)malloc(10*sizeof(char*));
 	size_t s1, s2;
@@ -33,7 +33,10 @@ char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, cha
 	sprintf(lines[0], "#!/usr/bin/gnuplot\n");
 	sprintf(lines[1], "set term png size %zu, %zu enhanced font \"Arial,24\"\n", s1, s2);
 	sprintf(lines[2], "set pm3d map\n");
-	sprintf(lines[3], "#set cbrange [-4:4]\n");
+	if(range_max-range_min==0)
+		sprintf(lines[3], "#set cbrange [-4:4]\n");
+	else
+		sprintf(lines[3], "set cbrange [%f:%f]\n", range_min, range_max);
 	sprintf(lines[4], "set output \"%s\"\n", imageFileName);
 	sprintf(lines[5], "#set size square\n");
 	sprintf(lines[6], "set xrange [0:%zu]\n", r1);
