@@ -219,13 +219,13 @@ int main(int argc, char * argv[])
 		switch(plotDim)
 		{
 			case 3:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath, range_min, range_max);
 				break;
 			case 2:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r1, outputFilePath);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r1, outputFilePath, range_min, range_max);
 				break;
 			case 1:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r2, outputFilePath);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r2, outputFilePath, range_min, range_max);
 				break;
 		}
 		
