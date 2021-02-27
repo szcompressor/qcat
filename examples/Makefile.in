@@ -88,8 +88,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = changeDataSize$(EXEEXT) generateRandomData$(EXEEXT) \
-	generateRandomData2$(EXEEXT) convertBytesToTxtFloat$(EXEEXT) \
+bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
+	generateRandomData$(EXEEXT) generateRandomData2$(EXEEXT) \
+	convertBytesToTxtFloat$(EXEEXT) \
 	convertBytesToTxtDouble$(EXEEXT) splitComplexData$(EXEEXT) \
 	convertDataToLogDouble$(EXEEXT) \
 	convertTxtToBytesDouble$(EXEEXT) \
@@ -155,6 +156,9 @@ generateRandomData_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_generateRandomData2_OBJECTS = generateRandomData2.$(OBJEXT)
 generateRandomData2_OBJECTS = $(am_generateRandomData2_OBJECTS)
 generateRandomData2_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_printProperty_OBJECTS = printProperty.$(OBJEXT)
+printProperty_OBJECTS = $(am_printProperty_OBJECTS)
+printProperty_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_splitComplexData_OBJECTS = splitComplexData.$(OBJEXT)
 splitComplexData_OBJECTS = $(am_splitComplexData_OBJECTS)
 splitComplexData_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -201,7 +205,8 @@ SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(splitComplexData_SOURCES)
+	$(generateRandomData2_SOURCES) $(printProperty_SOURCES) \
+	$(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
@@ -211,7 +216,8 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(splitComplexData_SOURCES)
+	$(generateRandomData2_SOURCES) $(printProperty_SOURCES) \
+	$(splitComplexData_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -359,6 +365,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
 AM_CFLAGS = -I../qcat/include
+printProperty_SOURCES = printProperty.c
+printProperty_LDADD = ../qcat/.libs/libqcat.a -lm
 changeDataSize_SOURCES = changeDataSize.c
 changeDataSize_LDADD = ../qcat/.libs/libqcat.a -lm
 generateRandomData_SOURCES = generateRandomData.c
@@ -522,6 +530,10 @@ generateRandomData2$(EXEEXT): $(generateRandomData2_OBJECTS) $(generateRandomDat
 	@rm -f generateRandomData2$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(generateRandomData2_OBJECTS) $(generateRandomData2_LDADD) $(LIBS)
 
+printProperty$(EXEEXT): $(printProperty_OBJECTS) $(printProperty_DEPENDENCIES) $(EXTRA_printProperty_DEPENDENCIES) 
+	@rm -f printProperty$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(printProperty_OBJECTS) $(printProperty_LDADD) $(LIBS)
+
 splitComplexData$(EXEEXT): $(splitComplexData_OBJECTS) $(splitComplexData_DEPENDENCIES) $(EXTRA_splitComplexData_DEPENDENCIES) 
 	@rm -f splitComplexData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(splitComplexData_OBJECTS) $(splitComplexData_LDADD) $(LIBS)
@@ -545,6 +557,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extractSliceFrom3D.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printProperty.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splitComplexData.Po@am__quote@
 
 .c.o:
