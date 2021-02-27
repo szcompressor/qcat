@@ -78,6 +78,9 @@ Example: convertFloatToDouble testfloat_8_8_128.dat testdouble_8_8_128.f64
 [sdi@sdihost bin]$ ./convertDoubleToFloat 
 Test case: convertDoubleToFloat [srcFilePath] [tgtFilePath]
 Example: convertDoubleToFloat testdouble_8_8_128.dat testfloat_8_8_128.dat
+[sdi@sdihost bin]$ ./printProperty
+Usage: printDataProperty [dataType] tgtFilePath]
+Example: printDataProperty -f testfloat_8_8_128.dat
 ```
 ## Sample outputs
 
