@@ -54,10 +54,10 @@ int main(int argc, char * argv[])
 	printf("The first 10 values are: \n");
 	if(dataType == DA_FLOAT)
 		for(i=0;i<10;i++)
-			printf("%f ", (float)data[i]);
+			printf("%f ", ((float*)data)[i]);
 	else
 		for(i=0;i<10;i++)
-			printf("%f ", (double)data[i]);		
+			printf("%f ", ((double*)data)[i]);		
 	printf("....\n------------------------\n");
 	if(status != DA_SCES)
 	{
