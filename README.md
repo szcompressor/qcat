@@ -90,7 +90,7 @@ Example: predCR -f 1024 1E-1 original.dat predicted.dat
 ## Summary of particularly useful executables: 
 1. PlotSliceImage : It helps you to plot the images based on a 2D or 3D scientific data file (stored in binary format such as little endian type).
 2. compareData: compare two data files (they are generally expected to be original data file and decompressed data file, respectively) and show the compression related metrics such as psnr.
-3. predCR: If you have the original data file and a prediction data file, then predCR can help you generate the compression ratio in terms of the SZ error-bounded prediction framework. 
+3. predCR: If you have an original data file and the corresponding prediction data file, then predCR can help you generate the compression ratio in terms of the SZ error-bounded prediction framework. 
 
 
 
