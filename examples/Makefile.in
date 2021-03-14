@@ -96,7 +96,8 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertTxtToBytesDouble$(EXEEXT) \
 	convertTxtToBytesFloat$(EXEEXT) PlotSliceImage$(EXEEXT) \
 	convertFloatToDouble$(EXEEXT) convertDoubleToFloat$(EXEEXT) \
-	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT)
+	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT) \
+	predCR$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -156,6 +157,9 @@ generateRandomData_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_generateRandomData2_OBJECTS = generateRandomData2.$(OBJEXT)
 generateRandomData2_OBJECTS = $(am_generateRandomData2_OBJECTS)
 generateRandomData2_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_predCR_OBJECTS = predCR.$(OBJEXT)
+predCR_OBJECTS = $(am_predCR_OBJECTS)
+predCR_DEPENDENCIES = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a
 am_printProperty_OBJECTS = printProperty.$(OBJEXT)
 printProperty_OBJECTS = $(am_printProperty_OBJECTS)
 printProperty_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -205,8 +209,8 @@ SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(printProperty_SOURCES) \
-	$(splitComplexData_SOURCES)
+	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
+	$(printProperty_SOURCES) $(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
@@ -216,8 +220,8 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(printProperty_SOURCES) \
-	$(splitComplexData_SOURCES)
+	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
+	$(printProperty_SOURCES) $(splitComplexData_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -395,6 +399,8 @@ compareData_SOURCES = compareData.c
 compareData_LDADD = ../qcat/.libs/libqcat.a -lm
 extractSliceFrom3D_SOURCES = extractSliceFrom3D.c
 extractSliceFrom3D_LDADD = ../qcat/.libs/libqcat.a -lm
+predCR_SOURCES = predCR.c
+predCR_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -530,6 +536,10 @@ generateRandomData2$(EXEEXT): $(generateRandomData2_OBJECTS) $(generateRandomDat
 	@rm -f generateRandomData2$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(generateRandomData2_OBJECTS) $(generateRandomData2_LDADD) $(LIBS)
 
+predCR$(EXEEXT): $(predCR_OBJECTS) $(predCR_DEPENDENCIES) $(EXTRA_predCR_DEPENDENCIES) 
+	@rm -f predCR$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(predCR_OBJECTS) $(predCR_LDADD) $(LIBS)
+
 printProperty$(EXEEXT): $(printProperty_OBJECTS) $(printProperty_DEPENDENCIES) $(EXTRA_printProperty_DEPENDENCIES) 
 	@rm -f printProperty$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(printProperty_OBJECTS) $(printProperty_LDADD) $(LIBS)
@@ -557,6 +567,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extractSliceFrom3D.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/predCR.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printProperty.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splitComplexData.Po@am__quote@
 

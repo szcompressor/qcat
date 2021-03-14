@@ -5,7 +5,7 @@
  *  @brief This is an example of using compression interface
  *  (C) 2015 by Mathematics and Computer Science (MCS), Argonne National Laboratory.
  *      See COPYRIGHT in top-level directory.
- */
+*/
 
 
 #include <stdio.h>
@@ -54,7 +54,7 @@ int main(int argc, char * argv[])
     }
     for(i=0;i<10;i++)
 	    printf("data[%d]=%.20G --> %.20G\n", i, data[i], newData[i]);
-    if(status != DA_SCES)
+    if(status != RW_SCES)
     {
 		printf("Error: data file %s cannot be read!\n", oriFilePath);
 		exit(0);

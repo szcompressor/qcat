@@ -1,2 +1,2 @@
 AUTOMAKE_OPTIONS=foreign
-SUBDIRS = qcat examples
+SUBDIRS = zstd qcat examples

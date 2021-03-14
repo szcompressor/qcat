@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
 
     for(i=0;i<10;i++)
 	    printf("data[%d]=%f\n", i, data[i]);
-    if(status != DA_SCES)
+    if(status != RW_SCES)
     {
 		printf("Error: data file %s cannot be read!\n", outputFilePath);
 		exit(0);

@@ -15,7 +15,7 @@
 #include <string.h> 
 #include <stdlib.h>
 #include <unistd.h>
-#include <ByteToolkit.h>
+#include <qcat.h>
 
 #ifdef _WIN32
 #define PATH_SEPARATOR ';'
@@ -27,12 +27,9 @@
 extern "C" {
 #endif
 
-#define DA_SCES 0
-#define DA_FERR 1
-#define DA_TERR 2
-
-#define DA_FLOAT 0
-#define DA_DOUBLE 1
+#define RW_SCES 0
+#define RW_FERR 1
+#define RW_TERR 2
 
 #define LITTLE_ENDIAN_SYSTEM 0
 	
@@ -143,11 +140,11 @@ void writefloatfile_(float *data, size_t *nbEle, char *tgtFilePath, int *len);
 float *readFloatData_inTxt(char* filePath, size_t* nbEle) ;
 double *readDoubleData_inTxt(char* filePath, size_t* nbEle) ;
 
-void SDA_writeFloatData_gnuplotImage(float *data, size_t r2, size_t r1, char *tgtFilePath);
-void SDA_writeDoubleData_gnuplotImage(double *data, size_t r2, size_t r1, char *tgtFilePath);
-void SDA_writeData_genuplotImage(void *data, int dataType, size_t r2, size_t r1, char *tgtFilePath);
+void RW_writeFloatData_gnuplotImage(float *data, size_t r2, size_t r1, char *tgtFilePath);
+void RW_writeDoubleData_gnuplotImage(double *data, size_t r2, size_t r1, char *tgtFilePath);
+void RW_writeData_genuplotImage(void *data, int dataType, size_t r2, size_t r1, char *tgtFilePath);
 
-int SDA_writeStrings(int string_size, char **string, char *tgtFilePath);
+int RW_writeStrings(int string_size, char **string, char *tgtFilePath);
 char* extractDirFromPath(char* filePath);
 
 #ifdef __cplusplus

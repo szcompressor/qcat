@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
 		exit(0);
 	}
 
-	int dataType = strcmp(argv[1],"-f") == 0 ? DA_FLOAT : DA_DOUBLE; //0: float , 1: double
+	int dataType = strcmp(argv[1],"-f") == 0 ? QCAT_FLOAT : QCAT_DOUBLE; //0: float , 1: double
 	sprintf(oriFilePath, "%s", argv[2]);
 
 	int x = 1;
@@ -45,21 +45,21 @@ int main(int argc, char * argv[])
 
 	unsigned char* data  = NULL;
 	size_t nbEle = 0;
-	if(dataType == DA_FLOAT)
+	if(dataType == QCAT_FLOAT)
 		data = (unsigned char*)readFloatData(oriFilePath, &nbEle, &status);
 	else
 		data = (unsigned char*)readDoubleData(oriFilePath, &nbEle, &status);
 
 	int i = 0;
 	printf("The first 10 values are: \n");
-	if(dataType == DA_FLOAT)
+	if(dataType == QCAT_FLOAT)
 		for(i=0;i<10;i++)
 			printf("%f ", ((float*)data)[i]);
 	else
 		for(i=0;i<10;i++)
 			printf("%f ", ((double*)data)[i]);		
 	printf("....\n------------------------\n");
-	if(status != DA_SCES)
+	if(status != RW_SCES)
 	{
 		printf("Error: data file %s cannot be read!\n", oriFilePath);
 		exit(0);

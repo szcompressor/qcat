@@ -67,7 +67,7 @@ int main(int argc, char * argv[])
     printf("min=%f, max=%f\n", min, max);
     for(i=0;i<10;i++)
 	    printf("floatData[%zu]=%f\n", i, floatData[i]);
-    if(status != DA_SCES)
+    if(status != RW_SCES)
     {
 		printf("Error: data file %s cannot be read!\n", oriFilePath);
 		exit(0);

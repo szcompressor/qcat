@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
     if(type==0)
     {
 		float *data = readFloatData(oriFilePath, &nbEle, &status);
-		if(status != DA_SCES)
+		if(status != RW_SCES)
 		{
 			printf("Error: data file %s cannot be read!\n", oriFilePath);
 			exit(0);
@@ -66,7 +66,7 @@ int main(int argc, char * argv[])
 	else if(type==1)
 	{
 		double *data = readDoubleData(oriFilePath, &nbEle, &status);
-		if(status != DA_SCES)
+		if(status != RW_SCES)
 		{
 			printf("Error: data file %s cannot be read!\n", oriFilePath);
 			exit(0);

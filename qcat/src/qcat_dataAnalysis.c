@@ -20,7 +20,7 @@ double computeEntropy(int dataType, void* data, size_t nbEle)
 {
 	size_t i = 0;
 	unsigned char* bytes = (unsigned char*)data;
-	size_t totalLen = dataType == DA_FLOAT? nbEle*sizeof(float): nbEle*sizeof(double);
+	size_t totalLen = dataType == QCAT_FLOAT? nbEle*sizeof(float): nbEle*sizeof(double);
 
 	double entVal = 0.0;
 	unsigned char index = 0;
@@ -54,7 +54,7 @@ QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle)
 	property->dataType = dataType;
 	property->numOfElem = nbEle;
 	size_t i = 0;
-	if(dataType == DA_FLOAT)
+	if(dataType == QCAT_FLOAT)
 	{
 		float* data_ = (float*)data;
 		double min=data_[0],max=data_[0],sum=0;		
@@ -79,7 +79,7 @@ QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle)
 		property->totalByteSize = nbEle*sizeof(float);
 				
 	}
-	else //DA_DOUBLE
+	else //QCAT_DOUBLE
 	{
 		double* data_ = (double*)data;
 		double min=data_[0],max=data_[0],sum=0;		

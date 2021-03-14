@@ -3,6 +3,7 @@
 #include <string.h> 
 #include "rw.h"
 #include "qcat_gnuplot.h"
+#include "qcat.h"
 
 void usage()
 {
@@ -203,13 +204,13 @@ int main(int argc, char * argv[])
 		switch(plotDim)
 		{
 			case 3:
-				SDA_writeData_genuplotImage(sliceData, dataType, r2, r1, gnuDataFilePath);
+				RW_writeData_genuplotImage(sliceData, dataType, r2, r1, gnuDataFilePath);
 				break;
 			case 2:
-				SDA_writeData_genuplotImage(sliceData, dataType, r3, r1, gnuDataFilePath);
+				RW_writeData_genuplotImage(sliceData, dataType, r3, r1, gnuDataFilePath);
 				break;
 			case 1:
-				SDA_writeData_genuplotImage(sliceData, dataType, r3, r2, gnuDataFilePath);
+				RW_writeData_genuplotImage(sliceData, dataType, r3, r2, gnuDataFilePath);
 				break;
 		}
 			
@@ -229,7 +230,7 @@ int main(int argc, char * argv[])
 				break;
 		}
 		
-		SDA_writeStrings(10, sliceImageStrs, gnuScriptFilePath);
+		RW_writeStrings(10, sliceImageStrs, gnuScriptFilePath);
 		for(i=0;i<10;i++)
 			free(sliceImageStrs[i]);
 		free(sliceImageStrs);
@@ -263,13 +264,13 @@ int main(int argc, char * argv[])
 		switch(plotDim)
 		{
 			case 3:
-				SDA_writeData_genuplotImage(sliceData, dataType, r2, r1, gnuDataFilePath);
+				RW_writeData_genuplotImage(sliceData, dataType, r2, r1, gnuDataFilePath);
 				break;
 			case 2:
-				SDA_writeData_genuplotImage(sliceData, dataType, r3, r1, gnuDataFilePath);
+				RW_writeData_genuplotImage(sliceData, dataType, r3, r1, gnuDataFilePath);
 				break;
 			case 1:
-				SDA_writeData_genuplotImage(sliceData, dataType, r3, r2, gnuDataFilePath);
+				RW_writeData_genuplotImage(sliceData, dataType, r3, r2, gnuDataFilePath);
 				break;
 		}
 			
@@ -289,7 +290,7 @@ int main(int argc, char * argv[])
 				break;
 		}
 
-		SDA_writeStrings(10, sliceImageStrs, gnuScriptFilePath);
+		RW_writeStrings(10, sliceImageStrs, gnuScriptFilePath);
 		for(i=0;i<10;i++)
 			free(sliceImageStrs[i]);
 		free(sliceImageStrs);

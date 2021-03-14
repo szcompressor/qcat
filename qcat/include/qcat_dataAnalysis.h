@@ -14,6 +14,9 @@
 #ifndef _QCAT_DATAANALYSIS_H
 #define _QCAT_DATAANALYSIS_H
 
+#define QCAT_FLOAT 0
+#define QCAT_DOUBLE 1
+
 #ifdef __cplusplus
 extern "C" {
 #endif
