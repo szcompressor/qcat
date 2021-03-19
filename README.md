@@ -17,7 +17,13 @@ make install
 [sdi@sdihost qcat-0.1]$ cd qcat-1.3-install/bin
 [sdi@sdihost bin]$ ls
 changeDataSize  convertBytesToTxtDouble  convertDataToLogDouble  convertFloatToDouble     convertTxtToBytesFloat  generateRandomData   PlotSliceImage	predCR
-compareData     convertBytesToTxtFloat   convertDoubleToFloat    convertTxtToBytesDouble  generateIndexData       generateRandomData2  splitComplexData 
+compareData     convertBytesToTxtFloat   convertDoubleToFloat    convertTxtToBytesDouble  generateIndexData       generateRandomData2  splitComplexData printProperty
+calculateSSIM
+
+[sdi@sdihost bin]$ printProperty 
+Usage: printDataProperty [dataType] tgtFilePath]
+Example: printDataProperty -f testfloat_8_8_128.dat
+ 
 [sdi@sdihost bin]$ ./PlotSliceImage 
 Usage: PlotSliceImage <options>
 Options:
@@ -81,16 +87,24 @@ Example: convertFloatToDouble testfloat_8_8_128.dat testdouble_8_8_128.f64
 Usage: convertDoubleToFloat [srcFilePath] [tgtFilePath]
 Example: convertDoubleToFloat testdouble_8_8_128.dat testfloat_8_8_128.dat
 
+[sdi@sdihost bin]$ ./calculateSSIM 
+Usage: calculateSSIM [datatype (-f or -d)] [original data file] [decompressed data file] [dimesions... (from fast to slow)]
+			-f means single precision; -d means double precision
+Example: calculateSSIM -f CLOUD_100x500x500.dat CLOUD_100x500x500.dat.sz.out 500 500 100
+
 [sdi@sdihost bin]$ ./predCR
 Usage: predCR [datatype (-f or -d)] [quantBinCapacity] [errorBound] [original data file] [predcted data file]
 			-f means single precision; -d means double precision
 Example: predCR -f 1024 1E-1 original.dat predicted.dat
+
 ```
 
 Summary of particularly useful executables: 
-1. PlotSliceImage : It helps you to plot the images based on a 2D or 3D scientific data file (stored in binary format such as little endian type).
-2. compareData: compare two data files (they are generally expected to be original data file and decompressed data file, respectively) and show the compression related metrics such as psnr.
-3. predCR: If you have the original data file and a prediction data file, then predCR can help you generate the compression ratio in terms of the SZ error-bounded prediction framework. 
+1. printProperty : print the property of the dataset (such as value range and entropy)
+2. PlotSliceImage : It helps you to plot the images based on a 2D or 3D scientific data file (stored in binary format such as little endian type).
+3. compareData: compare two data files (they are generally expected to be original data file and decompressed data file, respectively) and show the compression related metrics such as psnr.
+4. calculateSSIM: calculate the visualization SSIM for the multi-dimensional dataset (original data vs. decompressed data)
+5. predCR: If you have the original data file and a prediction data file, then predCR can help you generate the compression ratio in terms of the SZ error-bounded prediction framework. 
 
 
 
