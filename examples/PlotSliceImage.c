@@ -171,7 +171,7 @@ int main(int argc, char * argv[])
 	size_t nbEle = 0;	
 	
 	char *dataDir = extractDirFromPath(oriFilePath);
-	char tmpDir[1000], cmd[1000];
+	char tmpDir[1000], cmd[2000];
 	sprintf(tmpDir, "%s/.tmp", dataDir);
 	sprintf(cmd, "mkdir -p %s", tmpDir);
 	system(cmd);

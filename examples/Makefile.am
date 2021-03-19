@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS=foreign
-AM_CFLAGS = -I../qcat/include
+AM_CFLAGS = -I../qcat/include -I../zstd
 
 bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D predCR
 
