@@ -7,6 +7,7 @@
 #include <qcat_compressionAnalysis.h>
 #include <Huffman.h>
 #include <zstd.h>
+#include <qcat_ssim.h>
 
 #ifndef _QCAT_H
 #define _QCAT_H

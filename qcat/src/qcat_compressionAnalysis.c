@@ -17,7 +17,63 @@
 #include <stdlib.h>
 #include <Huffman.h>
 #include <zstd.h>
+#include <qcat_ssim.h>
+#include <sz_utility.h>
 #include <sz_dummy_compression.h>
+
+double calculateSSIM(void* oriData, void* decData, int dataType, size_t r4, size_t r3, size_t r2, size_t r1)
+{
+	int dim = computeDimension(0, r4, r3, r2, r1);
+	
+	int windowSize0 = 7;
+	int windowSize1 = 7;
+	int windowSize2 = 7;
+	int windowSize3 = 7;
+	
+	int windowShift0 = 2;
+	int windowShift1 = 2;
+	int windowShift2 = 2;
+	int windowShift3 = 2;
+	
+	double result = -1;
+	if(dataType==QCAT_FLOAT) //float type
+	{
+		switch(dim)
+		{
+		case 1:
+			result = SSIM_1d_windowed_float(oriData, decData, r1, windowSize0, windowShift0);
+			break;
+		case 2:
+			result = SSIM_2d_windowed_float(oriData, decData, r2, r1, windowSize0, windowSize1, windowShift0, windowShift1);
+			break;
+		case 3:
+			result = SSIM_3d_windowed_float(oriData, decData, r3, r2, r1, windowSize0, windowSize1, windowSize2, windowShift0, windowShift1, windowShift2);
+			break;
+		case 4:
+			result = SSIM_4d_windowed_float(oriData, decData, r4, r3, r2, r1, windowSize0, windowSize1, windowSize2, windowSize3, windowShift0, windowShift1, windowShift2, windowShift3);
+			break;
+		}
+	}
+	else //double type
+	{
+		switch(dim)
+		{
+		case 1:
+			result = SSIM_1d_windowed_double(oriData, decData, r1, windowSize0, windowShift0);
+			break;
+		case 2:
+			result = SSIM_2d_windowed_double(oriData, decData, r2, r1, windowSize0, windowSize1, windowShift0, windowShift1);
+			break;
+		case 3:
+			result = SSIM_3d_windowed_double(oriData, decData, r3, r2, r1, windowSize0, windowSize1, windowSize2, windowShift0, windowShift1, windowShift2);
+			break;
+		case 4:
+			result = SSIM_4d_windowed_double(oriData, decData, r4, r3, r2, r1, windowSize0, windowSize1, windowSize2, windowSize3, windowShift0, windowShift1, windowShift2, windowShift3);
+			break;
+		}		
+	}
+	return result;
+}
 
 QCAT_CompressionResult* compareData(int dataType, size_t nbEle, void* data, void* dec)
 {
@@ -284,8 +340,6 @@ QCAT_CompressionResult* getCompressionResult(int dataType, float errBound, int q
 	free(type);
 	return result;
 }
-
-
 
 void printCompressionResult(QCAT_CompressionResult* result)
 {	

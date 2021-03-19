@@ -37,8 +37,10 @@ typedef struct QCAT_CompressionResult
 	float pearsonEff;
 	size_t unpredictableCount;
 	float unpredictablePercent;
+	double ssim;
 } QCAT_CompressionResult;
 
+double calculateSSIM(void* oriData, void* decData, int dataType, size_t r4, size_t r3, size_t r2, size_t r1);
 QCAT_CompressionResult* compareData(int dataType, size_t nbEle, void* data, void* dec);
 QCAT_CompressionResult* getCompressionResult(int dataType, float errBound, int quantBinCapacity, void* origData, void* predData, QCAT_DataProperty* property);
 void printCompressionResult(QCAT_CompressionResult* result);

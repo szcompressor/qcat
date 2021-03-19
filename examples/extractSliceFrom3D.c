@@ -16,7 +16,7 @@ int main(int argc, char * argv[])
 {
     int status = 0;
     char oriFilePath[640];
-    char outFilePath[640];
+    char outFilePath[644];
     
     int type = 0; //float:0, double:1
     

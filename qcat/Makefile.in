@@ -143,7 +143,7 @@ am_libqcat_la_OBJECTS = src/libqcat_la-DynamicIntArray.lo \
 	src/libqcat_la-qcat_dataAnalysis.lo \
 	src/libqcat_la-qcat_compressionAnalysis.lo \
 	src/libqcat_la-sz_dummy_compression.lo \
-	src/libqcat_la-sz_utility.lo
+	src/libqcat_la-sz_utility.lo src/libqcat_la-qcat_ssim.lo
 libqcat_la_OBJECTS = $(am_libqcat_la_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -169,6 +169,7 @@ am__depfiles_remade = src/$(DEPDIR)/libqcat_la-ByteToolkit.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo \
+	src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo \
 	src/$(DEPDIR)/libqcat_la-rw.Plo \
 	src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Plo \
 	src/$(DEPDIR)/libqcat_la-sz_utility.Plo
@@ -344,12 +345,12 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-include_HEADERS = include/DynamicIntArray.h include/DynamicByteArray.h include/Huffman.h include/rw.h include/ByteToolkit.h include/DynamicFloatArray.h include/DynamicDoubleArray.h include/qcat_gnuplot.h include/qcat_dataAnalysis.h include/qcat_compressionAnalysis.h include/sz_dummy_compression.h include/sz_utility.h include/qcat.h
+include_HEADERS = include/DynamicIntArray.h include/DynamicByteArray.h include/Huffman.h include/rw.h include/ByteToolkit.h include/DynamicFloatArray.h include/DynamicDoubleArray.h include/qcat_gnuplot.h include/qcat_dataAnalysis.h include/qcat_compressionAnalysis.h include/sz_dummy_compression.h include/sz_utility.h include/qcat.h include/qcat_ssim.h
 lib_LTLIBRARIES = libqcat.la
 libqcat_la_CFLAGS = -I./include -I../zstd/
 libqcat_la_LDFLAGS = -version-info  0:1:0
 libqcat_la_LIDADD = ../zstd/.libs/libzstd.a
-libqcat_la_SOURCES = src/DynamicIntArray.c src/DynamicByteArray.c src/Huffman.c src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qcat_gnuplot.c src/qcat_dataAnalysis.c src/qcat_compressionAnalysis.c src/sz_dummy_compression.c src/sz_utility.c
+libqcat_la_SOURCES = src/DynamicIntArray.c src/DynamicByteArray.c src/Huffman.c src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qcat_gnuplot.c src/qcat_dataAnalysis.c src/qcat_compressionAnalysis.c src/sz_dummy_compression.c src/sz_utility.c src/qcat_ssim.c
 libqcat_la_LINK = $(AM_V_CC)$(LIBTOOL) --tag=CC --mode=link $(CCLD) $(libqcat_la_CFLAGS) -O3 $(libqcat_la_LDFLAGS) -o $(lib_LTLIBRARIES)
 all: all-am
 
@@ -449,6 +450,8 @@ src/libqcat_la-sz_dummy_compression.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libqcat_la-sz_utility.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/libqcat_la-qcat_ssim.lo: src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 
 libqcat.la: $(libqcat_la_OBJECTS) $(libqcat_la_DEPENDENCIES) $(EXTRA_libqcat_la_DEPENDENCIES) 
 	$(AM_V_GEN)$(libqcat_la_LINK) -rpath $(libdir) $(libqcat_la_OBJECTS) $(libqcat_la_LIBADD) $(LIBS)
@@ -470,6 +473,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-rw.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-sz_utility.Plo@am__quote@ # am--include-marker
@@ -587,6 +591,13 @@ src/libqcat_la-sz_utility.lo: src/sz_utility.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/sz_utility.c' object='src/libqcat_la-sz_utility.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-sz_utility.lo `test -f 'src/sz_utility.c' || echo '$(srcdir)/'`src/sz_utility.c
+
+src/libqcat_la-qcat_ssim.lo: src/qcat_ssim.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_ssim.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_ssim.Tpo -c -o src/libqcat_la-qcat_ssim.lo `test -f 'src/qcat_ssim.c' || echo '$(srcdir)/'`src/qcat_ssim.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_ssim.Tpo src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qcat_ssim.c' object='src/libqcat_la-qcat_ssim.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_ssim.lo `test -f 'src/qcat_ssim.c' || echo '$(srcdir)/'`src/qcat_ssim.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -755,6 +766,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo
+	-rm -f src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-rw.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-sz_utility.Plo
@@ -812,6 +824,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo
+	-rm -f src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-rw.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-sz_utility.Plo

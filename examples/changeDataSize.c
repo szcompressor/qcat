@@ -39,7 +39,7 @@ int main(int argc, char * argv[])
 		exit(0);
     }
    
-    char outputFile[100];
+    char outputFile[644];
     sprintf(outputFile, "%s.%d", oriFilePath, newSize);
     writeFloatData_inBytes(data, newSize, outputFile, &status);
     printf("outputFile= %s\n", outputFile);

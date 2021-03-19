@@ -31,6 +31,21 @@ size_t computeDataLength(size_t r5, size_t r4, size_t r3, size_t r2, size_t r1)
 	return dataLength;
 }
 
+int computeDimension(size_t r5, size_t r4, size_t r3, size_t r2, size_t r1)
+{
+	if(r1==0)
+		return 0;
+	else if(r2 == 0)
+		return 1;
+	else if(r3 == 0)
+		return 2;
+	else if(r4 == 0)
+		return 3;
+	else if(r5 == 0)
+		return 4;
+	return 5;
+}
+
 void computeReqLength_float(double realPrecision, short radExpo, int* reqLength, float* medianValue)
 
 {

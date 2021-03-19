@@ -215,7 +215,7 @@ QCAT_CompressionResult* huffmanAndZstd(int dataType, int* type, int quantBinCapa
 	
 	//analyze compression results
 	result = compareData(dataType, nbEle, origData, decData);
-	int dataSize = 4+dataType*4;
+	//int dataSize = 4+dataType*4;
 	result->compressionSize = zstdOutSize;
 	//float compressionRatio = ((float)dataSize*nbEle)/zstdOutSize;
 	//result->compressionRatio = compressionRatio;	

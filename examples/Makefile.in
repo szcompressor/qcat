@@ -97,7 +97,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertTxtToBytesFloat$(EXEEXT) PlotSliceImage$(EXEEXT) \
 	convertFloatToDouble$(EXEEXT) convertDoubleToFloat$(EXEEXT) \
 	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT) \
-	predCR$(EXEEXT)
+	calculateSSIM$(EXEEXT) predCR$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -117,6 +117,10 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_calculateSSIM_OBJECTS = calculateSSIM.$(OBJEXT)
+calculateSSIM_OBJECTS = $(am_calculateSSIM_OBJECTS)
+calculateSSIM_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_changeDataSize_OBJECTS = changeDataSize.$(OBJEXT)
 changeDataSize_OBJECTS = $(am_changeDataSize_OBJECTS)
 changeDataSize_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -182,7 +186,8 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
-	./$(DEPDIR)/changeDataSize.Po ./$(DEPDIR)/compareData.Po \
+	./$(DEPDIR)/calculateSSIM.Po ./$(DEPDIR)/changeDataSize.Po \
+	./$(DEPDIR)/compareData.Po \
 	./$(DEPDIR)/convertBytesToTxtDouble.Po \
 	./$(DEPDIR)/convertBytesToTxtFloat.Po \
 	./$(DEPDIR)/convertDataToLogDouble.Po \
@@ -213,8 +218,9 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
-	$(compareData_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
+SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
+	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
+	$(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
@@ -224,8 +230,9 @@ SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
 	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
 	$(printProperty_SOURCES) $(splitComplexData_SOURCES)
-DIST_SOURCES = $(PlotSliceImage_SOURCES) $(changeDataSize_SOURCES) \
-	$(compareData_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
+DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
+	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
+	$(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
@@ -412,6 +419,8 @@ compareData_SOURCES = compareData.c
 compareData_LDADD = ../qcat/.libs/libqcat.a -lm
 extractSliceFrom3D_SOURCES = extractSliceFrom3D.c
 extractSliceFrom3D_LDADD = ../qcat/.libs/libqcat.a -lm
+calculateSSIM_SOURCES = calculateSSIM.c
+calculateSSIM_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 predCR_SOURCES = predCR.c
 predCR_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
@@ -501,6 +510,10 @@ PlotSliceImage$(EXEEXT): $(PlotSliceImage_OBJECTS) $(PlotSliceImage_DEPENDENCIES
 	@rm -f PlotSliceImage$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(PlotSliceImage_OBJECTS) $(PlotSliceImage_LDADD) $(LIBS)
 
+calculateSSIM$(EXEEXT): $(calculateSSIM_OBJECTS) $(calculateSSIM_DEPENDENCIES) $(EXTRA_calculateSSIM_DEPENDENCIES) 
+	@rm -f calculateSSIM$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(calculateSSIM_OBJECTS) $(calculateSSIM_LDADD) $(LIBS)
+
 changeDataSize$(EXEEXT): $(changeDataSize_OBJECTS) $(changeDataSize_DEPENDENCIES) $(EXTRA_changeDataSize_DEPENDENCIES) 
 	@rm -f changeDataSize$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(changeDataSize_OBJECTS) $(changeDataSize_LDADD) $(LIBS)
@@ -568,6 +581,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PlotSliceImage.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSSIM.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changeDataSize.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compareData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtDouble.Po@am__quote@ # am--include-marker
@@ -748,6 +762,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/PlotSliceImage.Po
+	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
@@ -809,6 +824,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/PlotSliceImage.Po
+	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
