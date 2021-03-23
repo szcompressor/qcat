@@ -92,6 +92,11 @@ Usage: calculateSSIM [datatype (-f or -d)] [original data file] [decompressed da
 			-f means single precision; -d means double precision
 Example: calculateSSIM -f CLOUD_100x500x500.dat CLOUD_100x500x500.dat.sz.out 500 500 100
 
+[sdi@sdihost bin]$ ./computePDF
+Usage: computePDF [datatype (-f or -d)] [original data file] [decompressed data file]
+			-f means single precision; -d means double precision
+Example: computePDF -f CLOUD_100x500x500.dat CLOUD_100x500x500.dat.sz.out
+
 [sdi@sdihost bin]$ ./predCR
 Usage: predCR [datatype (-f or -d)] [quantBinCapacity] [errorBound] [original data file] [predcted data file]
 			-f means single precision; -d means double precision
@@ -104,7 +109,8 @@ Summary of particularly useful executables:
 2. PlotSliceImage : It helps you to plot the images based on a 2D or 3D scientific data file (stored in binary format such as little endian type).
 3. compareData: compare two data files (they are generally expected to be original data file and decompressed data file, respectively) and show the compression related metrics such as psnr.
 4. calculateSSIM: calculate the visualization SSIM for the multi-dimensional dataset (original data vs. decompressed data)
-5. predCR: If you have the original data file and a prediction data file, then predCR can help you generate the compression ratio in terms of the SZ error-bounded prediction framework. 
+5. computePDF: compute the probaility density function (PDF) of compression errors between original data file and decompressed data file. 
+6. predCR: If you have the original data file and a prediction data file, then predCR can help you generate the compression ratio in terms of the SZ error-bounded prediction framework. 
 
 
 
