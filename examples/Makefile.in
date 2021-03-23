@@ -97,7 +97,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertTxtToBytesFloat$(EXEEXT) PlotSliceImage$(EXEEXT) \
 	convertFloatToDouble$(EXEEXT) convertDoubleToFloat$(EXEEXT) \
 	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT) \
-	calculateSSIM$(EXEEXT) predCR$(EXEEXT)
+	computePDF$(EXEEXT) calculateSSIM$(EXEEXT) predCR$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -127,6 +127,10 @@ changeDataSize_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_compareData_OBJECTS = compareData.$(OBJEXT)
 compareData_OBJECTS = $(am_compareData_OBJECTS)
 compareData_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_computePDF_OBJECTS = computePDF.$(OBJEXT)
+computePDF_OBJECTS = $(am_computePDF_OBJECTS)
+computePDF_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_convertBytesToTxtDouble_OBJECTS =  \
 	convertBytesToTxtDouble.$(OBJEXT)
 convertBytesToTxtDouble_OBJECTS =  \
@@ -187,7 +191,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/calculateSSIM.Po ./$(DEPDIR)/changeDataSize.Po \
-	./$(DEPDIR)/compareData.Po \
+	./$(DEPDIR)/compareData.Po ./$(DEPDIR)/computePDF.Po \
 	./$(DEPDIR)/convertBytesToTxtDouble.Po \
 	./$(DEPDIR)/convertBytesToTxtFloat.Po \
 	./$(DEPDIR)/convertDataToLogDouble.Po \
@@ -220,7 +224,7 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(convertBytesToTxtDouble_SOURCES) \
+	$(computePDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
@@ -232,7 +236,7 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(printProperty_SOURCES) $(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(convertBytesToTxtDouble_SOURCES) \
+	$(computePDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
@@ -419,6 +423,8 @@ compareData_SOURCES = compareData.c
 compareData_LDADD = ../qcat/.libs/libqcat.a -lm
 extractSliceFrom3D_SOURCES = extractSliceFrom3D.c
 extractSliceFrom3D_LDADD = ../qcat/.libs/libqcat.a -lm
+computePDF_SOURCES = computePDF.c
+computePDF_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 calculateSSIM_SOURCES = calculateSSIM.c
 calculateSSIM_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 predCR_SOURCES = predCR.c
@@ -522,6 +528,10 @@ compareData$(EXEEXT): $(compareData_OBJECTS) $(compareData_DEPENDENCIES) $(EXTRA
 	@rm -f compareData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(compareData_OBJECTS) $(compareData_LDADD) $(LIBS)
 
+computePDF$(EXEEXT): $(computePDF_OBJECTS) $(computePDF_DEPENDENCIES) $(EXTRA_computePDF_DEPENDENCIES) 
+	@rm -f computePDF$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(computePDF_OBJECTS) $(computePDF_LDADD) $(LIBS)
+
 convertBytesToTxtDouble$(EXEEXT): $(convertBytesToTxtDouble_OBJECTS) $(convertBytesToTxtDouble_DEPENDENCIES) $(EXTRA_convertBytesToTxtDouble_DEPENDENCIES) 
 	@rm -f convertBytesToTxtDouble$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(convertBytesToTxtDouble_OBJECTS) $(convertBytesToTxtDouble_LDADD) $(LIBS)
@@ -584,6 +594,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSSIM.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changeDataSize.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compareData.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computePDF.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertDataToLogDouble.Po@am__quote@ # am--include-marker
@@ -765,6 +776,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
+	-rm -f ./$(DEPDIR)/computePDF.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
 	-rm -f ./$(DEPDIR)/convertDataToLogDouble.Po
@@ -827,6 +839,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
+	-rm -f ./$(DEPDIR)/computePDF.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
 	-rm -f ./$(DEPDIR)/convertDataToLogDouble.Po

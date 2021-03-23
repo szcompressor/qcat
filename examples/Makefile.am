@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS=foreign
 AM_CFLAGS = -I../qcat/include -I../zstd
 
-bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D calculateSSIM predCR
+bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computePDF calculateSSIM predCR
 
 printProperty_SOURCES=printProperty.c
 printProperty_LDADD=../qcat/.libs/libqcat.a -lm
@@ -33,6 +33,8 @@ compareData_SOURCES=compareData.c
 compareData_LDADD=../qcat/.libs/libqcat.a -lm
 extractSliceFrom3D_SOURCES=extractSliceFrom3D.c
 extractSliceFrom3D_LDADD=../qcat/.libs/libqcat.a -lm
+computePDF_SOURCES=computePDF.c
+computePDF_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 calculateSSIM_SOURCES=calculateSSIM.c
 calculateSSIM_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 predCR_SOURCES=predCR.c

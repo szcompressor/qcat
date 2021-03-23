@@ -75,6 +75,103 @@ double calculateSSIM(void* oriData, void* decData, int dataType, size_t r4, size
 	return result;
 }
 
+double* computePDF(int dataType, void* oriData, void* decData, size_t numOfElem, double* min_diff, double* err_interval)
+{
+	size_t i = 0;
+	int index = 0;
+	double *absErrPDF = NULL;
+	if(dataType==QCAT_FLOAT)
+	{
+		float* data = (float*)oriData;
+		float* dec = (float*)decData;
+		float* diff = (float*)malloc(sizeof(float)*numOfElem);
+		float minDiff = data[0] - dec[0];
+		float maxDiff = minDiff;
+		for (i = 0; i < numOfElem; i++)
+		{
+			diff[i] = data[i] - dec[i];
+			if(minDiff > diff[i])
+				minDiff = diff[i];
+			if(maxDiff < diff[i])
+				maxDiff = diff[i];
+		}
+		double diffRange = maxDiff - minDiff;
+		double interval = diffRange/PDF_INTERVALS;
+
+		*min_diff = minDiff;
+		*err_interval = interval;
+
+		if(interval==0)
+		{
+			absErrPDF = (double*)malloc(sizeof(double));
+			*absErrPDF = 0;
+		}
+		else
+		{
+			absErrPDF = (double*)malloc(sizeof(double)*PDF_INTERVALS);
+			memset(absErrPDF, 0, PDF_INTERVALS*sizeof(double));			
+			for (i = 0; i < numOfElem; i++)
+			{
+				index = (int)((diff[i]-minDiff)/interval);
+				if(index==PDF_INTERVALS)
+					index = PDF_INTERVALS-1;
+				absErrPDF[index] += 1;
+			}
+
+			for (i = 0; i < PDF_INTERVALS; i++)
+				absErrPDF[i]/=numOfElem;	
+				
+			free(diff);			
+		}
+	}
+	else
+	{
+		double* data = (double*)oriData;
+		double* dec = (double*)decData;
+		double* diff = (double*)malloc(sizeof(double)*numOfElem);
+		double minDiff = data[0] - dec[0];
+		double maxDiff = minDiff;
+		for (i = 0; i < numOfElem; i++)
+		{
+			diff[i] = data[i] - dec[i];
+			if(minDiff > diff[i])
+				minDiff = diff[i];
+			if(maxDiff < diff[i])
+				maxDiff = diff[i];
+		}
+		double diffRange = maxDiff - minDiff;
+		double interval = diffRange/PDF_INTERVALS;
+
+		*min_diff = minDiff;
+		*err_interval = interval;
+
+		if(interval==0)
+		{
+			absErrPDF = (double*)malloc(sizeof(double));
+			*absErrPDF = 0;
+		}
+		else
+		{
+			absErrPDF = (double*)malloc(sizeof(double)*PDF_INTERVALS);
+			memset(absErrPDF, 0, PDF_INTERVALS*sizeof(double));			
+			for (i = 0; i < numOfElem; i++)
+			{
+				index = (int)((diff[i]-minDiff)/interval);
+				if(index==PDF_INTERVALS)
+					index = PDF_INTERVALS-1;
+				absErrPDF[index] += 1;
+			}
+
+			for (i = 0; i < PDF_INTERVALS; i++)
+				absErrPDF[i]/=numOfElem;	
+				
+			free(diff);			
+		}
+
+	}	
+	return absErrPDF;			
+}
+
 QCAT_CompressionResult* compareData(int dataType, size_t nbEle, void* data, void* dec)
 {
 	QCAT_CompressionResult* compressionResult = NULL;

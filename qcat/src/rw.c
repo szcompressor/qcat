@@ -1294,3 +1294,43 @@ char* extractDirFromPath(char* filePath)
 	char* dir = dirname(ts1);
 	return dir;
 }
+
+char *extractFileNameFromPath(char *filePath)
+{
+    char ch = '/';
+    char *q = strrchr(filePath,ch) + 1;
+    return q;
+}
+
+void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, double* pdfData)
+{
+	size_t i = 0;
+	if(err_interval==0)
+	{
+		char *ss[2];
+		ss[0] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+		sprintf(ss[0], "x errpdf\n");
+		ss[1] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+		strcpy(ss[1],"0 1\n");
+		RW_writeStrings(2, ss, tgtFilePath);
+		free(ss[0]);
+		free(ss[1]);
+	}
+	else
+	{
+		char *ss[PDF_INTERVALS+1];
+		ss[0] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+		sprintf(ss[0], "x errpdf\n");
+		for(i=0;i<PDF_INTERVALS;i++)
+		{
+			//printf("%d\n", i);
+			ss[i+1] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+			double x = err_minValue+i*err_interval;
+			sprintf(ss[i+1], "%.10G %.10G\n", x, pdfData[i]);
+		}
+		RW_writeStrings(PDF_INTERVALS+1, ss, tgtFilePath);
+		for(i=0;i<PDF_INTERVALS+1;i++)
+			free(ss[i]);
+	}
+	
+}

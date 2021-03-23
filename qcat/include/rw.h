@@ -33,6 +33,8 @@ extern "C" {
 
 #define LITTLE_ENDIAN_SYSTEM 0
 	
+#define QCAT_BUFS 64	
+	
 extern int dataEndianType;
 extern int sysEndianType; 
 
@@ -146,6 +148,8 @@ void RW_writeData_genuplotImage(void *data, int dataType, size_t r2, size_t r1, 
 
 int RW_writeStrings(int string_size, char **string, char *tgtFilePath);
 char* extractDirFromPath(char* filePath);
+char *extractFileNameFromPath(char *filePath);
+void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, double* pdfData);
 
 #ifdef __cplusplus
 }
