@@ -47,7 +47,8 @@ int main(int argc, char * argv[])
 	int dataType = 0;
 	int status = 0;
 	char *oriFilePath = NULL, *decFilePath = NULL, *outputFilePath = NULL;
-	char gnuDataFilePath[640], gnuScriptFilePath[640];
+	char gnuDataFilePath[700], gnuScriptFilePath[700], gnuScriptFileName[700];
+	char gnuDataFileName[700];
 	size_t r3 = 0, r2 = 0, r1 = 0;
 	int plotDim = 3;
 	float range_min = 0, range_max = 0;
@@ -170,21 +171,34 @@ int main(int argc, char * argv[])
 		
 	size_t nbEle = 0;	
 	
-	char *dataDir = extractDirFromPath(oriFilePath);
-	char tmpDir[1000], cmd[2000];
-	sprintf(tmpDir, "%s/.tmp", dataDir);
+	char* outputFileDir = extractDirFromPath(outputFilePath);	
+	
+	//char *dataDir = extractDirFromPath(oriFilePath);
+	char tmpDir[640], cmd[2000];
+	if(outputFileDir!=NULL)
+		sprintf(tmpDir, "%s/.tmp", outputFileDir);
+	else
+		sprintf(tmpDir, ".tmp");
+
 	sprintf(cmd, "mkdir -p %s", tmpDir);
 	system(cmd);
+	
+	char* outputFileName = extractFileNameFromPath(outputFilePath);
+	char * caseFileName = removeFileExtension(outputFileName);
+	//sprintf(tmpOutputFilePath, "%s/%s", tmpDir, outputFileName); 
 	
 	if(dataType==0)
 	{
 		float* oriData = readFloatData(oriFilePath, &nbEle, &status);
-		float* sliceData = NULL;
+		float* sliceData = NULL;		
+		
 		if(mode==0) //plot original data
 		{	
 			sliceData = generateSliceData_float(plotDim, sliceNumber, r3, r2, r1, oriData, domain); 
-			sprintf(gnuDataFilePath, "%s.orid", oriFilePath);
-			sprintf(gnuScriptFilePath, "%s.orip", oriFilePath);
+			sprintf(gnuDataFilePath, "%s/%s.orid", tmpDir, caseFileName);
+			sprintf(gnuDataFileName, "%s.orid", caseFileName);
+			sprintf(gnuScriptFilePath, "%s/%s.orip", tmpDir, caseFileName);
+			sprintf(gnuScriptFileName, "%s.orip", caseFileName);
 		}
 		else if(mode==1) //plot difference
 		{
@@ -197,8 +211,10 @@ int main(int argc, char * argv[])
 			float* decData = readFloatData(decFilePath, &nbEle, &status);
 			sliceData = generateSliceDiff_float(plotDim, sliceNumber, r3, r2, r1, oriData, decData, domain);
 			free(decData);	
-			sprintf(gnuDataFilePath, "%s.difd", oriFilePath);
-			sprintf(gnuScriptFilePath, "%s.difp", oriFilePath);			
+			sprintf(gnuDataFilePath, "%s/%s.difd", tmpDir, caseFileName);
+			sprintf(gnuDataFileName, "%s.difd", caseFileName);
+			sprintf(gnuScriptFilePath, "%s/%s.difp", tmpDir, caseFileName);		
+			sprintf(gnuScriptFileName, "%s.difp", caseFileName);
 		}
 
 		switch(plotDim)
@@ -220,13 +236,13 @@ int main(int argc, char * argv[])
 		switch(plotDim)
 		{
 			case 3:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r2, r1, outputFileName, range_min, range_max);
 				break;
 			case 2:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r1, outputFilePath, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r1, outputFileName, range_min, range_max);
 				break;
 			case 1:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r2, outputFilePath, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r2, outputFileName, range_min, range_max);
 				break;
 		}
 		
@@ -243,8 +259,10 @@ int main(int argc, char * argv[])
 		if(mode==0) //plot original data
 		{	
 			sliceData = generateSliceData_double(plotDim, sliceNumber, r3, r2, r1, oriData, domain); 
-			sprintf(gnuDataFilePath, "%s.orid", oriFilePath);
-			sprintf(gnuScriptFilePath, "%s.orip", oriFilePath);			
+			sprintf(gnuDataFilePath, "%s/%s.orid", tmpDir, caseFileName);
+			sprintf(gnuDataFileName, "%s.orid", caseFileName);
+			sprintf(gnuScriptFilePath, "%s/%s.orip", tmpDir, caseFileName);			
+			sprintf(gnuScriptFileName, "%s.orip", caseFileName);
 		}
 		else if(mode==1) //plot difference
 		{
@@ -257,8 +275,10 @@ int main(int argc, char * argv[])
 			double* decData = readDoubleData(decFilePath, &nbEle, &status);
 			sliceData = generateSliceDiff_double(plotDim, sliceNumber, r3, r2, r1, oriData, decData, domain);		
 			free(decData);
-			sprintf(gnuDataFilePath, "%s.difd", oriFilePath);
-			sprintf(gnuScriptFilePath, "%s.difp", oriFilePath);			
+			sprintf(gnuDataFilePath, "%s/%s.difd", tmpDir, caseFileName);
+			sprintf(gnuDataFileName, "%s.difd", caseFileName);
+			sprintf(gnuScriptFilePath, "%s/%s.difp", tmpDir, caseFileName);			
+			sprintf(gnuScriptFileName, "%s.difp", caseFileName);
 		}
 
 		switch(plotDim)
@@ -280,13 +300,13 @@ int main(int argc, char * argv[])
 		switch(plotDim)
 		{
 			case 3:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r2, r1, outputFilePath, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r2, r1, outputFileName, range_min, range_max);
 				break;
 			case 2:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r1, outputFilePath, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r1, outputFileName, range_min, range_max);
 				break;
 			case 1:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFilePath, r3, r2, outputFilePath, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r2, outputFileName, range_min, range_max);
 				break;
 		}
 
@@ -297,7 +317,13 @@ int main(int argc, char * argv[])
 		free(oriData);
 	}	
 	
-	sprintf(cmd, "cd %s;gnuplot %s;mv %s %s/.tmp; mv %s %s/.tmp", dataDir, gnuScriptFilePath, gnuScriptFilePath, dataDir, gnuDataFilePath, dataDir);
-	printf("Image file is plotted and put here: %s\n", outputFilePath);
+	sprintf(cmd, "cd %s;gnuplot %s;mv %s ..", tmpDir, gnuScriptFileName, outputFileName);
+	//printf("%s, %s\n", tmpDir, gnuScriptFilePath);
+	if(outputFileDir==NULL)
+		printf("Image file is plotted and put here: ./%s\n", outputFileName);
+	else
+		printf("Image file is plotted and put here: %s/%s\n", outputFileDir, outputFileName);
 	system(cmd);
+	
+	free(caseFileName);
 }

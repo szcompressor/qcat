@@ -21,6 +21,18 @@
 int dataEndianType = 0;
 int sysEndianType = 0; //0 means little endian, 1 means big endian
 
+char *removeFileExtension(char* myStr) 
+{
+    char *retStr;
+    char *lastExt;
+    if (myStr == NULL) return NULL;
+    if ((retStr = malloc (strlen (myStr) + 1)) == NULL) return NULL;
+    strcpy (retStr, myStr);
+    lastExt = strrchr (retStr, '.');
+    if (lastExt != NULL)
+        *lastExt = '\0';
+    return retStr;
+}
 
 void symTransform_8bytes(unsigned char data[8])
 {
@@ -1290,6 +1302,8 @@ int RW_writeStrings(int string_size, char **string, char *tgtFilePath)
 
 char* extractDirFromPath(char* filePath)
 {
+	if(strstr(filePath, "/")==NULL) 
+		return NULL;
 	char* ts1 = strdup(filePath);
 	char* dir = dirname(ts1);
 	return dir;
@@ -1298,6 +1312,8 @@ char* extractDirFromPath(char* filePath)
 char *extractFileNameFromPath(char *filePath)
 {
     char ch = '/';
+	if(strstr(filePath, "/")==NULL) 
+		return filePath;    
     char *q = strrchr(filePath,ch) + 1;
     return q;
 }

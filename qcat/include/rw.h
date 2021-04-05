@@ -73,6 +73,9 @@ typedef union lfloat
     unsigned char byte[4];
 } lfloat;
 
+
+char *removeFileExtension(char* myStr);
+
 void symTransform_8bytes(unsigned char data[8]);
 void symTransform_2bytes(unsigned char data[2]);
 void symTransform_4bytes(unsigned char data[4]);
