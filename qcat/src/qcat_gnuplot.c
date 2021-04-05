@@ -31,7 +31,7 @@ char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, cha
 	s1=900;
 	s2=900;
 	sprintf(lines[0], "#!/usr/bin/gnuplot\n");
-	sprintf(lines[1], "set term png size %zu, %zu enhanced font \"Arial,24\"\n", s1, s2);
+	sprintf(lines[1], "set term png size %zu, %zu enhanced font \"Arial,10\"\n", s1, s2);
 	sprintf(lines[2], "set pm3d map\n");
 	if(range_max-range_min==0)
 		sprintf(lines[3], "#set cbrange [-4:4]\n");
