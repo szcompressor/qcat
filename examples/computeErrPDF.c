@@ -21,17 +21,20 @@ int main(int argc, char * argv[])
     char dataType[4];
     char oriFilePath[640], decFilePath[640];
     
-    if(argc < 3)
+    if(argc < 4)
     {
-		printf("Usage: computePDF [datatype (-f or -d)] [original data file] [decompressed data file]\n");
+		printf("Usage: computeErrPDF [datatype (-f or -d)] [fix_interval] [original data file] [decompressed data file]\n");
 		printf("			-f means single precision; -d means double precision\n");
-		printf("Example: computePDF -f CLOUD_100x500x500.dat CLOUD_100x500x500.dat.sz.out\n");
+		printf("			fix_interval: a positive number means fix_interval, -1 means fix_number_of_intevals\n");
+		printf("Example: computeErrPDF -f -1 CLOUD_100x500x500.dat CLOUD_100x500x500.dat.sz.out\n");
+		printf("Example: computeErrPDF -f 0.001 CLOUD_100x500x500.dat CLOUD_100x500x500.dat.sz.out\n");
 		exit(0);
     }
    
     sprintf(dataType, "%s", argv[1]);
-    sprintf(oriFilePath, "%s", argv[2]);
-    sprintf(decFilePath, "%s", argv[3]);
+    double fix_interval = atof(argv[2]);
+    sprintf(oriFilePath, "%s", argv[3]);
+    sprintf(decFilePath, "%s", argv[4]);
   
     int x = 1;
     char *y = (char*)&x;
@@ -50,6 +53,7 @@ int main(int argc, char * argv[])
 	double* pdf = NULL;
 	double min_diff = 0;
 	double err_interval = 0;
+	int intervals = 0;
     if(strcmp(dataType, "-f")==0) //single precision
 	{
 		float *ori_data = NULL, *dec_data = NULL;
@@ -66,7 +70,7 @@ int main(int argc, char * argv[])
 		}
 
 		printf("calcaulting....\n");
-		pdf = computePDF(QCAT_FLOAT, ori_data, dec_data, nbEle, &min_diff, &err_interval);
+		pdf = computeErrPDF(QCAT_FLOAT, ori_data, dec_data, nbEle, fix_interval, &min_diff, &err_interval, &intervals);	
 		
 		free(ori_data);
 		free(dec_data);		
@@ -87,7 +91,7 @@ int main(int argc, char * argv[])
 		}		
 
 		printf("calcaulting....\n");
-		pdf = computePDF(QCAT_DOUBLE, ori_data, dec_data, nbEle, &min_diff, &err_interval);
+		pdf = computeErrPDF(QCAT_DOUBLE, ori_data, dec_data, nbEle, fix_interval, &min_diff, &err_interval, &intervals);
 		
 		free(ori_data);
 		free(dec_data);
@@ -96,7 +100,7 @@ int main(int argc, char * argv[])
 	//write pdf to a file
 	char* tgtPDFDataPath = (char*)malloc(QCAT_BUFS_LONG);
 	sprintf(tgtPDFDataPath, "%s.dis", decFilePath);
-	writePDFData(tgtPDFDataPath, min_diff, err_interval, pdf);
+	writePDFData(tgtPDFDataPath, min_diff, err_interval, intervals, pdf);
 	free(tgtPDFDataPath);
 
 	//generate gnuplot script file
