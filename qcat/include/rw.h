@@ -106,6 +106,7 @@ float *readFloatData(char *srcFilePath, size_t *nbEle, int *status);
 unsigned short* readShortData(char *srcFilePath, size_t *dataLength, int *status);
 
 float *readFloatData_systemEndian_k(char *srcFilePath, size_t nbEle, int *status);
+float *readFloatData_systemEndian_sk(char *srcFilePath, size_t startLocation, size_t nbEle, int *status);
 double *readDoubleData_systemEndian_k(char *srcFilePath, size_t nbEle, int *status);
 double *readDoubleData_systemEndian(char *srcFilePath, size_t *nbEle, int *status);
 int8_t *readInt8Data_systemEndian(char *srcFilePath, size_t *nbEle, int *status);
@@ -152,7 +153,8 @@ void RW_writeData_genuplotImage(void *data, int dataType, size_t r2, size_t r1, 
 int RW_writeStrings(int string_size, char **string, char *tgtFilePath);
 char* extractDirFromPath(char* filePath);
 char *extractFileNameFromPath(char *filePath);
-void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, double* pdfData);
+void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, int pdf_intervals, double* pdfData);
+void writePDFData_int32(char* tgtFilePath, double min, int intervals, double* pdfData);
 
 #ifdef __cplusplus
 }

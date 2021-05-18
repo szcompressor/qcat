@@ -16,6 +16,10 @@
 
 #define QCAT_FLOAT 0
 #define QCAT_DOUBLE 1
+#define QCAT_INT32 2
+#define QCAT_INT16 3
+#define QCAT_UINT32 4
+#define QCAT_UINT16 5
 
 #ifdef __cplusplus
 extern "C" {

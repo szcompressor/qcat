@@ -606,6 +606,59 @@ float *readFloatData_systemEndian_k(char *srcFilePath, size_t nbEle, int *status
 	}
 }
 
+float *readFloatData_systemEndian_sk(char *srcFilePath, size_t startLocation, size_t nbEle, int *status)
+{
+	size_t inSize = sizeof(float)*(startLocation+nbEle);
+    
+    float *daBuf = (float *)malloc(inSize);
+
+
+	int state = RW_SCES;
+	if(dataEndianType==sysEndianType)
+	{
+		FILE* pFile = fopen(srcFilePath, "rb");
+		if (pFile == NULL)
+		{
+			printf("Failed to open input file. 2\n");
+			*status = RW_FERR;
+			return NULL;
+		}
+		fread(daBuf, sizeof(float), (startLocation+nbEle), pFile);
+		fclose(pFile);
+		*status = RW_SCES;
+		
+		size_t i;
+		for(i=0;i<nbEle;i++)
+		{
+			daBuf[i] = daBuf[i+startLocation];
+		}
+	}
+	else
+	{
+		size_t i,j;
+		
+		size_t byteLength;
+		unsigned char* bytes = readByteData(srcFilePath, &byteLength, &state);
+		if(state == RW_FERR)
+		{
+			*status = RW_FERR;
+			return NULL;
+		}
+		
+		lfloat buf;
+		for(i = startLocation;i<nbEle;i++)
+		{
+			j = i*4;
+			memcpy(buf.byte, bytes+j, 4);
+			symTransform_4bytes(buf.byte);
+			daBuf[i] = buf.value;
+		}
+		free(bytes);
+		*status = RW_SCES;
+	}
+	return daBuf;
+}
+
 double *readDoubleData_systemEndian(char *srcFilePath, size_t *nbEle, int *status)
 {
 	size_t inSize;
@@ -1318,7 +1371,7 @@ char *extractFileNameFromPath(char *filePath)
     return q;
 }
 
-void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, double* pdfData)
+void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, int pdf_intervals, double* pdfData)
 {
 	size_t i = 0;
 	if(err_interval==0)
@@ -1334,19 +1387,41 @@ void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, d
 	}
 	else
 	{
-		char *ss[PDF_INTERVALS+1];
+		char *ss[pdf_intervals+1];
 		ss[0] = (char*)malloc(sizeof(char)*QCAT_BUFS);
 		sprintf(ss[0], "x errpdf\n");
-		for(i=0;i<PDF_INTERVALS;i++)
+		for(i=0;i<pdf_intervals;i++)
 		{
 			//printf("%d\n", i);
 			ss[i+1] = (char*)malloc(sizeof(char)*QCAT_BUFS);
 			double x = err_minValue+i*err_interval;
 			sprintf(ss[i+1], "%.10G %.10G\n", x, pdfData[i]);
 		}
-		RW_writeStrings(PDF_INTERVALS+1, ss, tgtFilePath);
-		for(i=0;i<PDF_INTERVALS+1;i++)
+		RW_writeStrings(pdf_intervals+1, ss, tgtFilePath);
+		for(i=0;i<pdf_intervals+1;i++)
 			free(ss[i]);
 	}
+	
+}
+
+void writePDFData_int32(char* tgtFilePath, double min, int intervals, double* pdfData)
+{
+	size_t i = 0;
+	char** ss = (char**)malloc((intervals+1)*sizeof(char*));
+	ss[0] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+	sprintf(ss[0], "x errpdf\n");
+	for(i=0;i<intervals;i++)
+	{
+		//printf("%d\n", i);
+		ss[i+1] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+		double x = min+i;
+		if(pdfData[i]!=0)
+			sprintf(ss[i+1], "%.10G %.10G\n", x, pdfData[i]);
+	}
+	RW_writeStrings(intervals+1, ss, tgtFilePath);
+	for(i=0;i<intervals+1;i++)
+		free(ss[i]);
+		
+	free(ss);
 	
 }

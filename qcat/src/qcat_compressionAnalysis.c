@@ -75,7 +75,44 @@ double calculateSSIM(void* oriData, void* decData, int dataType, size_t r4, size
 	return result;
 }
 
-double* computePDF(int dataType, void* oriData, void* decData, size_t numOfElem, double* min_diff, double* err_interval)
+
+double* computeDataPDF_int32(int dataType, void* data, size_t numOfElem, int* min, int* intervals)
+{
+	size_t i = 0;
+	int index = 0;
+	double* dataPDF = NULL;
+	int* intData = (int*)data;
+	int minData = intData[0];
+	int maxData = intData[0];
+	for (i = 0; i < numOfElem; i++)
+	{
+		if(minData > intData[i])
+			minData = intData[i];
+		if(maxData < intData[i])
+			maxData = intData[i];
+	}
+	int range = maxData - minData;
+	
+	*min = minData;
+	int pdf_intervals = range + 1;
+	
+	dataPDF = (double*)malloc(sizeof(double)*1000000);
+	memset(dataPDF, 0, 1000000*sizeof(double));			
+	for (i = 0; i < numOfElem; i++)
+	{
+		index = intData[i] - minData;
+		dataPDF[index] += 1;
+	}
+
+	for (i = 0; i < pdf_intervals; i++)
+		dataPDF[i]/=numOfElem;	
+	
+	*intervals = pdf_intervals;
+	return dataPDF;
+}
+
+
+double* computeErrPDF(int dataType, void* oriData, void* decData, size_t numOfElem, double fix_interval, double* min_diff, double* err_interval, int* intervals)
 {
 	size_t i = 0;
 	int index = 0;
@@ -96,10 +133,21 @@ double* computePDF(int dataType, void* oriData, void* decData, size_t numOfElem,
 				maxDiff = diff[i];
 		}
 		double diffRange = maxDiff - minDiff;
-		double interval = diffRange/PDF_INTERVALS;
-
+		double interval = fix_interval;
+		int pdf_intervals = PDF_INTERVALS;
+		if(interval<=0)
+		{
+			interval = diffRange/PDF_INTERVALS;
+			pdf_intervals = PDF_INTERVALS;
+		}
+		else
+		{
+			interval = fix_interval;
+			pdf_intervals = (int)(diffRange/interval)+1;
+		}
 		*min_diff = minDiff;
 		*err_interval = interval;
+		*intervals = pdf_intervals;
 
 		if(interval==0)
 		{
@@ -108,17 +156,17 @@ double* computePDF(int dataType, void* oriData, void* decData, size_t numOfElem,
 		}
 		else
 		{
-			absErrPDF = (double*)malloc(sizeof(double)*PDF_INTERVALS);
-			memset(absErrPDF, 0, PDF_INTERVALS*sizeof(double));			
+			absErrPDF = (double*)malloc(sizeof(double)*pdf_intervals);
+			memset(absErrPDF, 0, pdf_intervals*sizeof(double));			
 			for (i = 0; i < numOfElem; i++)
 			{
 				index = (int)((diff[i]-minDiff)/interval);
-				if(index==PDF_INTERVALS)
-					index = PDF_INTERVALS-1;
+				if(index==pdf_intervals)
+					index = pdf_intervals-1;
 				absErrPDF[index] += 1;
 			}
 
-			for (i = 0; i < PDF_INTERVALS; i++)
+			for (i = 0; i < pdf_intervals; i++)
 				absErrPDF[i]/=numOfElem;	
 				
 			free(diff);			
@@ -140,10 +188,21 @@ double* computePDF(int dataType, void* oriData, void* decData, size_t numOfElem,
 				maxDiff = diff[i];
 		}
 		double diffRange = maxDiff - minDiff;
-		double interval = diffRange/PDF_INTERVALS;
-
+		double interval = fix_interval;
+		int pdf_intervals = PDF_INTERVALS;
+		if(interval<=0)
+		{
+			interval = diffRange/PDF_INTERVALS;
+			pdf_intervals = PDF_INTERVALS;
+		}
+		else
+		{
+			interval = fix_interval;
+			pdf_intervals = (int)(diffRange/interval)+1;
+		}
 		*min_diff = minDiff;
 		*err_interval = interval;
+		*intervals = pdf_intervals;
 
 		if(interval==0)
 		{
@@ -152,17 +211,17 @@ double* computePDF(int dataType, void* oriData, void* decData, size_t numOfElem,
 		}
 		else
 		{
-			absErrPDF = (double*)malloc(sizeof(double)*PDF_INTERVALS);
-			memset(absErrPDF, 0, PDF_INTERVALS*sizeof(double));			
+			absErrPDF = (double*)malloc(sizeof(double)*pdf_intervals);
+			memset(absErrPDF, 0, pdf_intervals*sizeof(double));			
 			for (i = 0; i < numOfElem; i++)
 			{
 				index = (int)((diff[i]-minDiff)/interval);
-				if(index==PDF_INTERVALS)
-					index = PDF_INTERVALS-1;
+				if(index==pdf_intervals)
+					index = pdf_intervals-1;
 				absErrPDF[index] += 1;
 			}
 
-			for (i = 0; i < PDF_INTERVALS; i++)
+			for (i = 0; i < pdf_intervals; i++)
 				absErrPDF[i]/=numOfElem;	
 				
 			free(diff);			
