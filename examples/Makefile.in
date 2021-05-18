@@ -97,7 +97,9 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertTxtToBytesFloat$(EXEEXT) PlotSliceImage$(EXEEXT) \
 	convertFloatToDouble$(EXEEXT) convertDoubleToFloat$(EXEEXT) \
 	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT) \
-	computePDF$(EXEEXT) calculateSSIM$(EXEEXT) predCR$(EXEEXT)
+	computeDataPDF$(EXEEXT) computeErrPDF$(EXEEXT) \
+	calculateSSIM$(EXEEXT) predCR$(EXEEXT) \
+	convertDataType$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -127,9 +129,13 @@ changeDataSize_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_compareData_OBJECTS = compareData.$(OBJEXT)
 compareData_OBJECTS = $(am_compareData_OBJECTS)
 compareData_DEPENDENCIES = ../qcat/.libs/libqcat.a
-am_computePDF_OBJECTS = computePDF.$(OBJEXT)
-computePDF_OBJECTS = $(am_computePDF_OBJECTS)
-computePDF_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+am_computeDataPDF_OBJECTS = computeDataPDF.$(OBJEXT)
+computeDataPDF_OBJECTS = $(am_computeDataPDF_OBJECTS)
+computeDataPDF_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
+am_computeErrPDF_OBJECTS = computeErrPDF.$(OBJEXT)
+computeErrPDF_OBJECTS = $(am_computeErrPDF_OBJECTS)
+computeErrPDF_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 	../zstd/.libs/libzstd.a
 am_convertBytesToTxtDouble_OBJECTS =  \
 	convertBytesToTxtDouble.$(OBJEXT)
@@ -142,6 +148,10 @@ convertBytesToTxtFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_convertDataToLogDouble_OBJECTS = convertDataToLogDouble.$(OBJEXT)
 convertDataToLogDouble_OBJECTS = $(am_convertDataToLogDouble_OBJECTS)
 convertDataToLogDouble_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_convertDataType_OBJECTS = convertDataType.$(OBJEXT)
+convertDataType_OBJECTS = $(am_convertDataType_OBJECTS)
+convertDataType_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_convertDoubleToFloat_OBJECTS = convertDoubleToFloat.$(OBJEXT)
 convertDoubleToFloat_OBJECTS = $(am_convertDoubleToFloat_OBJECTS)
 convertDoubleToFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -191,10 +201,12 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/calculateSSIM.Po ./$(DEPDIR)/changeDataSize.Po \
-	./$(DEPDIR)/compareData.Po ./$(DEPDIR)/computePDF.Po \
+	./$(DEPDIR)/compareData.Po ./$(DEPDIR)/computeDataPDF.Po \
+	./$(DEPDIR)/computeErrPDF.Po \
 	./$(DEPDIR)/convertBytesToTxtDouble.Po \
 	./$(DEPDIR)/convertBytesToTxtFloat.Po \
 	./$(DEPDIR)/convertDataToLogDouble.Po \
+	./$(DEPDIR)/convertDataType.Po \
 	./$(DEPDIR)/convertDoubleToFloat.Po \
 	./$(DEPDIR)/convertFloatToDouble.Po \
 	./$(DEPDIR)/convertTxtToBytesDouble.Po \
@@ -224,9 +236,10 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(computePDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
+	$(computeDataPDF_SOURCES) $(computeErrPDF_SOURCES) \
+	$(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
-	$(convertDataToLogDouble_SOURCES) \
+	$(convertDataToLogDouble_SOURCES) $(convertDataType_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
@@ -236,9 +249,10 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(printProperty_SOURCES) $(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(computePDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
+	$(computeDataPDF_SOURCES) $(computeErrPDF_SOURCES) \
+	$(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
-	$(convertDataToLogDouble_SOURCES) \
+	$(convertDataToLogDouble_SOURCES) $(convertDataType_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
@@ -423,12 +437,16 @@ compareData_SOURCES = compareData.c
 compareData_LDADD = ../qcat/.libs/libqcat.a -lm
 extractSliceFrom3D_SOURCES = extractSliceFrom3D.c
 extractSliceFrom3D_LDADD = ../qcat/.libs/libqcat.a -lm
-computePDF_SOURCES = computePDF.c
-computePDF_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeDataPDF_SOURCES = computeDataPDF.c
+computeDataPDF_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeErrPDF_SOURCES = computeErrPDF.c
+computeErrPDF_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 calculateSSIM_SOURCES = calculateSSIM.c
 calculateSSIM_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 predCR_SOURCES = predCR.c
 predCR_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+convertDataType_SOURCES = convertDataType.c
+convertDataType_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -528,9 +546,13 @@ compareData$(EXEEXT): $(compareData_OBJECTS) $(compareData_DEPENDENCIES) $(EXTRA
 	@rm -f compareData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(compareData_OBJECTS) $(compareData_LDADD) $(LIBS)
 
-computePDF$(EXEEXT): $(computePDF_OBJECTS) $(computePDF_DEPENDENCIES) $(EXTRA_computePDF_DEPENDENCIES) 
-	@rm -f computePDF$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(computePDF_OBJECTS) $(computePDF_LDADD) $(LIBS)
+computeDataPDF$(EXEEXT): $(computeDataPDF_OBJECTS) $(computeDataPDF_DEPENDENCIES) $(EXTRA_computeDataPDF_DEPENDENCIES) 
+	@rm -f computeDataPDF$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(computeDataPDF_OBJECTS) $(computeDataPDF_LDADD) $(LIBS)
+
+computeErrPDF$(EXEEXT): $(computeErrPDF_OBJECTS) $(computeErrPDF_DEPENDENCIES) $(EXTRA_computeErrPDF_DEPENDENCIES) 
+	@rm -f computeErrPDF$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(computeErrPDF_OBJECTS) $(computeErrPDF_LDADD) $(LIBS)
 
 convertBytesToTxtDouble$(EXEEXT): $(convertBytesToTxtDouble_OBJECTS) $(convertBytesToTxtDouble_DEPENDENCIES) $(EXTRA_convertBytesToTxtDouble_DEPENDENCIES) 
 	@rm -f convertBytesToTxtDouble$(EXEEXT)
@@ -543,6 +565,10 @@ convertBytesToTxtFloat$(EXEEXT): $(convertBytesToTxtFloat_OBJECTS) $(convertByte
 convertDataToLogDouble$(EXEEXT): $(convertDataToLogDouble_OBJECTS) $(convertDataToLogDouble_DEPENDENCIES) $(EXTRA_convertDataToLogDouble_DEPENDENCIES) 
 	@rm -f convertDataToLogDouble$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(convertDataToLogDouble_OBJECTS) $(convertDataToLogDouble_LDADD) $(LIBS)
+
+convertDataType$(EXEEXT): $(convertDataType_OBJECTS) $(convertDataType_DEPENDENCIES) $(EXTRA_convertDataType_DEPENDENCIES) 
+	@rm -f convertDataType$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(convertDataType_OBJECTS) $(convertDataType_LDADD) $(LIBS)
 
 convertDoubleToFloat$(EXEEXT): $(convertDoubleToFloat_OBJECTS) $(convertDoubleToFloat_DEPENDENCIES) $(EXTRA_convertDoubleToFloat_DEPENDENCIES) 
 	@rm -f convertDoubleToFloat$(EXEEXT)
@@ -594,10 +620,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSSIM.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changeDataSize.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compareData.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computePDF.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataPDF.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrPDF.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertDataToLogDouble.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertDataType.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertDoubleToFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertFloatToDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesDouble.Po@am__quote@ # am--include-marker
@@ -776,10 +804,12 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
-	-rm -f ./$(DEPDIR)/computePDF.Po
+	-rm -f ./$(DEPDIR)/computeDataPDF.Po
+	-rm -f ./$(DEPDIR)/computeErrPDF.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
 	-rm -f ./$(DEPDIR)/convertDataToLogDouble.Po
+	-rm -f ./$(DEPDIR)/convertDataType.Po
 	-rm -f ./$(DEPDIR)/convertDoubleToFloat.Po
 	-rm -f ./$(DEPDIR)/convertFloatToDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesDouble.Po
@@ -839,10 +869,12 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
-	-rm -f ./$(DEPDIR)/computePDF.Po
+	-rm -f ./$(DEPDIR)/computeDataPDF.Po
+	-rm -f ./$(DEPDIR)/computeErrPDF.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
 	-rm -f ./$(DEPDIR)/convertDataToLogDouble.Po
+	-rm -f ./$(DEPDIR)/convertDataType.Po
 	-rm -f ./$(DEPDIR)/convertDoubleToFloat.Po
 	-rm -f ./$(DEPDIR)/convertFloatToDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesDouble.Po
