@@ -107,17 +107,17 @@ int main(int argc, char * argv[])
 	}
 	
 	if(strcmp(outputType, "FLOAT")==0)
-		inType = QCAT_FLOAT;
+		outType = QCAT_FLOAT;
 	else if(strcmp(outputType, "DOUBLE")==0)
-		inType = QCAT_DOUBLE;
+		outType = QCAT_DOUBLE;
 	else if(strcmp(outputType, "UINT32")==0)
-		inType = QCAT_UINT32;
+		outType = QCAT_UINT32;
 	else if(strcmp(outputType, "UINT16")==0)
-		inType = QCAT_UINT16;
+		outType = QCAT_UINT16;
 	else if(strcmp(outputType, "INT32")==0)
-		inType = QCAT_INT32;
+		outType = QCAT_INT32;
 	else if(strcmp(outputType, "INT16")==0)
-		inType = QCAT_INT16;	
+		outType = QCAT_INT16;	
 	else
 	{
 		printf("Error: wrong type - %s for output\n", outputType);
