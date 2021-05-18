@@ -1,4 +1,4 @@
-# Quick Compression Analysis Toolkit (QCAT)
+# <img src="https://www.mcs.anl.gov/~shdi/download/qcat-logo.png" width="60"> Quick Compression Analysis Toolkit (QCAT)
 
 QCAT is a lightweight tool to analyze the data in the context of lossy compression. You can use it to change the size of data file in binary, convert binary data files to texture files and vice versa. You can also plot the raw data file and decompressed data file and visualize the difference by using the executable 'PlotSliceImage' for 2D and 3D datasets in different directions. 
 
