@@ -12,10 +12,10 @@ double SSIM_1d_calcWindow_float(float* data, float* other, int offset0, int wind
 	int i0;
 	int np=0; //Number of points
 	
-	float xMin=data[0];
-	float xMax=data[0];
-	float yMin=data[0];
-	float yMax=data[0];
+	float xMin=data[offset0];
+	float xMax=data[offset0];
+	float yMin=other[offset0];
+	float yMax=other[offset0];
 	double xSum=0;
 	double x2Sum=0;
 	double ySum=0;
@@ -42,8 +42,12 @@ double SSIM_1d_calcWindow_float(float* data, float* other, int offset0, int wind
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double xSigma=sqrt((x2Sum/np)-(xMean*xMean));
-	double ySigma=sqrt((y2Sum/np)-(yMean*yMean));
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
 	double xyCov=(xySum/np)-(xMean*yMean);
 
 	double c1,c2;
@@ -71,10 +75,10 @@ double SSIM_1d_calcWindow_double(double* oriData, double* decData, int offset0, 
 	double* data = oriData;
 	double* other = decData;
 	
-	double xMin=data[0];
-	double xMax=data[0];
-	double yMin=data[0];
-	double yMax=data[0];
+	double xMin=data[offset0];
+	double xMax=data[offset0];
+	double yMin=other[offset0];
+	double yMax=other[offset0];
 	double xSum=0;
 	double x2Sum=0;
 	double ySum=0;
@@ -101,8 +105,12 @@ double SSIM_1d_calcWindow_double(double* oriData, double* decData, int offset0, 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double xSigma=sqrt((x2Sum/np)-(xMean*xMean));
-	double ySigma=sqrt((y2Sum/np)-(yMean*yMean));
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
 	double xyCov=(xySum/np)-(xMean*yMean);
 
 	double c1,c2;
@@ -187,7 +195,8 @@ double SSIM_2d_windowed_float(float* oriData, float* decData, size_t size1, size
 
 		for(offset0=0; offset0+windowSize0<=size0; offset0+=offsetInc0){ //MOVING WINDOW
 			nw++;
-			ssimSum+=SSIM_2d_calcWindow_float(data, other, size0, offset0, offset1, windowSize0, windowSize1);
+			double ssim = SSIM_2d_calcWindow_float(data, other, size0, offset0, offset1, windowSize0, windowSize1);
+			ssimSum+=ssim;
 		}
 	}
 
@@ -198,10 +207,10 @@ double SSIM_2d_calcWindow_float(float* data, float *other, size_t size0, int off
 {
 	int i0,i1,index;
 	int np=0; //Number of points
-	float xMin=data[0];
-	float xMax=data[0];
-	float yMin=data[0];
-	float yMax=data[0];
+	float xMin=data[offset0+size0*offset1];
+	float xMax=data[offset0+size0*offset1];
+	float yMin=other[offset0+size0*offset1];
+	float yMax=other[offset0+size0*offset1];
 	double xSum=0;
 	double x2Sum=0;
 	double ySum=0;
@@ -230,8 +239,12 @@ double SSIM_2d_calcWindow_float(float* data, float *other, size_t size0, int off
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double xSigma=sqrt((x2Sum/np)-(xMean*xMean));
-	double ySigma=sqrt((y2Sum/np)-(yMean*yMean));
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
 	double xyCov=(xySum/np)-(xMean*yMean);
 
 	double c1,c2;
@@ -283,10 +296,10 @@ double SSIM_2d_windowed_double(double* oriData, double* decData, size_t size1, s
 double SSIM_2d_calcWindow_double(double* data, double *other, size_t size0, int offset0, int offset1, int windowSize0, int windowSize1){
 	int i0,i1,index;
 	int np=0; //Number of points
-	double xMin=data[0];
-	double xMax=data[0];
-	double yMin=data[0];
-	double yMax=data[0];
+	double xMin=data[offset0+size0*offset1];
+	double xMax=data[offset0+size0*offset1];
+	double yMin=other[offset0+size0*offset1];
+	double yMax=other[offset0+size0*offset1];
 	double xSum=0;
 	double x2Sum=0;
 	double ySum=0;
@@ -315,8 +328,12 @@ double SSIM_2d_calcWindow_double(double* data, double *other, size_t size0, int 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double xSigma=sqrt((x2Sum/np)-(xMean*xMean));
-	double ySigma=sqrt((y2Sum/np)-(yMean*yMean));
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
 	double xyCov=(xySum/np)-(xMean*yMean);
 
 	double c1,c2;
@@ -375,10 +392,10 @@ double SSIM_3d_windowed_float(float* oriData, float* decData, size_t size2, size
 double SSIM_3d_calcWindow_float(float* data, float* other, size_t size1, size_t size0, int offset0, int offset1, int offset2, int windowSize0, int windowSize1, int windowSize2){
 	int i0,i1,i2,index;
 	int np=0; //Number of points
-	float xMin=data[0];
-	float xMax=data[0];
-	float yMin=data[0];
-	float yMax=data[0];
+	float xMin=data[offset0+size0*(offset1+size1*offset2)];
+	float xMax=data[offset0+size0*(offset1+size1*offset2)];
+	float yMin=other[offset0+size0*(offset1+size1*offset2)];
+	float yMax=other[offset0+size0*(offset1+size1*offset2)];
 	double xSum=0;
 	double x2Sum=0;
 	double ySum=0;
@@ -410,8 +427,12 @@ double SSIM_3d_calcWindow_float(float* data, float* other, size_t size1, size_t 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double xSigma=sqrt(fabs((x2Sum/np)-(xMean*xMean)));
-	double ySigma=sqrt(fabs((y2Sum/np)-(yMean*yMean)));
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
 	double xyCov=(xySum/np)-(xMean*yMean);
 
 
@@ -471,10 +492,10 @@ double SSIM_3d_calcWindow_double(double* data, double* other, size_t size1, size
 {
 	int i0,i1,i2,index;
 	int np=0; //Number of points
-	double xMin=data[0];
-	double xMax=data[0];
-	double yMin=data[0];
-	double yMax=data[0];
+	double xMin=data[offset0+size0*(offset1+size1*offset2)];
+	double xMax=data[offset0+size0*(offset1+size1*offset2)];
+	double yMin=other[offset0+size0*(offset1+size1*offset2)];
+	double yMax=other[offset0+size0*(offset1+size1*offset2)];
 	double xSum=0;
 	double x2Sum=0;
 	double ySum=0;
@@ -506,8 +527,12 @@ double SSIM_3d_calcWindow_double(double* data, double* other, size_t size1, size
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double xSigma=sqrt(fabs((x2Sum/np)-(xMean*xMean)));
-	double ySigma=sqrt(fabs((y2Sum/np)-(yMean*yMean)));
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
 	double xyCov=(xySum/np)-(xMean*yMean);
 
 
@@ -572,10 +597,10 @@ double SSIM_4d_calcWindow_float(float* data, float* other, size_t size2, size_t 
 {
 	int i0,i1,i2,i3,index;
 	int np=0; //Number of points
-	float xMin=data[0];
-	float xMax=data[0];
-	float yMin=data[0];
-	float yMax=data[0];
+	float xMin=data[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
+	float xMax=data[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
+	float yMin=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
+	float yMax=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
 	double xSum=0;
 	double x2Sum=0;
 	double ySum=0;
@@ -607,8 +632,12 @@ double SSIM_4d_calcWindow_float(float* data, float* other, size_t size2, size_t 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double xSigma=sqrt((x2Sum/np)-(xMean*xMean));
-	double ySigma=sqrt((y2Sum/np)-(yMean*yMean));
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
 	double xyCov=(xySum/np)-(xMean*yMean);
 
 	double c1,c2;
@@ -671,10 +700,10 @@ double SSIM_4d_calcWindow_double(double* data, double* other, size_t size2, size
 {
   int i0,i1,i2,i3,index;
   int np=0; //Number of points
-  double xMin=data[0];
-  double xMax=data[0];
-  double yMin=data[0];
-  double yMax=data[0];
+  double xMin=data[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
+  double xMax=data[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
+  double yMin=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
+  double yMax=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
   double xSum=0;
   double x2Sum=0;
   double ySum=0;
@@ -706,9 +735,13 @@ double SSIM_4d_calcWindow_double(double* data, double* other, size_t size2, size
 
   double xMean=xSum/np;
   double yMean=ySum/np;
-  double xSigma=sqrt((x2Sum/np)-(xMean*xMean));
-  double ySigma=sqrt((y2Sum/np)-(yMean*yMean));
-  double xyCov=(xySum/np)-(xMean*yMean);
+	double a = (x2Sum/np)-(xMean*xMean);
+	if(a<0) a = 0;
+	double xSigma=sqrt(a);
+	a = (y2Sum/np)-(yMean*yMean);
+	if(a<0) a = 0;
+	double ySigma=sqrt(a);
+	double xyCov=(xySum/np)-(xMean*yMean);
   
   double c1,c2;
   if(xMax-xMin==0){
