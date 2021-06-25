@@ -5,6 +5,7 @@
 #include <ByteToolkit.h>
 #include <qcat_dataAnalysis.h>
 #include <qcat_compressionAnalysis.h>
+#include <sz_dummy_compression.h>
 #include <Huffman.h>
 #include <zstd.h>
 #include <qcat_ssim.h>

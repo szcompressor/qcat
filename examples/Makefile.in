@@ -99,7 +99,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT) \
 	computeDataPDF$(EXEEXT) computeErrPDF$(EXEEXT) \
 	calculateSSIM$(EXEEXT) predCR$(EXEEXT) \
-	convertDataType$(EXEEXT)
+	convertDataType$(EXEEXT) simSZ$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -181,6 +181,9 @@ predCR_DEPENDENCIES = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a
 am_printProperty_OBJECTS = printProperty.$(OBJEXT)
 printProperty_OBJECTS = $(am_printProperty_OBJECTS)
 printProperty_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_simSZ_OBJECTS = simSZ.$(OBJEXT)
+simSZ_OBJECTS = $(am_simSZ_OBJECTS)
+simSZ_DEPENDENCIES = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a
 am_splitComplexData_OBJECTS = splitComplexData.$(OBJEXT)
 splitComplexData_OBJECTS = $(am_splitComplexData_OBJECTS)
 splitComplexData_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -214,7 +217,8 @@ am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/extractSliceFrom3D.Po \
 	./$(DEPDIR)/generateRandomData.Po \
 	./$(DEPDIR)/generateRandomData2.Po ./$(DEPDIR)/predCR.Po \
-	./$(DEPDIR)/printProperty.Po ./$(DEPDIR)/splitComplexData.Po
+	./$(DEPDIR)/printProperty.Po ./$(DEPDIR)/simSZ.Po \
+	./$(DEPDIR)/splitComplexData.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -246,7 +250,8 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
 	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
-	$(printProperty_SOURCES) $(splitComplexData_SOURCES)
+	$(printProperty_SOURCES) $(simSZ_SOURCES) \
+	$(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrPDF_SOURCES) \
@@ -259,7 +264,8 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
 	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
-	$(printProperty_SOURCES) $(splitComplexData_SOURCES)
+	$(printProperty_SOURCES) $(simSZ_SOURCES) \
+	$(splitComplexData_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -445,6 +451,8 @@ calculateSSIM_SOURCES = calculateSSIM.c
 calculateSSIM_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 predCR_SOURCES = predCR.c
 predCR_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+simSZ_SOURCES = simSZ.c
+simSZ_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 convertDataType_SOURCES = convertDataType.c
 convertDataType_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
@@ -606,6 +614,10 @@ printProperty$(EXEEXT): $(printProperty_OBJECTS) $(printProperty_DEPENDENCIES) $
 	@rm -f printProperty$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(printProperty_OBJECTS) $(printProperty_LDADD) $(LIBS)
 
+simSZ$(EXEEXT): $(simSZ_OBJECTS) $(simSZ_DEPENDENCIES) $(EXTRA_simSZ_DEPENDENCIES) 
+	@rm -f simSZ$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(simSZ_OBJECTS) $(simSZ_LDADD) $(LIBS)
+
 splitComplexData$(EXEEXT): $(splitComplexData_OBJECTS) $(splitComplexData_DEPENDENCIES) $(EXTRA_splitComplexData_DEPENDENCIES) 
 	@rm -f splitComplexData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(splitComplexData_OBJECTS) $(splitComplexData_LDADD) $(LIBS)
@@ -635,6 +647,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/predCR.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printProperty.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simSZ.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splitComplexData.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -819,6 +832,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/generateRandomData2.Po
 	-rm -f ./$(DEPDIR)/predCR.Po
 	-rm -f ./$(DEPDIR)/printProperty.Po
+	-rm -f ./$(DEPDIR)/simSZ.Po
 	-rm -f ./$(DEPDIR)/splitComplexData.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -884,6 +898,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/generateRandomData2.Po
 	-rm -f ./$(DEPDIR)/predCR.Po
 	-rm -f ./$(DEPDIR)/printProperty.Po
+	-rm -f ./$(DEPDIR)/simSZ.Po
 	-rm -f ./$(DEPDIR)/splitComplexData.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

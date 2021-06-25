@@ -206,7 +206,7 @@ QCAT_CompressionResult* huffmanAndZstd(int dataType, int* type, int quantBinCapa
 	if(nbEle < 100)
 			estimatedCompressedSize = 200;
 	else
-			estimatedCompressedSize = nbEle*1.2;
+			estimatedCompressedSize = nbEle*sizeof(int)*1.2;
 	unsigned char* compressBytes = (unsigned char*)malloc(estimatedCompressedSize);
 	size_t zstdOutSize = ZSTD_compress(compressBytes, estimatedCompressedSize, huffmanOutput, huffmanOutSize, 3);	
 	
@@ -221,4 +221,75 @@ QCAT_CompressionResult* huffmanAndZstd(int dataType, int* type, int quantBinCapa
 	//result->compressionRatio = compressionRatio;	
 	
 	return result;
+}
+
+
+unsigned char* huffmanAndZstdCompress(int* type, int nbEle, int quantBinCapacity, float absErrBound, float* unpData, unsigned int unpredictableCount, size_t* outSize)
+{
+	
+	unsigned char* tmp = (unsigned char*)malloc(nbEle*sizeof(int));
+	
+	//Huffman compression
+	int stateNum = 2*quantBinCapacity;
+	HuffmanTree* huffmanTree = createHuffmanTree(stateNum);
+	unsigned char* huffmanOutput = NULL;
+	size_t huffmanOutSize = 0;
+	encode_withTree(huffmanTree, type, nbEle, &huffmanOutput, &huffmanOutSize);
+	SZ_ReleaseHuffman(huffmanTree);
+	
+	size_t unpCompressedDataSize = 0;		
+	if(unpredictableCount>0)
+	{
+		unsigned char* unpCompressedData = SZ_fast_compress_args_unpredictable_float(QCAT_FLOAT, unpData, &unpCompressedDataSize, absErrBound, 0, 0, 0, 0, (size_t)unpredictableCount);
+		memcpy(tmp, unpCompressedData, unpCompressedDataSize);
+	}
+
+	memcpy(tmp+unpCompressedDataSize, huffmanOutput, huffmanOutSize);
+	
+	size_t targetSize = unpCompressedDataSize + huffmanOutSize;
+	
+	//compress huffman output by zstd
+	size_t estimatedCompressedSize = 0;
+	if(nbEle < 100)
+			estimatedCompressedSize = 200;
+	else
+			estimatedCompressedSize = nbEle*sizeof(int)*1.2;
+			
+	unsigned char* compressBytes = (unsigned char*)malloc(sizeof(size_t)*2 + estimatedCompressedSize);
+	intToBytes_bigEndian(compressBytes, unpredictableCount); //4 bytes
+	intToBytes_bigEndian(compressBytes + sizeof(unsigned int), unpCompressedDataSize); //4 bytes
+	sizeToBytes(compressBytes+2*sizeof(unsigned int), targetSize); //8 bytes
+	
+	size_t zstdOutSize = ZSTD_compress(compressBytes+2*sizeof(unsigned int) + sizeof(size_t), estimatedCompressedSize, tmp, targetSize, 3);	
+	
+	*outSize = zstdOutSize +2*sizeof(unsigned int) + sizeof(size_t);
+	return compressBytes;
+}
+
+void zstdAndHuffmanDecompress(int quantBinCapacity, unsigned char*bytes, size_t nbBytes, size_t nbEle, int **type, float** unpData, unsigned int* unpredictableCount)	
+{
+	*type = (int*)malloc(sizeof(int)*nbEle);
+	memset(*type, 0, sizeof(int)*nbEle);
+	
+	*unpredictableCount = bytesToInt_bigEndian(bytes);
+	unsigned int unpCompressedDataSize = bytesToInt_bigEndian(bytes+sizeof(unsigned int));
+	size_t targetSize = bytesToSize(bytes+2*sizeof(unsigned int));
+	
+	unsigned char* zstdBytes = bytes+2*sizeof(unsigned int) + sizeof(size_t);
+	
+	unsigned char* unpred_huffmanBytes = (unsigned char*)malloc(targetSize);
+	ZSTD_decompress(unpred_huffmanBytes, targetSize, zstdBytes, nbBytes-sizeof(unsigned int)*2 - sizeof(size_t));
+	
+	unsigned char* huffmanBytes = unpred_huffmanBytes + unpCompressedDataSize;	
+
+	if(*unpredictableCount>0)
+		SZ_fast_decompress_args_unpredictable_float(unpData, 0, 0, 0, 0, *unpredictableCount, unpred_huffmanBytes, unpCompressedDataSize);	
+	else
+		*unpData = NULL;
+
+	int stateNum = quantBinCapacity*2;
+	HuffmanTree* huffmanTree = createHuffmanTree(stateNum);
+	decode_withTree(huffmanTree, huffmanBytes, nbEle, *type);
+	SZ_ReleaseHuffman(huffmanTree);	
+	
 }

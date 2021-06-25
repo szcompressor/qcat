@@ -19,6 +19,9 @@ unsigned char* SZ_fast_compress_args_unpredictable_float(int dataType, float *da
 void SZ_fast_decompress_args_unpredictable_float(float** newData, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1, unsigned char* cmpBytes, 
 size_t cmpSize);
 
+unsigned char* huffmanAndZstdCompress(int* type, int nbEle, int quantBinCapacity, float absErrBound, float* unpData, unsigned int unpredictableCount, size_t* outSize);
+void zstdAndHuffmanDecompress(int quantBinCapacity, unsigned char*bytes, size_t nbBytes, size_t nbEle, int **type, float** unpData, unsigned int* unpredictableCount);
+
 #ifdef __cplusplus
 }
 #endif
