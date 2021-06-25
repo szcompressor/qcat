@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
 		int *dec_type = NULL;
 		float *dec_unpData = NULL;
 		unsigned int dec_unpredictableCount = 0;
-		zstdAndHuffmanDecompress(quantBinCapacity, bytes, outSize, nbEle, &type, &unpredData, &dec_unpredictableCount);
+		zstdAndHuffmanDecompress(quantBinCapacity, bytes, outSize, nbEle, &dec_type, &dec_unpData, &dec_unpredictableCount);
 		
 		printf("the number of unpred data is %d.\n", dec_unpredictableCount);
 		
