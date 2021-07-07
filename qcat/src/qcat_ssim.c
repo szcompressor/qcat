@@ -17,10 +17,7 @@ double SSIM_1d_calcWindow_float(float* data, float* other, int offset0, int wind
 	float yMin=other[offset0];
 	float yMax=other[offset0];
 	double xSum=0;
-	double x2Sum=0;
 	double ySum=0;
-	double y2Sum=0;
-	double xySum=0;
 
 	for(i0=offset0;i0<offset0+windowSize0;i0++){
 		np++;
@@ -33,22 +30,28 @@ double SSIM_1d_calcWindow_float(float* data, float* other, int offset0, int wind
 		if(yMax<other[i0])
 			yMax=other[i0];
 		xSum+=data[i0];
-		x2Sum+=(data[i0]*data[i0]);
 		ySum+=other[i0];
-		y2Sum+=(other[i0]*other[i0]);
-		xySum+=(data[i0]*other[i0]);
 	}
 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i0=offset0;i0<offset0+windowSize0;i0++){
+		var_x += (data[i0] - xMean)*(data[i0] - xMean);
+		var_y += (other[i0] - yMean)*(other[i0] - yMean);
+		var_xy += (data[i0] - xMean)*(other[i0] - yMean);
+	}
+	
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
 
 	double c1,c2;
 	if(xMax-xMin==0){
@@ -105,13 +108,22 @@ double SSIM_1d_calcWindow_double(double* oriData, double* decData, int offset0, 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i0=offset0;i0<offset0+windowSize0;i0++){
+		var_x += (data[i0] - xMean)*(data[i0] - xMean);
+		var_y += (other[i0] - yMean)*(other[i0] - yMean);
+		var_xy += (data[i0] - xMean)*(other[i0] - yMean);
+	}
+	
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
 
 	double c1,c2;
 	if(xMax-xMin==0){
@@ -239,13 +251,26 @@ double SSIM_2d_calcWindow_float(float* data, float *other, size_t size0, int off
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i1=offset1;i1<offset1+windowSize1;i1++){
+	for(i0=offset0;i0<offset0+windowSize0;i0++){
+		index=i0+size0*i1;
+		var_x += (data[index] - xMean)*(data[index] - xMean);
+		var_y += (other[index] - yMean)*(other[index] - yMean);
+		var_xy += (data[index] - xMean)*(other[index] - yMean);
+	}
+	}
+	
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
+
 
 	double c1,c2;
 	if(xMax-xMin==0){
@@ -301,10 +326,7 @@ double SSIM_2d_calcWindow_double(double* data, double *other, size_t size0, int 
 	double yMin=other[offset0+size0*offset1];
 	double yMax=other[offset0+size0*offset1];
 	double xSum=0;
-	double x2Sum=0;
 	double ySum=0;
-	double y2Sum=0;
-	double xySum=0;
 
 	for(i1=offset1;i1<offset1+windowSize1;i1++){
 	for(i0=offset0;i0<offset0+windowSize0;i0++){
@@ -319,22 +341,31 @@ double SSIM_2d_calcWindow_double(double* data, double *other, size_t size0, int 
 	  if(yMax<other[index])
 		yMax=other[index];
 	  xSum+=data[index];
-	  x2Sum+=(data[index]*data[index]);
 	  ySum+=other[index];
-	  y2Sum+=(other[index]*other[index]);
-	  xySum+=(data[index]*other[index]);
 	}
 	}
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i1=offset1;i1<offset1+windowSize1;i1++){
+	for(i0=offset0;i0<offset0+windowSize0;i0++){
+		index=i0+size0*i1;
+		var_x += (data[index] - xMean)*(data[index] - xMean);
+		var_y += (other[index] - yMean)*(other[index] - yMean);
+		var_xy += (data[index] - xMean)*(other[index] - yMean);
+	}
+	}
+	
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
 
 	double c1,c2;
 	if(xMax-xMin==0){
@@ -350,6 +381,7 @@ double SSIM_2d_calcWindow_double(double* data, double *other, size_t size0, int 
 	double contrast=(2*xSigma*ySigma+c2)/(xSigma*xSigma+ySigma*ySigma+c2);
 	double structure=(xyCov+c3)/(xSigma*ySigma+c3);
 	double ssim=luminance*contrast*structure;
+	
 	return ssim;
 }
 
@@ -397,10 +429,7 @@ double SSIM_3d_calcWindow_float(float* data, float* other, size_t size1, size_t 
 	float yMin=other[offset0+size0*(offset1+size1*offset2)];
 	float yMax=other[offset0+size0*(offset1+size1*offset2)];
 	double xSum=0;
-	double x2Sum=0;
 	double ySum=0;
-	double y2Sum=0;
-	double xySum=0;
 
 	for(i2=offset2;i2<offset2+windowSize2;i2++){
 	for(i1=offset1;i1<offset1+windowSize1;i1++){
@@ -416,10 +445,7 @@ double SSIM_3d_calcWindow_float(float* data, float* other, size_t size1, size_t 
 		if(yMax<other[index])
 		  yMax=other[index];
 		xSum+=data[index];
-		x2Sum+=(data[index]*data[index]);
 		ySum+=other[index];
-		y2Sum+=(other[index]*other[index]);
-		xySum+=(data[index]*other[index]);
 	  }
 	}
 	}
@@ -427,13 +453,26 @@ double SSIM_3d_calcWindow_float(float* data, float* other, size_t size1, size_t 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i2=offset2;i2<offset2+windowSize2;i2++){
+	for(i1=offset1;i1<offset1+windowSize1;i1++){
+	  for(i0=offset0;i0<offset0+windowSize0;i0++){
+	    index=i0+size0*(i1+size1*i2);
+		var_x += (data[index] - xMean)*(data[index] - xMean);
+		var_y += (other[index] - yMean)*(other[index] - yMean);
+		var_xy += (data[index] - xMean)*(other[index] - yMean);
+	}
+	}
+	}
+	
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
 
 
 	double c1,c2;
@@ -527,13 +566,26 @@ double SSIM_3d_calcWindow_double(double* data, double* other, size_t size1, size
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i2=offset2;i2<offset2+windowSize2;i2++){
+	for(i1=offset1;i1<offset1+windowSize1;i1++){
+	  for(i0=offset0;i0<offset0+windowSize0;i0++){
+		index=i0+size0*(i1+size1*i2);  
+		var_x += (data[index] - xMean)*(data[index] - xMean);
+		var_y += (other[index] - yMean)*(other[index] - yMean);
+		var_xy += (data[index] - xMean)*(other[index] - yMean);
+	}
+	}
+	}
+	
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
 
 
 	double c1,c2;
@@ -632,13 +684,28 @@ double SSIM_4d_calcWindow_float(float* data, float* other, size_t size2, size_t 
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i3=offset3;i3<offset3+windowSize3;i3++){
+	for(i2=offset2;i2<offset2+windowSize2;i2++){
+	  for(i1=offset1;i1<offset1+windowSize1;i1++){
+		for(i0=offset0;i0<offset0+windowSize0;i0++){
+		index=i0+size0*(i1+size1*(i2+size2*i3));			
+		var_x += (data[index] - xMean)*(data[index] - xMean);
+		var_y += (other[index] - yMean)*(other[index] - yMean);
+		var_xy += (data[index] - xMean)*(other[index] - yMean);
+	}
+	}
+	}
+	}
+		
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
 
 	double c1,c2;
 	if(xMax-xMin==0){
@@ -733,15 +800,29 @@ double SSIM_4d_calcWindow_double(double* data, double* other, size_t size2, size
     }
   }
 
-  double xMean=xSum/np;
-  double yMean=ySum/np;
-	double a = (x2Sum/np)-(xMean*xMean);
-	if(a<0) a = 0;
-	double xSigma=sqrt(a);
-	a = (y2Sum/np)-(yMean*yMean);
-	if(a<0) a = 0;
-	double ySigma=sqrt(a);
-	double xyCov=(xySum/np)-(xMean*yMean);
+	double xMean=xSum/np;
+	double yMean=ySum/np;
+	double var_x = 0, var_y = 0, var_xy = 0;
+	
+	for(i3=offset3;i3<offset3+windowSize3;i3++){
+	for(i2=offset2;i2<offset2+windowSize2;i2++){
+	  for(i1=offset1;i1<offset1+windowSize1;i1++){
+		for(i0=offset0;i0<offset0+windowSize0;i0++){
+		index=i0+size0*(i1+size1*(i2+size2*i3));			
+		var_x += (data[index] - xMean)*(data[index] - xMean);
+		var_y += (other[index] - yMean)*(other[index] - yMean);
+		var_xy += (data[index] - xMean)*(other[index] - yMean);
+	}
+	}
+	}
+	}
+	var_x /= np;
+	var_y /= np;
+	var_xy /= np;	
+	
+	double xSigma=sqrt(var_x);
+	double ySigma=sqrt(var_y);
+	double xyCov = var_xy;
   
   double c1,c2;
   if(xMax-xMin==0){
