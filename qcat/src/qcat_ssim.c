@@ -83,10 +83,7 @@ double SSIM_1d_calcWindow_double(double* oriData, double* decData, int offset0, 
 	double yMin=other[offset0];
 	double yMax=other[offset0];
 	double xSum=0;
-	double x2Sum=0;
 	double ySum=0;
-	double y2Sum=0;
-	double xySum=0;
 
 	for(i0=offset0;i0<offset0+windowSize0;i0++){
 		np++;
@@ -99,10 +96,7 @@ double SSIM_1d_calcWindow_double(double* oriData, double* decData, int offset0, 
 		if(yMax<other[i0])
 			yMax=other[i0];
 		xSum+=data[i0];
-		x2Sum+=(data[i0]*data[i0]);
 		ySum+=other[i0];
-		y2Sum+=(other[i0]*other[i0]);
-		xySum+=(data[i0]*other[i0]);
 	}
 
 
@@ -224,10 +218,7 @@ double SSIM_2d_calcWindow_float(float* data, float *other, size_t size0, int off
 	float yMin=other[offset0+size0*offset1];
 	float yMax=other[offset0+size0*offset1];
 	double xSum=0;
-	double x2Sum=0;
 	double ySum=0;
-	double y2Sum=0;
-	double xySum=0;
 
 	for(i1=offset1;i1<offset1+windowSize1;i1++){
 	for(i0=offset0;i0<offset0+windowSize0;i0++){
@@ -242,10 +233,7 @@ double SSIM_2d_calcWindow_float(float* data, float *other, size_t size0, int off
 	  if(yMax<other[index])
 		yMax=other[index];
 	  xSum+=data[index];
-	  x2Sum+=(data[index]*data[index]);
 	  ySum+=other[index];
-	  y2Sum+=(other[index]*other[index]);
-	  xySum+=(data[index]*other[index]);
 	}
 	}
 
@@ -536,10 +524,7 @@ double SSIM_3d_calcWindow_double(double* data, double* other, size_t size1, size
 	double yMin=other[offset0+size0*(offset1+size1*offset2)];
 	double yMax=other[offset0+size0*(offset1+size1*offset2)];
 	double xSum=0;
-	double x2Sum=0;
 	double ySum=0;
-	double y2Sum=0;
-	double xySum=0;
 
 	for(i2=offset2;i2<offset2+windowSize2;i2++){
 	for(i1=offset1;i1<offset1+windowSize1;i1++){
@@ -555,14 +540,10 @@ double SSIM_3d_calcWindow_double(double* data, double* other, size_t size1, size
 		if(yMax<other[index])
 		  yMax=other[index];
 		xSum+=data[index];
-		x2Sum+=(data[index]*data[index]);
 		ySum+=other[index];
-		y2Sum+=(other[index]*other[index]);
-		xySum+=(data[index]*other[index]);
 	  }
 	}
 	}
-
 
 	double xMean=xSum/np;
 	double yMean=ySum/np;
@@ -654,10 +635,7 @@ double SSIM_4d_calcWindow_float(float* data, float* other, size_t size2, size_t 
 	float yMin=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
 	float yMax=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
 	double xSum=0;
-	double x2Sum=0;
 	double ySum=0;
-	double y2Sum=0;
-	double xySum=0;
 	for(i3=offset3;i3<offset3+windowSize3;i3++){
 	for(i2=offset2;i2<offset2+windowSize2;i2++){
 	  for(i1=offset1;i1<offset1+windowSize1;i1++){
@@ -673,10 +651,7 @@ double SSIM_4d_calcWindow_float(float* data, float* other, size_t size2, size_t 
 		  if(yMax<other[index])
 			yMax=other[index];
 		  xSum+=data[index];
-		  x2Sum+=(data[index]*data[index]);
 		  ySum+=other[index];
-		  y2Sum+=(other[index]*other[index]);
-		  xySum+=(data[index]*other[index]);
 		}
 	  }
 	}
@@ -772,10 +747,7 @@ double SSIM_4d_calcWindow_double(double* data, double* other, size_t size2, size
   double yMin=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
   double yMax=other[offset0+size0*(offset1+size1*(offset2+size2*offset3))];
   double xSum=0;
-  double x2Sum=0;
   double ySum=0;
-  double y2Sum=0;
-  double xySum=0;
   for(i3=offset3;i3<offset3+windowSize3;i3++){
     for(i2=offset2;i2<offset2+windowSize2;i2++){
       for(i1=offset1;i1<offset1+windowSize1;i1++){
@@ -791,10 +763,7 @@ double SSIM_4d_calcWindow_double(double* data, double* other, size_t size2, size
           if(yMax<other[index])
             yMax=other[index];
           xSum+=data[index];
-          x2Sum+=(data[index]*data[index]);
           ySum+=other[index];
-          y2Sum+=(other[index]*other[index]);
-          xySum+=(data[index]*other[index]);
         }
       }
     }
