@@ -25,7 +25,7 @@ void usage()
 	printf("* output data file:\n");
 	printf("	-o <output data file> : specify output data file\n");
 	printf("Examples:\n");
-	printf("	convertDataFile -I UINT32 -O FLOAT -i data.f32 -o date.u32\n");	
+	printf("	convertDataType -I UINT32 -O FLOAT -i data.u32 -o date.f32\n");	
 }
 
 int main(int argc, char * argv[])
