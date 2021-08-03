@@ -146,7 +146,7 @@ int main(int argc, char * argv[])
 		float* in_data = readFloatData_systemEndian(inputFilePath, &nbEle, &status);
 		unsigned int* out_data = (unsigned int*)malloc(sizeof(unsigned int)*nbEle);
 		for(i = 0;i < nbEle;i++)
-			out_data[i] = (unsigned int)in_data[i];
+			out_data[i] = (unsigned int)(in_data[i]+0.5f);
 		writeUIntData_inBytes(out_data, nbEle, outputFilePath, &status);
 		free(in_data);
 		free(out_data);		
@@ -156,7 +156,7 @@ int main(int argc, char * argv[])
 		float* in_data = readFloatData_systemEndian(inputFilePath, &nbEle, &status);
 		unsigned short* out_data = (unsigned short*)malloc(sizeof(unsigned short)*nbEle);
 		for(i = 0;i < nbEle;i++)
-			out_data[i] = (unsigned short)in_data[i];
+			out_data[i] = (unsigned short)(in_data[i]+0.5f);
 		writeUShortData_inBytes(out_data, nbEle, outputFilePath, &status);
 		free(in_data);
 		free(out_data);			
@@ -166,7 +166,7 @@ int main(int argc, char * argv[])
 		float* in_data = readFloatData_systemEndian(inputFilePath, &nbEle, &status);
 		int* out_data = (int*)malloc(sizeof(int)*nbEle);
 		for(i = 0;i < nbEle;i++)
-			out_data[i] = (int)in_data[i];
+			out_data[i] = (int)(in_data[i]+0.5f);
 		writeIntData_inBytes(out_data, nbEle, outputFilePath, &status);
 		free(in_data);
 		free(out_data);			
@@ -176,7 +176,7 @@ int main(int argc, char * argv[])
 		float* in_data = readFloatData_systemEndian(inputFilePath, &nbEle, &status);
 		short* out_data = (short*)malloc(sizeof(short)*nbEle);
 		for(i = 0;i < nbEle;i++)
-			out_data[i] = (short)in_data[i];
+			out_data[i] = (short)(in_data[i]+0.5f);
 		writeShortData_inBytes(out_data, nbEle, outputFilePath, &status);
 		free(in_data);
 		free(out_data);			
