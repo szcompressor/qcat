@@ -15,8 +15,9 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <rw.h>
+#include <qcat_hashtable.h>
 
-double computeEntropy(int dataType, void* data, size_t nbEle)
+double computeLosslessEntropy_8bits(int dataType, void* data, size_t nbEle)
 {
 	size_t i = 0;
 	unsigned char* bytes = (unsigned char*)data;
@@ -44,6 +45,95 @@ double computeEntropy(int dataType, void* data, size_t nbEle)
 
 	free(table);
 	return entVal;
+}
+
+double computeLosslessEntropy_32bits(void* data, size_t nbEle)
+{
+	size_t i = 0;
+	char vs[256];	
+	
+	hashtable_t* entropy_table = ht_create(nbEle);
+	float* value = (float*)data;
+	for(i=0;i<nbEle;i++)
+	{
+        lfloat buf;
+        buf.value = value[i];
+        unsigned int v = buf.ivalue;
+		
+		sprintf(vs, "%d", v);	
+		QCAT_ELEMENT* qe = ht_get(entropy_table, vs);
+		if(qe==NULL)
+		{
+			qe = (QCAT_ELEMENT*) malloc(sizeof(QCAT_ELEMENT));
+			memset(qe, 0, sizeof(QCAT_ELEMENT));
+			qe->value = value[i];
+			ht_set(entropy_table, vs, qe);
+		}
+		qe->counter ++;
+	}		
+	
+	size_t sum = nbEle;
+	size_t j = 0;
+	double entVal = 0;
+	for(i=0;i<entropy_table->capacity&&j<entropy_table->count;i++)
+	{
+		entry_t* t = entropy_table->table[i];
+		while(t!=NULL)
+		{
+			QCAT_ELEMENT* qe = (QCAT_ELEMENT*)t->value;
+			double prob = ((double)qe->counter)/sum;
+			entVal -= prob*log(prob)/log(2);
+			free(qe);
+			t = t->next;
+		}
+	}	
+	
+	ht_freeTable(entropy_table);
+	return entVal;
+}
+
+double computeLosslessEntropy_64bits(void* data, size_t nbEle)
+{
+	char vs[256];
+	size_t i = 0;
+	hashtable_t* entropy_table = ht_create(nbEle);
+	double* value = (double*)data;	
+	for(i=0;i<nbEle;i++)
+	{
+        ldouble buf;
+        buf.value = value[i];
+        unsigned long v = buf.lvalue;
+		
+		sprintf(vs, "%lu", v);	
+		QCAT_ELEMENT* qe = ht_get(entropy_table, vs);
+		if(qe==NULL)
+		{
+			qe = (QCAT_ELEMENT*) malloc(sizeof(QCAT_ELEMENT));
+			memset(qe, 0, sizeof(QCAT_ELEMENT));
+			qe->value = value[i];
+			ht_set(entropy_table, vs, qe);
+		}
+		qe->counter ++;
+	}
+	
+	size_t sum = nbEle;
+	size_t j = 0;
+	double entVal = 0;
+	for(i=0;i<entropy_table->capacity&&j<entropy_table->count;i++)
+	{
+		entry_t* t = entropy_table->table[i];
+		while(t!=NULL)
+		{
+			QCAT_ELEMENT* qe = (QCAT_ELEMENT*)t->value;
+			double prob = ((double)qe->counter)/sum;
+			entVal -= prob*log(prob)/log(2);
+			free(qe);
+			t = t->next;
+		}
+	}	
+	
+	ht_freeTable(entropy_table);
+	return entVal;	
 }
 
 QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle)
@@ -104,7 +194,11 @@ QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle)
 		property->totalByteSize = nbEle*sizeof(double);	
 	}
 	
-	property->entropy = computeEntropy(dataType, data, nbEle);
+	property->entropy_8bits = computeLosslessEntropy_8bits(dataType, data, nbEle);
+	if(property->dataType == QCAT_FLOAT)
+		property->entropy_32bits = computeLosslessEntropy_32bits(data, nbEle);
+	else if(property->dataType == QCAT_DOUBLE)
+		property->entropy_64bits = computeLosslessEntropy_64bits(data, nbEle);
 	
 	return property;
 }
@@ -117,7 +211,12 @@ void printProperty(QCAT_DataProperty* property)
 	printf("max = %f\n", property->maxValue);
 	printf("valueRange = %f\n", property->valueRange);
 	printf("avgValue = %f\n", property->avgValue);
-	printf("entropy = %f\n", property->entropy);
+	if(property->entropy_8bits!=0)
+		printf("entropy_8bits = %f\n", property->entropy_8bits);
+	if(property->entropy_32bits!=0)
+		printf("entropy_32bits = %f\n", property->entropy_32bits);
+	if(property->entropy_64bits!=0)
+		printf("entropy_64bits = %f\n", property->entropy_64bits);		
 	printf("zeromean_variance = %f\n", property->zeromean_variance);
 	
 }

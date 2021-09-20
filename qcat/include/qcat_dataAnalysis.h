@@ -39,13 +39,23 @@ typedef struct QCAT_DataProperty
 	double maxValue;
 	double valueRange;
 	double avgValue;
-	double entropy;
+	double entropy_8bits;
+	double entropy_32bits;
+	double entropy_64bits;
 	double zeromean_variance;
 	size_t totalByteSize;
 } QCAT_DataProperty;
 
 
-double computeEntropy(int dataType, void* data, size_t nbEle);
+typedef struct QCAT__ELEMENT
+{
+	double value;
+	unsigned int counter;
+} QCAT_ELEMENT;
+
+double computeLosslessEntropy(int dataType, void* data, size_t nbEle);
+double computeLosslessEntropy_32bits(void* data, size_t nbEle);
+double computeLosslessEntropy_64bits(void* data, size_t nbEle);
 QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle);
 void printProperty(QCAT_DataProperty* property);
 
