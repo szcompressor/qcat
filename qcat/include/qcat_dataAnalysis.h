@@ -56,7 +56,7 @@ typedef struct QCAT__ELEMENT
 double computeLosslessEntropy(int dataType, void* data, size_t nbEle);
 double computeLosslessEntropy_32bits(void* data, size_t nbEle);
 double computeLosslessEntropy_64bits(void* data, size_t nbEle);
-QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle);
+QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle, int entropyType);
 void printProperty(QCAT_DataProperty* property);
 
 #ifdef __cplusplus

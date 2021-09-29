@@ -13,21 +13,28 @@
 #include "ByteToolkit.h"
 #include "rw.h"
 #include "qcat_dataAnalysis.h"
+#include "math.h"
 
 int main(int argc, char * argv[])
 {
 	int status = 0;
 	char oriFilePath[640];
 
-	if(argc < 2)
+	if(argc < 3)
 	{
-		printf("Usage: printDataProperty [dataType] tgtFilePath]\n");
-		printf("Example: printDataProperty -f testfloat_8_8_128.dat\n");
+		printf("Usage: printDataProperty [dataType (-f or -d)] [tgtFilePath] [entropyType]\n");
+		printf("As for [entropyType]:\n");
+		printf("\t\t0 means don't compute entropy at all.\n");	
+		printf("\t\t1 means compute only 8bit byte entropy.\n");
+		printf("\t\t2 means compute only floating-point entropy.\n");
+		printf("\t\t3 means compute both 8bit and floating-point entropy.\n");
+		printf("Example: printDataProperty -f testfloat_8_8_128.dat 1\n");
 		exit(0);
 	}
 
 	int dataType = strcmp(argv[1],"-f") == 0 ? QCAT_FLOAT : QCAT_DOUBLE; //0: float , 1: double
 	sprintf(oriFilePath, "%s", argv[2]);
+	int entropyType = atoi(argv[3]);
 
 	int x = 1;
 	char *y = (char*)&x;
@@ -65,7 +72,7 @@ int main(int argc, char * argv[])
 		exit(0);
 	}
 	
-	QCAT_DataProperty* property = computeProperty(dataType, data, nbEle);
+	QCAT_DataProperty* property = computeProperty(dataType, data, nbEle, entropyType);
 	
 	printProperty(property);
 	

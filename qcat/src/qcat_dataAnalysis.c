@@ -136,7 +136,7 @@ double computeLosslessEntropy_64bits(void* data, size_t nbEle)
 	return entVal;	
 }
 
-QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle)
+QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle, int entropyType)
 {
 	QCAT_DataProperty* property = (QCAT_DataProperty*)malloc(sizeof(QCAT_DataProperty));
 	memset(property, 0, sizeof(QCAT_DataProperty));
@@ -194,12 +194,19 @@ QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle)
 		property->totalByteSize = nbEle*sizeof(double);	
 	}
 	
-	property->entropy_8bits = computeLosslessEntropy_8bits(dataType, data, nbEle);
-	if(property->dataType == QCAT_FLOAT)
-		property->entropy_32bits = computeLosslessEntropy_32bits(data, nbEle);
-	else if(property->dataType == QCAT_DOUBLE)
-		property->entropy_64bits = computeLosslessEntropy_64bits(data, nbEle);
-	
+	//entropyType == 0: do not compute any entropy
+	//entropyType == 1: compute lossless entropy 8 bits
+	//entropyType == 2: compute lossless entropy 32 bits , 64 bits
+	//entropyType == 3: compute lossless entropy both 8 bits and 32 bits/64 bits
+	if(entropyType == 1 || entropyType == 3)
+		property->entropy_8bits = computeLosslessEntropy_8bits(dataType, data, nbEle);
+	if(entropyType >= 2)
+	{
+		if(property->dataType == QCAT_FLOAT)
+			property->entropy_32bits = computeLosslessEntropy_32bits(data, nbEle);
+		else if(property->dataType == QCAT_DOUBLE)
+			property->entropy_64bits = computeLosslessEntropy_64bits(data, nbEle);
+	}
 	return property;
 }
 
