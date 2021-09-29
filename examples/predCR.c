@@ -68,7 +68,7 @@ int main(int argc, char * argv[])
 		predData = readDoubleData(preFilePath, &nbEle2, &status);		
 	}
 	
-	QCAT_DataProperty* property = computeProperty(dType, oriData, nbEle);	
+	QCAT_DataProperty* property = computeProperty(dType, oriData, nbEle, 1);	
 	printProperty(property);
 	
 	QCAT_CompressionResult* result = getCompressionResult(dType, errBound, quantBinCapacity, oriData, predData, property);

@@ -32,9 +32,13 @@ int main(int argc, char * argv[])
 		exit(0);
 	}
 
+	int entropyType = 0;
+	if(argc <= 3)
+		entropyType = 0;
+	else
+		entropyType = atoi(argv[3]);
 	int dataType = strcmp(argv[1],"-f") == 0 ? QCAT_FLOAT : QCAT_DOUBLE; //0: float , 1: double
 	sprintf(oriFilePath, "%s", argv[2]);
-	int entropyType = atoi(argv[3]);
 
 	int x = 1;
 	char *y = (char*)&x;
@@ -49,14 +53,13 @@ int main(int argc, char * argv[])
 		sysEndianType = 1; //BIG_ENDIAN_SYSTEM;
 		printf("This is big-endian system.\n");
 	}
-
 	unsigned char* data  = NULL;
 	size_t nbEle = 0;
 	if(dataType == QCAT_FLOAT)
 		data = (unsigned char*)readFloatData(oriFilePath, &nbEle, &status);
 	else
 		data = (unsigned char*)readDoubleData(oriFilePath, &nbEle, &status);
-
+	
 	int i = 0;
 	printf("The first 10 values are: \n");
 	if(dataType == QCAT_FLOAT)
