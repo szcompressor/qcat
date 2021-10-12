@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS=foreign
 AM_CFLAGS = -I../qcat/include -I../zstd
 
-bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType
+bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType
 
 printProperty_SOURCES=printProperty.c
 printProperty_LDADD=../qcat/.libs/libqcat.a -lm
@@ -19,6 +19,8 @@ splitComplexData_SOURCES=splitComplexData.c
 splitComplexData_LDADD=../qcat/.libs/libqcat.a -lm
 convertDataToLogDouble_SOURCES=convertDataToLogDouble.c
 convertDataToLogDouble_LDADD=../qcat/.libs/libqcat.a -lm
+convertDataToLogFloat_SOURCES=convertDataToLogFloat.c
+convertDataToLogFloat_LDADD=../qcat/.libs/libqcat.a -lm
 convertTxtToBytesDouble_SOURCES=convertTxtToBytesDouble.c
 convertTxtToBytesDouble_LDADD=../qcat/.libs/libqcat.a -lm
 convertTxtToBytesFloat_SOURCES=convertTxtToBytesFloat.c
