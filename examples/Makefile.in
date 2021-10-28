@@ -100,7 +100,8 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	computeDataPDF$(EXEEXT) computeErrPDF$(EXEEXT) \
 	calculateSSIM$(EXEEXT) predCR$(EXEEXT) \
 	convertDataType$(EXEEXT) simSZ$(EXEEXT) \
-	convertEndianType$(EXEEXT)
+	convertEndianType$(EXEEXT) computeDataAutoCorrelation$(EXEEXT) \
+	computeErrAutoCorrelation$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -130,9 +131,21 @@ changeDataSize_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_compareData_OBJECTS = compareData.$(OBJEXT)
 compareData_OBJECTS = $(am_compareData_OBJECTS)
 compareData_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_computeDataAutoCorrelation_OBJECTS =  \
+	computeDataAutoCorrelation.$(OBJEXT)
+computeDataAutoCorrelation_OBJECTS =  \
+	$(am_computeDataAutoCorrelation_OBJECTS)
+computeDataAutoCorrelation_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_computeDataPDF_OBJECTS = computeDataPDF.$(OBJEXT)
 computeDataPDF_OBJECTS = $(am_computeDataPDF_OBJECTS)
 computeDataPDF_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
+am_computeErrAutoCorrelation_OBJECTS =  \
+	computeErrAutoCorrelation.$(OBJEXT)
+computeErrAutoCorrelation_OBJECTS =  \
+	$(am_computeErrAutoCorrelation_OBJECTS)
+computeErrAutoCorrelation_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 	../zstd/.libs/libzstd.a
 am_computeErrPDF_OBJECTS = computeErrPDF.$(OBJEXT)
 computeErrPDF_OBJECTS = $(am_computeErrPDF_OBJECTS)
@@ -212,7 +225,10 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/calculateSSIM.Po ./$(DEPDIR)/changeDataSize.Po \
-	./$(DEPDIR)/compareData.Po ./$(DEPDIR)/computeDataPDF.Po \
+	./$(DEPDIR)/compareData.Po \
+	./$(DEPDIR)/computeDataAutoCorrelation.Po \
+	./$(DEPDIR)/computeDataPDF.Po \
+	./$(DEPDIR)/computeErrAutoCorrelation.Po \
 	./$(DEPDIR)/computeErrPDF.Po \
 	./$(DEPDIR)/convertBytesToTxtDouble.Po \
 	./$(DEPDIR)/convertBytesToTxtFloat.Po \
@@ -250,8 +266,9 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(computeDataPDF_SOURCES) $(computeErrPDF_SOURCES) \
-	$(convertBytesToTxtDouble_SOURCES) \
+	$(computeDataAutoCorrelation_SOURCES) \
+	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
+	$(computeErrPDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDataToLogFloat_SOURCES) $(convertDataType_SOURCES) \
@@ -265,8 +282,9 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(computeDataPDF_SOURCES) $(computeErrPDF_SOURCES) \
-	$(convertBytesToTxtDouble_SOURCES) \
+	$(computeDataAutoCorrelation_SOURCES) \
+	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
+	$(computeErrPDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDataToLogFloat_SOURCES) $(convertDataType_SOURCES) \
@@ -471,6 +489,10 @@ convertDataType_SOURCES = convertDataType.c
 convertDataType_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 convertEndianType_SOURCES = convertEndianType.c
 convertEndianType_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeDataAutoCorrelation_SOURCES = computeDataAutoCorrelation.c
+computeDataAutoCorrelation_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeErrAutoCorrelation_SOURCES = computeErrAutoCorrelation.c
+computeErrAutoCorrelation_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -570,9 +592,17 @@ compareData$(EXEEXT): $(compareData_OBJECTS) $(compareData_DEPENDENCIES) $(EXTRA
 	@rm -f compareData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(compareData_OBJECTS) $(compareData_LDADD) $(LIBS)
 
+computeDataAutoCorrelation$(EXEEXT): $(computeDataAutoCorrelation_OBJECTS) $(computeDataAutoCorrelation_DEPENDENCIES) $(EXTRA_computeDataAutoCorrelation_DEPENDENCIES) 
+	@rm -f computeDataAutoCorrelation$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(computeDataAutoCorrelation_OBJECTS) $(computeDataAutoCorrelation_LDADD) $(LIBS)
+
 computeDataPDF$(EXEEXT): $(computeDataPDF_OBJECTS) $(computeDataPDF_DEPENDENCIES) $(EXTRA_computeDataPDF_DEPENDENCIES) 
 	@rm -f computeDataPDF$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(computeDataPDF_OBJECTS) $(computeDataPDF_LDADD) $(LIBS)
+
+computeErrAutoCorrelation$(EXEEXT): $(computeErrAutoCorrelation_OBJECTS) $(computeErrAutoCorrelation_DEPENDENCIES) $(EXTRA_computeErrAutoCorrelation_DEPENDENCIES) 
+	@rm -f computeErrAutoCorrelation$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(computeErrAutoCorrelation_OBJECTS) $(computeErrAutoCorrelation_LDADD) $(LIBS)
 
 computeErrPDF$(EXEEXT): $(computeErrPDF_OBJECTS) $(computeErrPDF_DEPENDENCIES) $(EXTRA_computeErrPDF_DEPENDENCIES) 
 	@rm -f computeErrPDF$(EXEEXT)
@@ -656,7 +686,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSSIM.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changeDataSize.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compareData.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataAutoCorrelation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataPDF.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrAutoCorrelation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrPDF.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtFloat.Po@am__quote@ # am--include-marker
@@ -843,7 +875,9 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
+	-rm -f ./$(DEPDIR)/computeDataAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
+	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeErrPDF.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
@@ -911,7 +945,9 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
+	-rm -f ./$(DEPDIR)/computeDataAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
+	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeErrPDF.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po

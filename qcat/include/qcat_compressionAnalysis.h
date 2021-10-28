@@ -18,6 +18,7 @@
 #define _QCAT_COMPRESSIONANALYSIS_H
 
 #define PDF_INTERVALS 10000
+#define AUTOCORR_SIZE 100
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,6 +45,10 @@ typedef struct QCAT_CompressionResult
 
 double* computeDataPDF_int32(int dataType, void* data, size_t numOfElem, int* min, int* intervals);
 double* computeErrPDF(int dataType, void* oriData, void* decData, size_t numOfElem, double fix_interval, double* min_diff, double* err_interval, int* intervals);
+
+double* ZC_compute_autocorrelation1D_float(float* data, size_t numOfElem, double avg);
+double* ZC_compute_autocorrelation1D_double(double* data, size_t numOfElem, double avg);
+double* ZC_compute_autocorrelation1D(void* data, int dataType, size_t numOfElem);
 double calculateSSIM(void* oriData, void* decData, int dataType, size_t r4, size_t r3, size_t r2, size_t r1);
 QCAT_CompressionResult* compareData(int dataType, size_t nbEle, void* data, void* dec);
 QCAT_CompressionResult* getCompressionResult(int dataType, float errBound, int quantBinCapacity, void* origData, void* predData, QCAT_DataProperty* property);

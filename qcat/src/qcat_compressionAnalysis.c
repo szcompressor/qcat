@@ -21,6 +21,203 @@
 #include <sz_utility.h>
 #include <sz_dummy_compression.h>
 
+double* ZC_compute_autocorrelation1D_double(double* data, size_t numOfElem, double avg)
+{
+	double *autocorr = (double*)malloc((AUTOCORR_SIZE+1)*sizeof(double));
+
+	size_t i = 0;
+	int delta = 0;
+
+	if (numOfElem > 4096)
+	{
+		double cov = 0;
+		for (i = 0; i < numOfElem; i++)
+			cov += (data[i] - avg)*(data[i] - avg);
+
+		cov = cov/numOfElem;
+
+		if (cov == 0)
+		{
+			for (delta = 1; delta <= AUTOCORR_SIZE; delta++)
+				autocorr[delta] = 0;
+		}
+		else
+		{
+			for(delta = 1; delta <= AUTOCORR_SIZE; delta++)
+			{
+				double sum = 0;
+
+				for (i = 0; i < numOfElem-delta; i++)
+					sum += (data[i]-avg)*(data[i+delta]-avg);
+
+				autocorr[delta] = sum/(numOfElem-delta)/cov;
+			}
+		}
+	}
+	else
+	{
+		for (delta = 1; delta <= AUTOCORR_SIZE; delta++)
+		{
+			double avg_0 = 0;
+			double avg_1 = 0;
+
+			for (i = 0; i < numOfElem-delta; i++)
+			{
+				avg_0 += data[i];
+				avg_1 += data[i+delta];
+			}
+
+			avg_0 = avg_0 / (numOfElem-delta);
+			avg_1 = avg_1 / (numOfElem-delta);
+
+			double cov_0 = 0;
+			double cov_1 = 0;
+
+			for (i = 0; i < numOfElem-delta; i++)
+			{
+				cov_0 += (data[i]-avg_0)*(data[i]-avg_0);
+				cov_1 += (data[i+delta]-avg_1)*(data[i+delta]-avg_1);
+			}
+
+			cov_0 = cov_0/(numOfElem-delta);
+			cov_1 = cov_1/(numOfElem-delta);
+
+			cov_0 = sqrt(cov_0);
+			cov_1 = sqrt(cov_1);
+
+			if (cov_0*cov_1 == 0)
+			{
+				for (delta = 1; delta <= AUTOCORR_SIZE; delta++)
+					autocorr[delta] = 1;
+			}
+			else
+			{
+				double sum = 0;
+
+				for (i = 0; i < numOfElem-delta; i++)
+					sum += (data[i]-avg_0)*(data[i+delta]-avg_1);
+
+				autocorr[delta] = sum/(numOfElem-delta)/(cov_0*cov_1);
+			}
+		}
+	}
+
+	autocorr[0] = 1;	
+	return autocorr;
+}
+
+double* ZC_compute_autocorrelation1D_float(float* data, size_t numOfElem, double avg)
+{
+	double *autocorr = (double*)malloc((AUTOCORR_SIZE+1)*sizeof(double));
+
+	size_t i = 0;
+	int delta = 0;
+
+	if (numOfElem > 4096)
+	{
+		double cov = 0;
+		for (i = 0; i < numOfElem; i++)
+			cov += (data[i] - avg)*(data[i] - avg);
+
+		cov = cov/numOfElem;
+
+		if (cov == 0)
+		{
+			for (delta = 1; delta <= AUTOCORR_SIZE; delta++)
+				autocorr[delta] = 0;
+		}
+		else
+		{
+			for(delta = 1; delta <= AUTOCORR_SIZE; delta++)
+			{
+				double sum = 0;
+
+				for (i = 0; i < numOfElem-delta; i++)
+					sum += (data[i]-avg)*(data[i+delta]-avg);
+
+				autocorr[delta] = sum/(numOfElem-delta)/cov;
+			}
+		}
+	}
+	else
+	{
+		for (delta = 1; delta <= AUTOCORR_SIZE; delta++)
+		{
+			double avg_0 = 0;
+			double avg_1 = 0;
+
+			for (i = 0; i < numOfElem-delta; i++)
+			{
+				avg_0 += data[i];
+				avg_1 += data[i+delta];
+			}
+
+			avg_0 = avg_0 / (numOfElem-delta);
+			avg_1 = avg_1 / (numOfElem-delta);
+
+			double cov_0 = 0;
+			double cov_1 = 0;
+
+			for (i = 0; i < numOfElem-delta; i++)
+			{
+				cov_0 += (data[i]-avg_0)*(data[i]-avg_0);
+				cov_1 += (data[i+delta]-avg_1)*(data[i+delta]-avg_1);
+			}
+
+			cov_0 = cov_0/(numOfElem-delta);
+			cov_1 = cov_1/(numOfElem-delta);
+
+			cov_0 = sqrt(cov_0);
+			cov_1 = sqrt(cov_1);
+
+			if (cov_0*cov_1 == 0)
+			{
+				for (delta = 1; delta <= AUTOCORR_SIZE; delta++)
+					autocorr[delta] = 1;
+			}
+			else
+			{
+				double sum = 0;
+
+				for (i = 0; i < numOfElem-delta; i++)
+					sum += (data[i]-avg_0)*(data[i+delta]-avg_1);
+
+				autocorr[delta] = sum/(numOfElem-delta)/(cov_0*cov_1);
+			}
+		}
+	}
+
+	autocorr[0] = 1;	
+	return autocorr;
+}
+
+double* ZC_compute_autocorrelation1D(void* data, int dataType, size_t numOfElem)
+{
+	double* result = NULL;
+	size_t i = 0;
+	double avg = 0;
+	if(dataType == QCAT_FLOAT)
+	{
+		float* data_ = (float*)data;
+		for(i=0;i<numOfElem;i++)
+			avg += data_[i];
+		avg /= numOfElem;
+		result = ZC_compute_autocorrelation1D_float(data, numOfElem, avg);
+	}
+	else if(dataType == QCAT_DOUBLE)
+	{
+		double* data_ = (double*)data;
+		for(i=0;i<numOfElem;i++)
+			avg += data_[i];
+		avg /= numOfElem;		
+		result = ZC_compute_autocorrelation1D_double(data, numOfElem, avg);
+	}
+	else
+		return NULL;
+	
+	return result;
+}
+
 double calculateSSIM(void* oriData, void* decData, int dataType, size_t r4, size_t r3, size_t r2, size_t r1)
 {
 	int dim = computeDimension(0, r4, r3, r2, r1);
