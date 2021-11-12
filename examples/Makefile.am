@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS=foreign
 AM_CFLAGS = -I../qcat/include -I../zstd
 
-bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation
+bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins
 
 printProperty_SOURCES=printProperty.c
 printProperty_LDADD=../qcat/.libs/libqcat.a -lm
@@ -53,3 +53,5 @@ computeDataAutoCorrelation_SOURCES=computeDataAutoCorrelation.c
 computeDataAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeErrAutoCorrelation_SOURCES=computeErrAutoCorrelation.c
 computeErrAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+compressQuantBins_SOURCES=compressQuantBins.c
+compressQuantBins_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm

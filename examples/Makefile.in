@@ -101,7 +101,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	calculateSSIM$(EXEEXT) predCR$(EXEEXT) \
 	convertDataType$(EXEEXT) simSZ$(EXEEXT) \
 	convertEndianType$(EXEEXT) computeDataAutoCorrelation$(EXEEXT) \
-	computeErrAutoCorrelation$(EXEEXT)
+	computeErrAutoCorrelation$(EXEEXT) compressQuantBins$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -131,6 +131,10 @@ changeDataSize_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_compareData_OBJECTS = compareData.$(OBJEXT)
 compareData_OBJECTS = $(am_compareData_OBJECTS)
 compareData_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_compressQuantBins_OBJECTS = compressQuantBins.$(OBJEXT)
+compressQuantBins_OBJECTS = $(am_compressQuantBins_OBJECTS)
+compressQuantBins_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_computeDataAutoCorrelation_OBJECTS =  \
 	computeDataAutoCorrelation.$(OBJEXT)
 computeDataAutoCorrelation_OBJECTS =  \
@@ -225,7 +229,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/calculateSSIM.Po ./$(DEPDIR)/changeDataSize.Po \
-	./$(DEPDIR)/compareData.Po \
+	./$(DEPDIR)/compareData.Po ./$(DEPDIR)/compressQuantBins.Po \
 	./$(DEPDIR)/computeDataAutoCorrelation.Po \
 	./$(DEPDIR)/computeDataPDF.Po \
 	./$(DEPDIR)/computeErrAutoCorrelation.Po \
@@ -266,6 +270,7 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
+	$(compressQuantBins_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
 	$(computeErrPDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
@@ -282,6 +287,7 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
+	$(compressQuantBins_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
 	$(computeErrPDF_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
@@ -493,6 +499,8 @@ computeDataAutoCorrelation_SOURCES = computeDataAutoCorrelation.c
 computeDataAutoCorrelation_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeErrAutoCorrelation_SOURCES = computeErrAutoCorrelation.c
 computeErrAutoCorrelation_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+compressQuantBins_SOURCES = compressQuantBins.c
+compressQuantBins_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -592,6 +600,10 @@ compareData$(EXEEXT): $(compareData_OBJECTS) $(compareData_DEPENDENCIES) $(EXTRA
 	@rm -f compareData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(compareData_OBJECTS) $(compareData_LDADD) $(LIBS)
 
+compressQuantBins$(EXEEXT): $(compressQuantBins_OBJECTS) $(compressQuantBins_DEPENDENCIES) $(EXTRA_compressQuantBins_DEPENDENCIES) 
+	@rm -f compressQuantBins$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(compressQuantBins_OBJECTS) $(compressQuantBins_LDADD) $(LIBS)
+
 computeDataAutoCorrelation$(EXEEXT): $(computeDataAutoCorrelation_OBJECTS) $(computeDataAutoCorrelation_DEPENDENCIES) $(EXTRA_computeDataAutoCorrelation_DEPENDENCIES) 
 	@rm -f computeDataAutoCorrelation$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(computeDataAutoCorrelation_OBJECTS) $(computeDataAutoCorrelation_LDADD) $(LIBS)
@@ -686,6 +698,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSSIM.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changeDataSize.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compareData.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compressQuantBins.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataAutoCorrelation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataPDF.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrAutoCorrelation.Po@am__quote@ # am--include-marker
@@ -875,6 +888,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
+	-rm -f ./$(DEPDIR)/compressQuantBins.Po
 	-rm -f ./$(DEPDIR)/computeDataAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
@@ -945,6 +959,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
+	-rm -f ./$(DEPDIR)/compressQuantBins.Po
 	-rm -f ./$(DEPDIR)/computeDataAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
