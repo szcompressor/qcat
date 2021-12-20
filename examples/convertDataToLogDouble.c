@@ -22,7 +22,7 @@ int main(int argc, char * argv[])
     if(argc < 3)
     {
 		printf("Test case: convertDataToLogDouble [srcFilePath] newsize [tgtFilePath]\n");
-		printf("Example: convertDataToLogDouble testfloat_8_8_128.dat -1 testfloat_8_8_128.xls\n");
+		printf("Example: convertDataToLogDouble testfloat_8_8_128.dat -1 testfloat_8_8_128.log\n");
 		exit(0);
     }
    
