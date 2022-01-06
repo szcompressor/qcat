@@ -1,15 +1,17 @@
-cmake_minimum_required (VERSION 3.1.3)
-project (qcat)
+cmake_minimum_required (VERSION 3.12)
+project (qcat VERSION 1.3.0)
+include(GNUInstallDirs)
+find_package(PkgConfig)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -lm")
+option(QCAT_USE_BUNDLES "prefer bundled versions of sofware" ON)
+option(BUILD_SHARED_LIBS "build shared libraies instead of static ones" ON)
+if(NOT QCAT_USE_BUNDLES)
+  pkg_search_module(ZSTD IMPORTED_TARGET GLOBAL libzstd)
+endif()
 
-set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set (EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-set (LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
-
-include_directories (
-	${CMAKE_CURRENT_SOURCE_DIR}/qcat/include 
-	)
+if(NOT ZSTD_FOUND)
+  add_subdirectory(zstd)
+endif()
 
 add_subdirectory (qcat)
 add_subdirectory (examples)
