@@ -1,0 +1,87 @@
+add_library(zstd
+  common/bitstream.h
+  common/compiler.h
+  common/cpu.h
+  common/debug.c
+  common/debug.h
+  common/entropy_common.c
+  common/error_private.c
+  common/error_private.h
+  common/fse.h
+  common/fse_decompress.c
+  common/huf.h
+  common/mem.h
+  common/pool.c
+  common/pool.h
+  common/threading.c
+  common/threading.h
+  common/xxhash.c
+  common/xxhash.h
+  common/zstd_common.c
+  common/zstd_errors.h
+  common/zstd_internal.h
+  compress/fse_compress.c
+  compress/hist.c
+  compress/hist.h
+  compress/huf_compress.c
+  compress/zstd_compress.c
+  compress/zstd_compress_internal.h
+  compress/zstd_double_fast.c
+  compress/zstd_double_fast.h
+  compress/zstd_fast.c
+  compress/zstd_fast.h
+  compress/zstd_lazy.c
+  compress/zstd_lazy.h
+  compress/zstd_ldm.c
+  compress/zstd_ldm.h
+  compress/zstd_opt.c
+  compress/zstd_opt.h
+  compress/zstdmt_compress.c
+  compress/zstdmt_compress.h
+  decompress/huf_decompress.c
+  decompress/zstd_decompress.c
+  deprecated/zbuff.h
+  deprecated/zbuff_common.c
+  deprecated/zbuff_compress.c
+  deprecated/zbuff_decompress.c
+  dictBuilder/cover.c
+  dictBuilder/divsufsort.c
+  dictBuilder/divsufsort.h
+  dictBuilder/zdict.c
+  dictBuilder/zdict.h
+  legacy/zstd_legacy.h
+  legacy/zstd_v01.c
+  legacy/zstd_v01.h
+  legacy/zstd_v02.c
+  legacy/zstd_v02.h
+  legacy/zstd_v03.c
+  legacy/zstd_v03.h
+  legacy/zstd_v04.c
+  legacy/zstd_v04.h
+  legacy/zstd_v05.c
+  legacy/zstd_v05.h
+  legacy/zstd_v06.c
+  legacy/zstd_v06.h
+  legacy/zstd_v07.c
+  legacy/zstd_v07.h
+  zstd.h
+  )
+target_include_directories(zstd
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/common
+  )
+target_include_directories(zstd
+  PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+
+
+install(TARGETS zstd EXPORT QcatTargets)
+install(FILES 
+    zstd.h
+    dictBuilder/zdict.h
+    common/zstd_errors.h
+  TYPE INCLUDE)
+configure_file(libzstd.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libzstd.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libzstd.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pkgconfig)
