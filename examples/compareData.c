@@ -19,19 +19,22 @@ int main(int argc, char * argv[])
     int status = 0;
     char dataType[4];
     char oriFilePath[640], decFilePath[640];
-    
-    if(argc < 3)
+    if(argc < 4)
     {
-		printf("Test case: compareData [datatype (-f or -d)] [original data file] [decompressed data file]\n");
+		printf("Test case: compareData [datatype (-f or -d)] [original data file] [decompressed data file] <-p>\n");
 		printf("			-f means single precision; -d means double precision\n");
-		printf("Example: compareData -f testfloat_8_8_128.dat testfloat_8_8_128.dat.sz.out \n");
+		printf("Example1: compareData -f testfloat_8_8_128.dat testfloat_8_8_128.dat.sz.out \n");
+		printf("Example2: compareData -f testfloat_8_8_128.dat testfloat_8_8_128.dat.sz.out -p\n");
+		printf("Note: -p is optional. It indicates printing the compression errors in a text file.\n");
 		exit(0);
     }
-   
+    int printError = 0;
     sprintf(dataType, "%s", argv[1]);
     sprintf(oriFilePath, "%s", argv[2]);
     sprintf(decFilePath, "%s", argv[3]);
-   
+    if(argc == 5)
+	    printError = 1;
+    int data_type = strcmp(dataType, "-f")==0? sizeof(float): sizeof(double);
     int x = 1;
     char *y = (char*)&x;
 
@@ -49,6 +52,7 @@ int main(int argc, char * argv[])
    
     if(strcmp(dataType, "-f")==0) //single precision
 	{
+		float* errors = NULL;
 		float *ori_data = NULL, *dec_data = NULL;
 		size_t nbEle = 0, nbEle2 = 0;
 		printf("reading data from %s \n", oriFilePath);
@@ -62,6 +66,8 @@ int main(int argc, char * argv[])
 			exit(0);
 		}
 		
+    		if(printError)
+			errors = (float*)malloc(data_type*nbEle);
 		size_t i = 0;
 		double Max = 0, Min = 0, diffMax = 0;
 		Max = ori_data[0];
@@ -88,8 +94,10 @@ int main(int argc, char * argv[])
 		{
 			if (Max < ori_data[i]) Max = ori_data[i];
 			if (Min > ori_data[i]) Min = ori_data[i];
-
-			float err = fabs(dec_data[i] - ori_data[i]);
+			float err_ = dec_data[i] - ori_data[i];
+			if(printError)
+				errors[i] = err_;
+			float err = fabs(err_);
 			if(ori_data[i]!=0)
 			{
 				relerr = err/fabs(ori_data[i]);
@@ -125,11 +133,22 @@ int main(int argc, char * argv[])
 		printf ("normErr = %f, normErr_norm = %f\n", normErr, normErr_norm);
 		printf ("pearson coeff = %f\n", acEff);
 
+		if(printError)
+		{
+			char errFile[644];
+			sprintf(errFile, "%s.err", decFilePath);
+			printf ("Printing the errors into a file: %s ....\n", errFile);
+			writeFloatData(errors, nbEle, errFile, &status);
+			printf ("Done\n");
+		}
+		
 		free(ori_data);
-		free(dec_data);		
+		free(dec_data);	
+		free(errors);
 	} 
 	else
 	{
+		double* errors = NULL;
 		double *ori_data = NULL, *dec_data = NULL;
 		size_t nbEle = 0, nbEle2 = 0;
 		printf("reading data from %s \n", oriFilePath);
@@ -143,6 +162,8 @@ int main(int argc, char * argv[])
 			exit(0);
 		}		
 
+    		if(printError)
+			errors = (double*)malloc(data_type*nbEle);
 		size_t i = 0;
 		double Max = 0, Min = 0, diffMax = 0;
 		Max = ori_data[0];
@@ -170,7 +191,10 @@ int main(int argc, char * argv[])
 			if (Max < ori_data[i]) Max = ori_data[i];
 			if (Min > ori_data[i]) Min = ori_data[i];
 
-			float err = fabs(dec_data[i] - ori_data[i]);
+			float err_ = dec_data[i] - ori_data[i];
+			if(printError)
+				errors[i] = err_;
+			float err = fabs(err_);
 			if(ori_data[i]!=0)
 			{
 				relerr = err/fabs(ori_data[i]);
@@ -206,8 +230,18 @@ int main(int argc, char * argv[])
 		printf ("normErr = %f, normErr_norm = %f\n", normErr, normErr_norm);
 		printf ("pearson coeff = %f\n", acEff);
 
+		if(printError)
+		{
+			char errFile[644];
+			sprintf(errFile, "%s.err", decFilePath);
+			printf ("Printing the errors into a file: %s ....\n", errFile);
+			writeDoubleData(errors, nbEle, errFile, &status);
+			printf ("Done\n");
+		}
+
 		free(ori_data);
 		free(dec_data);
+		free(errors);
 	}
 
     
