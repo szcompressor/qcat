@@ -35,7 +35,7 @@ double computeLosslessEntropy_8bits(int dataType, void* data, size_t nbEle)
 		table[index]++;
 	}
 		
-	size_t sum = nbEle*sizeof(float);
+	size_t sum = dataType==QCAT_FLOAT?nbEle*sizeof(float):nbEle*sizeof(double);
 	for (i = 0; i<table_size; i++)
 		if (table[i] != 0)
 		{
