@@ -43,7 +43,6 @@ typedef struct QCAT_CompressionResult
 	double ssim;
 } QCAT_CompressionResult;
 
-double* computeDataPDF_int32(int dataType, void* data, size_t numOfElem, int* min, int* intervals);
 double* computeErrPDF(int dataType, void* oriData, void* decData, size_t numOfElem, double fix_interval, double* min_diff, double* err_interval, int* intervals);
 
 double* ZC_compute_autocorrelation1D_float(float* data, size_t numOfElem, double avg);

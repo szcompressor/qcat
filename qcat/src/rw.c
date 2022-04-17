@@ -1008,7 +1008,7 @@ void writeDoubleData(double *data, size_t nbEle, char *tgtFilePath, int *status)
     
     for(i = 0;i<nbEle;i++)
 	{
-		sprintf(s,"%.20G\n",data[i]);
+		sprintf(s,"%.20f\n",data[i]);
 		fputs(s, pFile);
 	}
     
@@ -1032,7 +1032,7 @@ void writeFloatData(float *data, size_t nbEle, char *tgtFilePath, int *status)
 	{
 		//printf("i=%d\n",i);
 		//printf("data[i]=%f\n",data[i]);
-		sprintf(s,"%.30G\n",data[i]);
+		sprintf(s,"%.10f\n",data[i]);
 		fputs(s, pFile);
 	}
     
@@ -1371,7 +1371,7 @@ char *extractFileNameFromPath(char *filePath)
     return q;
 }
 
-void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, int pdf_intervals, double* pdfData)
+void writePDFData_error(char* tgtFilePath, double err_minValue, double err_interval, int pdf_intervals, double* pdfData)
 {
 	size_t i = 0;
 	if(err_interval==0)
@@ -1404,20 +1404,36 @@ void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, i
 	
 }
 
-void writePDFData_int32(char* tgtFilePath, double min, int intervals, double* pdfData)
+void writePDFData_raw(int dtype, char* tgtFilePath, float min, int intervals, double* pdfData, double unit)
 {
 	size_t i = 0;
 	char** ss = (char**)malloc((intervals+1)*sizeof(char*));
 	ss[0] = (char*)malloc(sizeof(char)*QCAT_BUFS);
-	sprintf(ss[0], "x errpdf\n");
-	for(i=0;i<intervals;i++)
+	sprintf(ss[0], "x \"\"\n");
+	
+	if(dtype==QCAT_INT32)
 	{
-		//printf("%d\n", i);
-		ss[i+1] = (char*)malloc(sizeof(char)*QCAT_BUFS);
-		double x = min+i;
-		if(pdfData[i]!=0)
-			sprintf(ss[i+1], "%.10G %.10G\n", x, pdfData[i]);
+		for(i=0;i<intervals;i++)
+		{
+			//printf("%d\n", i);
+			ss[i+1] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+			float x = min+i;
+			if(pdfData[i]!=0)
+				sprintf(ss[i+1], "%.10G %.10G\n", x, pdfData[i]);
+		}		
 	}
+	else if(dtype==QCAT_FLOAT)
+	{
+		for(i=0;i<intervals;i++)
+		{
+			//printf("%d\n", i);
+			ss[i+1] = (char*)malloc(sizeof(char)*QCAT_BUFS);
+			float x = min+unit*i;
+			if(pdfData[i]!=0)
+				sprintf(ss[i+1], "%.10G %.10G\n", x, pdfData[i]);
+		}			
+	}
+
 	RW_writeStrings(intervals+1, ss, tgtFilePath);
 	for(i=0;i<intervals+1;i++)
 		free(ss[i]);

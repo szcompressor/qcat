@@ -100,7 +100,7 @@ int main(int argc, char * argv[])
 	//write pdf to a file
 	char* tgtPDFDataPath = (char*)malloc(QCAT_BUFS_LONG);
 	sprintf(tgtPDFDataPath, "%s.dis", decFilePath);
-	writePDFData(tgtPDFDataPath, min_diff, err_interval, intervals, pdf);
+	writePDFData_error(tgtPDFDataPath, min_diff, err_interval, intervals, pdf);
 	free(tgtPDFDataPath);
 
 	//generate gnuplot script file

@@ -227,3 +227,121 @@ void printProperty(QCAT_DataProperty* property)
 	printf("zeromean_variance = %f\n", property->zeromean_variance);
 	
 }
+
+double* computeDataPDF_int32(void* data, size_t numOfElem, int* min, int* intervals)
+{
+	size_t i = 0;
+	int index = 0;
+	
+	double* dataPDF = NULL;
+	int* intData = (int*)data;
+	int minData = intData[0];
+	int maxData = intData[0];
+	for (i = 0; i < numOfElem; i++)
+	{
+		if(minData > intData[i])
+			minData = intData[i];
+		if(maxData < intData[i])
+			maxData = intData[i];
+	}
+	int range = maxData - minData;
+	
+	*min = minData;
+	int pdf_intervals = range + 1;
+	
+	dataPDF = (double*)malloc(sizeof(double)*1000000);
+	memset(dataPDF, 0, 1000000*sizeof(double));			
+	for (i = 0; i < numOfElem; i++)
+	{
+		index = intData[i] - minData;
+		dataPDF[index] += 1;
+	}
+
+	for (i = 0; i < pdf_intervals; i++)
+		dataPDF[i]/=numOfElem;	
+	
+	*intervals = pdf_intervals;
+	return dataPDF;		
+
+}
+
+double* computeDataPDF_float(float* data, size_t numOfElem, int intervals, float* min, double* unit, float mint, float maxt)
+{
+	size_t i = 0;
+	int index = 0;
+	int threshold = 0;
+	double* dataPDF = NULL;
+	dataPDF = (double*)malloc(sizeof(double)*intervals);
+	memset(dataPDF, 0, intervals*sizeof(double));	
+	
+	if(mint<maxt)
+		threshold = 1;
+		
+	if(threshold==0) //use all data points
+	{
+		float minData = data[0];
+		float maxData = data[0];
+		for (i = 0; i < numOfElem; i++)
+		{
+			if(minData > data[i])
+				minData = data[i];
+			if(maxData < data[i])
+				maxData = data[i];
+		}
+		float range = maxData - minData;
+		
+		*min = minData;
+		*unit= range/intervals;
+		
+		for (i = 0; i < numOfElem; i++)
+		{
+			index = (int)((data[i] - minData)/(*unit));
+			if(index==intervals)
+				index--;
+			dataPDF[index] += 1;
+		}		
+	}
+	else //focus on only selected value range [min]~[max]
+	{
+		float minData = 3E38f;
+		float maxData = -3E38f;
+		for (i = 0; i < numOfElem; i++)
+		{
+			if(data[i]>=mint && data[i]<=maxt)
+			{
+				if(minData > data[i])
+					minData = data[i];
+				if(maxData < data[i])
+					maxData = data[i];				
+			}
+		}
+		
+		if(maxData==-3E38f || minData==3E38f || maxData==minData)
+		{
+			printf("Error: no data points or only 1 data point in ([min],[max]).\n");
+			exit(0);
+		}
+		
+		float range = maxData - minData;
+		
+		*min = minData;
+		*unit= range/intervals;
+		
+		for (i = 0; i < numOfElem; i++)
+		{
+			if(data[i]>=mint && data[i]<=maxt)
+			{
+				index = (int)((data[i] - minData)/(*unit));
+				if(index==intervals)
+					index--;
+				dataPDF[index] += 1;				
+			}
+		}				
+	}
+
+	for (i = 0; i < intervals; i++)
+		dataPDF[i]/=numOfElem;	
+	
+	return dataPDF;		
+
+}

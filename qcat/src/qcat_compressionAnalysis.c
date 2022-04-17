@@ -273,42 +273,6 @@ double calculateSSIM(void* oriData, void* decData, int dataType, size_t r4, size
 }
 
 
-double* computeDataPDF_int32(int dataType, void* data, size_t numOfElem, int* min, int* intervals)
-{
-	size_t i = 0;
-	int index = 0;
-	double* dataPDF = NULL;
-	int* intData = (int*)data;
-	int minData = intData[0];
-	int maxData = intData[0];
-	for (i = 0; i < numOfElem; i++)
-	{
-		if(minData > intData[i])
-			minData = intData[i];
-		if(maxData < intData[i])
-			maxData = intData[i];
-	}
-	int range = maxData - minData;
-	
-	*min = minData;
-	int pdf_intervals = range + 1;
-	
-	dataPDF = (double*)malloc(sizeof(double)*1000000);
-	memset(dataPDF, 0, 1000000*sizeof(double));			
-	for (i = 0; i < numOfElem; i++)
-	{
-		index = intData[i] - minData;
-		dataPDF[index] += 1;
-	}
-
-	for (i = 0; i < pdf_intervals; i++)
-		dataPDF[i]/=numOfElem;	
-	
-	*intervals = pdf_intervals;
-	return dataPDF;
-}
-
-
 double* computeErrPDF(int dataType, void* oriData, void* decData, size_t numOfElem, double fix_interval, double* min_diff, double* err_interval, int* intervals)
 {
 	size_t i = 0;

@@ -153,8 +153,8 @@ void RW_writeData_genuplotImage(void *data, int dataType, size_t r2, size_t r1, 
 int RW_writeStrings(int string_size, char **string, char *tgtFilePath);
 char* extractDirFromPath(char* filePath);
 char *extractFileNameFromPath(char *filePath);
-void writePDFData(char* tgtFilePath, double err_minValue, double err_interval, int pdf_intervals, double* pdfData);
-void writePDFData_int32(char* tgtFilePath, double min, int intervals, double* pdfData);
+void writePDFData_error(char* tgtFilePath, double err_minValue, double err_interval, int pdf_intervals, double* pdfData);
+void writePDFData_raw(int dtype, char* tgtFilePath, float min, int intervals, double* pdfData, double unit);
 
 #ifdef __cplusplus
 }

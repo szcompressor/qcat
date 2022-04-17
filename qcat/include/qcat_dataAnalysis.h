@@ -58,7 +58,8 @@ double computeLosslessEntropy_32bits(void* data, size_t nbEle);
 double computeLosslessEntropy_64bits(void* data, size_t nbEle);
 QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle, int entropyType);
 void printProperty(QCAT_DataProperty* property);
-
+double* computeDataPDF_int32(void* data, size_t numOfElem, int* min, int* intervals);
+double* computeDataPDF_float(float* data, size_t numOfElem, int intervals, float* min, double* unit, float mint, float maxt);
 #ifdef __cplusplus
 }
 #endif
