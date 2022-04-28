@@ -56,9 +56,9 @@ double computeLosslessEntropy_32bits(void* data, size_t nbEle)
 	float* value = (float*)data;
 	for(i=0;i<nbEle;i++)
 	{
-        lfloat buf;
-        buf.value = value[i];
-        unsigned int v = buf.ivalue;
+        	lfloat buf;
+		buf.value = value[i];
+ 		unsigned int v = buf.ivalue;
 		
 		sprintf(vs, "%d", v);	
 		QCAT_ELEMENT* qe = ht_get(entropy_table, vs);
@@ -143,6 +143,10 @@ QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle, int e
 	
 	property->dataType = dataType;
 	property->numOfElem = nbEle;
+	property->entropy_8bits = -1;
+	property->entropy_32bits = -1;
+	property->entropy_64bits = -1;
+
 	size_t i = 0;
 	if(dataType == QCAT_FLOAT)
 	{
@@ -218,11 +222,11 @@ void printProperty(QCAT_DataProperty* property)
 	printf("max = %f\n", property->maxValue);
 	printf("valueRange = %f\n", property->valueRange);
 	printf("avgValue = %f\n", property->avgValue);
-	if(property->entropy_8bits!=0)
+	if(property->entropy_8bits>=0)
 		printf("entropy_8bits = %f\n", property->entropy_8bits);
-	if(property->entropy_32bits!=0)
+	if(property->entropy_32bits>=0)
 		printf("entropy_32bits = %f\n", property->entropy_32bits);
-	if(property->entropy_64bits!=0)
+	if(property->entropy_64bits>=0)
 		printf("entropy_64bits = %f\n", property->entropy_64bits);		
 	printf("zeromean_variance = %f\n", property->zeromean_variance);
 	
