@@ -15,15 +15,15 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, char* imageFileName, float range_min, float range_max)
+char** genGnuplotScript_sliceImage(char* dataFileName, int trim, size_t r2, size_t r1, char* imageFileName, float range_min, float range_max, int* lineCount)
 {
-	char** lines = (char**)malloc(10*sizeof(char*));
+	char** lines = (char**)malloc(16*sizeof(char*));
 	size_t s1, s2;
 	s1 = r1<900?900:r1;
 	s2 = r2<900?900:r2;
 	
 	int i = 0;
-	for(i=0;i<10;i++)
+	for(i=0;i<17;i++)
 	{
 		lines[i] = (char*)malloc(250);
 		memset(lines[i], 0, 250);
@@ -42,7 +42,23 @@ char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, cha
 	sprintf(lines[6], "set xrange [0:%zu]\n", r1);
 	sprintf(lines[7], "set yrange [%zu:0]\n", r2);
 	sprintf(lines[8], "set palette rgbformulae 33,13,10\n");
-	sprintf(lines[9], "splot \"%s\"", dataFileName);
+	if(trim)
+	{
+		sprintf(lines[9], "set lmargin 0\n");
+		sprintf(lines[10], "set rmargin 0\n");
+		sprintf(lines[11], "set tmargin 0\n");
+		sprintf(lines[12], "set bmargin 0\n");
+		sprintf(lines[13], "unset xtics\n");
+		sprintf(lines[14], "unset ytics\n");
+		sprintf(lines[15], "unset colorbox\n");
+		sprintf(lines[16], "splot \"%s\"", dataFileName);
+		*lineCount = 17;
+	}
+	else
+	{
+		sprintf(lines[9], "splot \"%s\"", dataFileName);
+		*lineCount = 10;
+	}
 
 	return lines;
 }

@@ -15,7 +15,7 @@ int checkStartsWith(char* str, const char* key)
 }
 
 /* Create a new hashtable. */
-hashtable_t *ht_create( int capacity ) {
+hashtable_t *ht_create(unsigned int capacity ) {
 
 	hashtable_t *hashtable = NULL;
 	int i;
@@ -28,9 +28,12 @@ hashtable_t *ht_create( int capacity ) {
 	}
 
 	/* Allocate pointers to the head nodes. */
-	if( ( hashtable->table = (entry_t**)malloc( sizeof( entry_t * ) * capacity ) ) == NULL ) {
+	hashtable->table = (entry_t**)malloc( sizeof( entry_t * ) * capacity ) ;
+	
+	if( hashtable->table  == NULL ) {
 		return NULL;
 	}
+	memset(hashtable->table, 0, sizeof( entry_t * ) * capacity);
 	for( i = 0; i < capacity; i++ ) {
 		hashtable->table[i] = NULL;
 	}
@@ -42,7 +45,7 @@ hashtable_t *ht_create( int capacity ) {
 }
 
 /* Hash a string for a particular hash table. */
-int ht_hash( hashtable_t *hashtable, const char *key ) {
+inline int ht_hash( hashtable_t *hashtable, const char *key ) {
 
 	unsigned long int hashval = 0;
 	int i = 0;
@@ -78,7 +81,7 @@ entry_t *ht_newpair( const char *key, void *value ) {
 }
 
 /* Insert a key-value pair into a hash table. */
-void ht_set( hashtable_t *hashtable, const char *key, void *value ) {
+inline void ht_set( hashtable_t *hashtable, const char *key, void *value ) {
 	int bin = 0;
 	entry_t *newpair = NULL;
 	entry_t *next = NULL;
@@ -123,7 +126,7 @@ void ht_set( hashtable_t *hashtable, const char *key, void *value ) {
 }
 
 /* Retrieve a key-value pair from a hash table. */
-void *ht_get( hashtable_t *hashtable, const char *key ) {
+inline void *ht_get( hashtable_t *hashtable, const char *key ) {
 	int bin = 0;
 	entry_t *pair;
 

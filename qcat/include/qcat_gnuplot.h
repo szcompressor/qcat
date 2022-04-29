@@ -20,8 +20,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-char** genGnuplotScript_sliceImage(char* dataFileName, size_t r2, size_t r1, char* imageFileName, float range_min, float range_max);
+char** genGnuplotScript_sliceImage(char* dataFileName, int trim, size_t r2, size_t r1, char* imageFileName, float range_min, float range_max, int* lineCount);
 float* computeSlice2DLog_float(size_t r2, size_t r1, float* data);
 float* computeSlice3DLog_float(int sliceNumber, size_t r3, size_t r2, size_t r1, float* data);
 double* computeSlice2DLog_double(size_t r2, size_t r1, double* data);

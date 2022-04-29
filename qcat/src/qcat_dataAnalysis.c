@@ -17,6 +17,31 @@
 #include <rw.h>
 #include <qcat_hashtable.h>
 
+//#include <sys/time.h>      /* For gettimeofday(), in microseconds */
+//#include <time.h>          /* For time(), in seconds */
+
+//struct timeval startTime;
+//struct timeval endTime;  /* Start and end times */
+//struct timeval costStart; /*only used for recording the cost*/
+//double totalCost = 0;
+
+
+/*void cost_start()
+{
+        totalCost = 0;
+        gettimeofday(&costStart, NULL);
+}
+
+void cost_end()
+{
+        double elapsed;
+        struct timeval costEnd;
+        gettimeofday(&costEnd, NULL);
+        elapsed = ((costEnd.tv_sec*1000000+costEnd.tv_usec)-(costStart.tv_sec*1000000+costStart.tv_usec))/1000000.0;
+        totalCost += elapsed;
+}
+*/
+
 double computeLosslessEntropy_8bits(int dataType, void* data, size_t nbEle)
 {
 	size_t i = 0;
@@ -52,8 +77,10 @@ double computeLosslessEntropy_32bits(void* data, size_t nbEle)
 	size_t i = 0;
 	char vs[256];	
 	
+	
 	hashtable_t* entropy_table = ht_create(nbEle);
 	float* value = (float*)data;
+//	cost_start();
 	for(i=0;i<nbEle;i++)
 	{
         	lfloat buf;
@@ -66,15 +93,18 @@ double computeLosslessEntropy_32bits(void* data, size_t nbEle)
 		{
 			qe = (QCAT_ELEMENT*) malloc(sizeof(QCAT_ELEMENT));
 			memset(qe, 0, sizeof(QCAT_ELEMENT));
-			qe->value = value[i];
+			//qe->value = value[i];
 			ht_set(entropy_table, vs, qe);
 		}
 		qe->counter ++;
 	}		
+//	cost_end();
+//	printf("cost1=%f\n", totalCost);	
 	
 	size_t sum = nbEle;
 	size_t j = 0;
 	double entVal = 0;
+//	cost_start();
 	for(i=0;i<entropy_table->capacity&&j<entropy_table->count;i++)
 	{
 		entry_t* t = entropy_table->table[i];
@@ -87,7 +117,8 @@ double computeLosslessEntropy_32bits(void* data, size_t nbEle)
 			t = t->next;
 		}
 	}	
-	
+//	cost_end();
+//	printf("cost2=%f\n", totalCost);
 	ht_freeTable(entropy_table);
 	return entVal;
 }
@@ -98,6 +129,8 @@ double computeLosslessEntropy_64bits(void* data, size_t nbEle)
 	size_t i = 0;
 	hashtable_t* entropy_table = ht_create(nbEle);
 	double* value = (double*)data;	
+	
+//	cost_start();
 	for(i=0;i<nbEle;i++)
 	{
         ldouble buf;
@@ -110,15 +143,18 @@ double computeLosslessEntropy_64bits(void* data, size_t nbEle)
 		{
 			qe = (QCAT_ELEMENT*) malloc(sizeof(QCAT_ELEMENT));
 			memset(qe, 0, sizeof(QCAT_ELEMENT));
-			qe->value = value[i];
+			//qe->value = value[i];
 			ht_set(entropy_table, vs, qe);
 		}
 		qe->counter ++;
 	}
+//	cost_end();
+//	printf("cost1=%f\n", totalCost);
 	
 	size_t sum = nbEle;
 	size_t j = 0;
 	double entVal = 0;
+//	cost_start();
 	for(i=0;i<entropy_table->capacity&&j<entropy_table->count;i++)
 	{
 		entry_t* t = entropy_table->table[i];
@@ -131,9 +167,83 @@ double computeLosslessEntropy_64bits(void* data, size_t nbEle)
 			t = t->next;
 		}
 	}	
-	
+//	cost_end();
+//	printf("cost2=%f\n", totalCost);
 	ht_freeTable(entropy_table);
 	return entVal;	
+}
+
+double computeLosslessEntropy_32bits_fast(void* data, size_t nbEle)
+{
+	size_t i = 0;
+	char vs[256];	
+	
+	int buffer_capacity = 100000;
+	int buffer_cell_length = 200000;
+	
+	int buffer_index = 0;
+	size_t cell_index = 0;
+	unsigned int **buffer = (unsigned int**)malloc(sizeof(unsigned int*)*buffer_capacity);
+	memset(buffer,0,sizeof(unsigned int*)*buffer_capacity);
+	buffer[0] = (unsigned int*)malloc(sizeof(unsigned int)*buffer_cell_length);
+	buffer_index++;
+	unsigned int *p = buffer[0];
+	
+	hashtable_t* entropy_table = ht_create(nbEle);
+	float* value = (float*)data;
+	
+//	cost_start();
+	for(i=0;i<nbEle;i++)
+	{
+		lfloat buf;
+		buf.value = value[i];
+		unsigned int v = buf.ivalue;
+
+		sprintf(vs, "%d", v);	
+
+		unsigned int* qe = ht_get(entropy_table, vs);
+		if(qe==NULL)
+		{
+			if(cell_index==buffer_cell_length)
+			{
+				p = buffer[buffer_index++] = (unsigned int*)malloc(sizeof(unsigned int)*buffer_cell_length);
+				cell_index = 0;
+			}	
+			qe = &(p[cell_index++]);
+			ht_set(entropy_table, vs, qe);	
+		}
+		(*qe) ++;
+	}
+//	cost_end();
+//	printf("cost1=%f\n", totalCost);
+	
+	size_t sum = nbEle;
+	size_t j = 0;
+	double entVal = 0;
+
+//	cost_start();
+	for(i=0;i<entropy_table->capacity&&j<entropy_table->count;i++)
+	{
+		entry_t* t = entropy_table->table[i];
+		while(t!=NULL)
+		{
+			unsigned int* qe = (unsigned int*)t->value;
+			entVal += (*qe)*log2((double)(*qe));
+			t = t->next;
+		}
+	}	
+	
+	entVal/=sum;
+	entVal = log2(sum) - entVal;
+
+//	cost_end();
+//	printf("cost2=%f\n", totalCost);
+	
+	for(i=0;i<buffer_index;i++)
+		free(buffer[i]);
+	free(buffer);
+	ht_freeTable(entropy_table);
+	return entVal;
 }
 
 QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle, int entropyType)
@@ -207,7 +317,7 @@ QCAT_DataProperty* computeProperty(int dataType, void* data, size_t nbEle, int e
 	if(entropyType >= 2)
 	{
 		if(property->dataType == QCAT_FLOAT)
-			property->entropy_32bits = computeLosslessEntropy_32bits(data, nbEle);
+			property->entropy_32bits = computeLosslessEntropy_32bits_fast(data, nbEle);
 		else if(property->dataType == QCAT_DOUBLE)
 			property->entropy_64bits = computeLosslessEntropy_64bits(data, nbEle);
 	}

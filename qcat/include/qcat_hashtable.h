@@ -30,7 +30,7 @@ typedef struct hashtable_t {
 
 
 int checkStartsWith(char* str, const char* key);
-hashtable_t *ht_create( int capacity );
+hashtable_t *ht_create(unsigned int capacity );
 int ht_hash( hashtable_t *hashtable, const char *key );
 entry_t *ht_newpair( const char *key, void *value );
 void ht_set( hashtable_t *hashtable, const char *key, void *value );
