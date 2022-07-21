@@ -28,6 +28,7 @@ void usage()
 	printf("	-p <dimension> : along which dimension for plotting the slice. (options: 1, 2 or 3; default setting: 3\n");
 	printf("	-s <slice number>: slice number if input is a 3D dataset\n");
 	printf("	-r <min> <max> : specify the value range (i.e., min and max) for the plotting\n");
+	printf("	-t: trim/crop the image by removing all margins (including x-axis, y-axis and colormap)\n");
 
 	printf("* Output: \n");
 	printf("	-o <output image file> : Specify the output image file (.png format)\n");
@@ -45,6 +46,7 @@ int main(int argc, char * argv[])
 	int domain = 0; //0: original domain ; 1: log domain
 	size_t sliceNumber = 0;
 	int dataType = 0;
+	int trim = 0;
 	int status = 0;
 	char *oriFilePath = NULL, *decFilePath = NULL, *outputFilePath = NULL;
 	char gnuDataFilePath[700], gnuScriptFilePath[700], gnuScriptFileName[700];
@@ -137,6 +139,9 @@ int main(int argc, char * argv[])
 				printf("Error: wrong domain - please use either ORI or LOG.\n");
 				usage();
 			}
+			break;
+		case 't':
+			trim = 1;	
 			break;		
 		default: 
 			usage();
@@ -186,7 +191,8 @@ int main(int argc, char * argv[])
 	char* outputFileName = extractFileNameFromPath(outputFilePath);
 	char * caseFileName = removeFileExtension(outputFileName);
 	//sprintf(tmpOutputFilePath, "%s/%s", tmpDir, outputFileName); 
-	
+
+	int lineCount = 0;	
 	if(dataType==0)
 	{
 		float* oriData = readFloatData(oriFilePath, &nbEle, &status);
@@ -232,22 +238,23 @@ int main(int argc, char * argv[])
 			
 		free(sliceData);
 
+		int lineCount = 0;
 		char** sliceImageStrs = NULL;
 		switch(plotDim)
 		{
 			case 3:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r2, r1, outputFileName, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, trim, r2, r1, outputFileName, range_min, range_max, &lineCount);
 				break;
 			case 2:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r1, outputFileName, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, trim, r3, r1, outputFileName, range_min, range_max, &lineCount);
 				break;
 			case 1:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r2, outputFileName, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, trim, r3, r2, outputFileName, range_min, range_max, &lineCount);
 				break;
 		}
 		
-		RW_writeStrings(10, sliceImageStrs, gnuScriptFilePath);
-		for(i=0;i<10;i++)
+		RW_writeStrings(lineCount, sliceImageStrs, gnuScriptFilePath);
+		for(i=0;i<17;i++)
 			free(sliceImageStrs[i]);
 		free(sliceImageStrs);
 		free(oriData);
@@ -300,18 +307,18 @@ int main(int argc, char * argv[])
 		switch(plotDim)
 		{
 			case 3:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r2, r1, outputFileName, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, trim, r2, r1, outputFileName, range_min, range_max, &lineCount);
 				break;
 			case 2:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r1, outputFileName, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, trim, r3, r1, outputFileName, range_min, range_max, &lineCount);
 				break;
 			case 1:
-				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, r3, r2, outputFileName, range_min, range_max);
+				sliceImageStrs = genGnuplotScript_sliceImage(gnuDataFileName, trim, r3, r2, outputFileName, range_min, range_max, &lineCount);
 				break;
 		}
 
-		RW_writeStrings(10, sliceImageStrs, gnuScriptFilePath);
-		for(i=0;i<10;i++)
+		RW_writeStrings(lineCount, sliceImageStrs, gnuScriptFilePath);
+		for(i=0;i<17;i++)
 			free(sliceImageStrs[i]);
 		free(sliceImageStrs);
 		free(oriData);
