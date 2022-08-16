@@ -26,7 +26,7 @@ char *removeFileExtension(char* myStr)
     char *retStr;
     char *lastExt;
     if (myStr == NULL) return NULL;
-    if ((retStr = malloc (strlen (myStr) + 1)) == NULL) return NULL;
+    if ((retStr = (char*)malloc (strlen (myStr) + 1)) == NULL) return NULL;
     strcpy (retStr, myStr);
     lastExt = strrchr (retStr, '.');
     if (lastExt != NULL)
@@ -1060,6 +1060,28 @@ void writeData(void *data, int dataType, size_t nbEle, char *tgtFilePath, int *s
 		return;
 	}
 	*status = state;
+}
+
+void writeData_inBytes(void *data, int dataType, size_t nbEle, char* tgtFilePath, int *status)
+{
+	int state = RW_SCES;
+	if(dataType == QCAT_FLOAT)
+	{
+		float* dataArray = (float *)data;
+		writeFloatData_inBytes(dataArray, nbEle, tgtFilePath, &state);
+	}
+	else if(dataType == QCAT_DOUBLE)
+	{
+		double* dataArray = (double *)data;
+		writeDoubleData_inBytes(dataArray, nbEle, tgtFilePath, &state);	
+	}
+	else
+	{
+		printf("Error: data type cannot be the types other than SZ_FLOAT or SZ_DOUBLE\n");
+		*status = RW_TERR; //wrong type
+		return;
+	}
+	*status = state;	
 }
 
 void writeFloatData_inBytes(float *data, size_t nbEle, char* tgtFilePath, int *status)

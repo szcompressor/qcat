@@ -1,7 +1,8 @@
 AUTOMAKE_OPTIONS=foreign
+AM_CPPFLAGS = -I../qcat/include -I../zstd
 AM_CFLAGS = -I../qcat/include -I../zstd
 
-bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins
+bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins computeAccuracyGain computeLaplacian computeGradientsDouble computeGradientsFloat
 
 printProperty_SOURCES=printProperty.c
 printProperty_LDADD=../qcat/.libs/libqcat.a -lm
@@ -55,3 +56,11 @@ computeErrAutoCorrelation_SOURCES=computeErrAutoCorrelation.c
 computeErrAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 compressQuantBins_SOURCES=compressQuantBins.c
 compressQuantBins_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeAccuracyGain_SOURCES=computeAccuracyGain.c
+computeAccuracyGain_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeLaplacian_SOURCES=computeLaplacian.c
+computeLaplacian_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeGradientsDouble_SOURCES=computeGradientsDouble.cpp
+computeGradientsDouble_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeGradientsFloat_SOURCES=computeGradientsFloat.cpp
+computeGradientsFloat_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
