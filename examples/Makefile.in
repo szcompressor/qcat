@@ -103,7 +103,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertEndianType$(EXEEXT) computeDataAutoCorrelation$(EXEEXT) \
 	computeErrAutoCorrelation$(EXEEXT) compressQuantBins$(EXEEXT) \
 	computeAccuracyGain$(EXEEXT) computeLaplacian$(EXEEXT) \
-	computeGradientsDouble$(EXEEXT) computeGradientsFloat$(EXEEXT)
+	calculateSobolevNorm$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -126,6 +126,10 @@ am__v_lt_1 =
 am_calculateSSIM_OBJECTS = calculateSSIM.$(OBJEXT)
 calculateSSIM_OBJECTS = $(am_calculateSSIM_OBJECTS)
 calculateSSIM_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
+am_calculateSobolevNorm_OBJECTS = calculateSobolevNorm.$(OBJEXT)
+calculateSobolevNorm_OBJECTS = $(am_calculateSobolevNorm_OBJECTS)
+calculateSobolevNorm_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 	../zstd/.libs/libzstd.a
 am_changeDataSize_OBJECTS = changeDataSize.$(OBJEXT)
 changeDataSize_OBJECTS = $(am_changeDataSize_OBJECTS)
@@ -160,14 +164,6 @@ computeErrAutoCorrelation_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 am_computeErrPDF_OBJECTS = computeErrPDF.$(OBJEXT)
 computeErrPDF_OBJECTS = $(am_computeErrPDF_OBJECTS)
 computeErrPDF_DEPENDENCIES = ../qcat/.libs/libqcat.a \
-	../zstd/.libs/libzstd.a
-am_computeGradientsDouble_OBJECTS = computeGradientsDouble.$(OBJEXT)
-computeGradientsDouble_OBJECTS = $(am_computeGradientsDouble_OBJECTS)
-computeGradientsDouble_DEPENDENCIES = ../qcat/.libs/libqcat.a \
-	../zstd/.libs/libzstd.a
-am_computeGradientsFloat_OBJECTS = computeGradientsFloat.$(OBJEXT)
-computeGradientsFloat_OBJECTS = $(am_computeGradientsFloat_OBJECTS)
-computeGradientsFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 	../zstd/.libs/libzstd.a
 am_computeLaplacian_OBJECTS = computeLaplacian.$(OBJEXT)
 computeLaplacian_OBJECTS = $(am_computeLaplacian_OBJECTS)
@@ -246,16 +242,15 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
-	./$(DEPDIR)/calculateSSIM.Po ./$(DEPDIR)/changeDataSize.Po \
-	./$(DEPDIR)/compareData.Po ./$(DEPDIR)/compressQuantBins.Po \
+	./$(DEPDIR)/calculateSSIM.Po \
+	./$(DEPDIR)/calculateSobolevNorm.Po \
+	./$(DEPDIR)/changeDataSize.Po ./$(DEPDIR)/compareData.Po \
+	./$(DEPDIR)/compressQuantBins.Po \
 	./$(DEPDIR)/computeAccuracyGain.Po \
 	./$(DEPDIR)/computeDataAutoCorrelation.Po \
 	./$(DEPDIR)/computeDataPDF.Po \
 	./$(DEPDIR)/computeErrAutoCorrelation.Po \
-	./$(DEPDIR)/computeErrPDF.Po \
-	./$(DEPDIR)/computeGradientsDouble.Po \
-	./$(DEPDIR)/computeGradientsFloat.Po \
-	./$(DEPDIR)/computeLaplacian.Po \
+	./$(DEPDIR)/computeErrPDF.Po ./$(DEPDIR)/computeLaplacian.Po \
 	./$(DEPDIR)/convertBytesToTxtDouble.Po \
 	./$(DEPDIR)/convertBytesToTxtFloat.Po \
 	./$(DEPDIR)/convertDataToLogDouble.Po \
@@ -290,31 +285,13 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CXXFLAGS) $(CXXFLAGS)
-AM_V_CXX = $(am__v_CXX_@AM_V@)
-am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
-am__v_CXX_0 = @echo "  CXX     " $@;
-am__v_CXX_1 = 
-CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
-am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
-am__v_CXXLD_0 = @echo "  CXXLD   " $@;
-am__v_CXXLD_1 = 
 SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
-	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(compressQuantBins_SOURCES) $(computeAccuracyGain_SOURCES) \
+	$(calculateSobolevNorm_SOURCES) $(changeDataSize_SOURCES) \
+	$(compareData_SOURCES) $(compressQuantBins_SOURCES) \
+	$(computeAccuracyGain_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
-	$(computeErrPDF_SOURCES) $(computeGradientsDouble_SOURCES) \
-	$(computeGradientsFloat_SOURCES) $(computeLaplacian_SOURCES) \
+	$(computeErrPDF_SOURCES) $(computeLaplacian_SOURCES) \
 	$(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
@@ -328,12 +305,12 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
 	$(splitComplexData_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
-	$(changeDataSize_SOURCES) $(compareData_SOURCES) \
-	$(compressQuantBins_SOURCES) $(computeAccuracyGain_SOURCES) \
+	$(calculateSobolevNorm_SOURCES) $(changeDataSize_SOURCES) \
+	$(compareData_SOURCES) $(compressQuantBins_SOURCES) \
+	$(computeAccuracyGain_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
-	$(computeErrPDF_SOURCES) $(computeGradientsDouble_SOURCES) \
-	$(computeGradientsFloat_SOURCES) $(computeLaplacian_SOURCES) \
+	$(computeErrPDF_SOURCES) $(computeLaplacian_SOURCES) \
 	$(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
@@ -552,14 +529,12 @@ computeAccuracyGain_SOURCES = computeAccuracyGain.c
 computeAccuracyGain_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeLaplacian_SOURCES = computeLaplacian.c
 computeLaplacian_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
-computeGradientsDouble_SOURCES = computeGradientsDouble.cpp
-computeGradientsDouble_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
-computeGradientsFloat_SOURCES = computeGradientsFloat.cpp
-computeGradientsFloat_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+calculateSobolevNorm_SOURCES = calculateSobolevNorm.c
+calculateSobolevNorm_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .cpp .lo .o .obj
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -647,6 +622,10 @@ calculateSSIM$(EXEEXT): $(calculateSSIM_OBJECTS) $(calculateSSIM_DEPENDENCIES) $
 	@rm -f calculateSSIM$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(calculateSSIM_OBJECTS) $(calculateSSIM_LDADD) $(LIBS)
 
+calculateSobolevNorm$(EXEEXT): $(calculateSobolevNorm_OBJECTS) $(calculateSobolevNorm_DEPENDENCIES) $(EXTRA_calculateSobolevNorm_DEPENDENCIES) 
+	@rm -f calculateSobolevNorm$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(calculateSobolevNorm_OBJECTS) $(calculateSobolevNorm_LDADD) $(LIBS)
+
 changeDataSize$(EXEEXT): $(changeDataSize_OBJECTS) $(changeDataSize_DEPENDENCIES) $(EXTRA_changeDataSize_DEPENDENCIES) 
 	@rm -f changeDataSize$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(changeDataSize_OBJECTS) $(changeDataSize_LDADD) $(LIBS)
@@ -678,14 +657,6 @@ computeErrAutoCorrelation$(EXEEXT): $(computeErrAutoCorrelation_OBJECTS) $(compu
 computeErrPDF$(EXEEXT): $(computeErrPDF_OBJECTS) $(computeErrPDF_DEPENDENCIES) $(EXTRA_computeErrPDF_DEPENDENCIES) 
 	@rm -f computeErrPDF$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(computeErrPDF_OBJECTS) $(computeErrPDF_LDADD) $(LIBS)
-
-computeGradientsDouble$(EXEEXT): $(computeGradientsDouble_OBJECTS) $(computeGradientsDouble_DEPENDENCIES) $(EXTRA_computeGradientsDouble_DEPENDENCIES) 
-	@rm -f computeGradientsDouble$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(computeGradientsDouble_OBJECTS) $(computeGradientsDouble_LDADD) $(LIBS)
-
-computeGradientsFloat$(EXEEXT): $(computeGradientsFloat_OBJECTS) $(computeGradientsFloat_DEPENDENCIES) $(EXTRA_computeGradientsFloat_DEPENDENCIES) 
-	@rm -f computeGradientsFloat$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(computeGradientsFloat_OBJECTS) $(computeGradientsFloat_LDADD) $(LIBS)
 
 computeLaplacian$(EXEEXT): $(computeLaplacian_OBJECTS) $(computeLaplacian_DEPENDENCIES) $(EXTRA_computeLaplacian_DEPENDENCIES) 
 	@rm -f computeLaplacian$(EXEEXT)
@@ -767,6 +738,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PlotSliceImage.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSSIM.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSobolevNorm.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/changeDataSize.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compareData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compressQuantBins.Po@am__quote@ # am--include-marker
@@ -775,8 +747,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataPDF.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrAutoCorrelation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrPDF.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeGradientsDouble.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeGradientsFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeLaplacian.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtFloat.Po@am__quote@ # am--include-marker
@@ -825,30 +795,6 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
-
-.cpp.o:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
-
-.cpp.obj:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.cpp.lo:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
-@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -985,6 +931,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/PlotSliceImage.Po
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
+	-rm -f ./$(DEPDIR)/calculateSobolevNorm.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
 	-rm -f ./$(DEPDIR)/compressQuantBins.Po
@@ -993,8 +940,6 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeErrPDF.Po
-	-rm -f ./$(DEPDIR)/computeGradientsDouble.Po
-	-rm -f ./$(DEPDIR)/computeGradientsFloat.Po
 	-rm -f ./$(DEPDIR)/computeLaplacian.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
@@ -1060,6 +1005,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/PlotSliceImage.Po
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
+	-rm -f ./$(DEPDIR)/calculateSobolevNorm.Po
 	-rm -f ./$(DEPDIR)/changeDataSize.Po
 	-rm -f ./$(DEPDIR)/compareData.Po
 	-rm -f ./$(DEPDIR)/compressQuantBins.Po
@@ -1068,8 +1014,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeErrPDF.Po
-	-rm -f ./$(DEPDIR)/computeGradientsDouble.Po
-	-rm -f ./$(DEPDIR)/computeGradientsFloat.Po
 	-rm -f ./$(DEPDIR)/computeLaplacian.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po

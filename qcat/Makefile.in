@@ -144,8 +144,7 @@ am_libqcat_la_OBJECTS = src/libqcat_la-qcat_hashtable.lo \
 	src/libqcat_la-qcat_dataAnalysis.lo \
 	src/libqcat_la-qcat_compressionAnalysis.lo \
 	src/libqcat_la-sz_dummy_compression.lo \
-	src/libqcat_la-sz_utility.lo src/libqcat_la-qcat_ssim.lo \
-	src/libqcat_la-qcat_derivativeMetrics.lo
+	src/libqcat_la-sz_utility.lo src/libqcat_la-qcat_ssim.lo
 libqcat_la_OBJECTS = $(am_libqcat_la_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -170,7 +169,6 @@ am__depfiles_remade = src/$(DEPDIR)/libqcat_la-ByteToolkit.Plo \
 	src/$(DEPDIR)/libqcat_la-Huffman.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo \
-	src/$(DEPDIR)/libqcat_la-qcat_derivativeMetrics.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_hashtable.Plo \
 	src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo \
@@ -200,24 +198,6 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
-	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CXXFLAGS) $(CXXFLAGS)
-AM_V_CXX = $(am__v_CXX_@AM_V@)
-am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
-am__v_CXX_0 = @echo "  CXX     " $@;
-am__v_CXX_1 = 
-CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
-am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
-am__v_CXXLD_0 = @echo "  CXXLD   " $@;
-am__v_CXXLD_1 = 
 SOURCES = $(libqcat_la_SOURCES)
 DIST_SOURCES = $(libqcat_la_SOURCES)
 am__can_run_installinfo = \
@@ -369,17 +349,17 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
-include_HEADERS = include/qcat_hashtable.h include/DynamicIntArray.h include/DynamicByteArray.h include/Huffman.h include/rw.h include/ByteToolkit.h include/DynamicFloatArray.h include/DynamicDoubleArray.h include/qcat_gnuplot.h include/qcat_dataAnalysis.h include/qcat_compressionAnalysis.h include/sz_dummy_compression.h include/sz_utility.h include/qcat.h include/qcat_ssim.h include/der.hpp include/idx.hpp include/matrix.hpp  include/m_basic.hpp  include/m_der.hpp  include/m_der_metrics.hpp include/m_norm.hpp  include/norm.hpp  include/others.hpp  include/ssim.hpp
+include_HEADERS = include/qcat_hashtable.h include/DynamicIntArray.h include/DynamicByteArray.h include/Huffman.h include/rw.h include/ByteToolkit.h include/DynamicFloatArray.h include/DynamicDoubleArray.h include/qcat_gnuplot.h include/qcat_dataAnalysis.h include/qcat_compressionAnalysis.h include/sz_dummy_compression.h include/sz_utility.h include/qcat.h include/qcat_ssim.h
 lib_LTLIBRARIES = libqcat.la
-libqcat_la_CPPFLAGS = -I./include -I../zstd/
+libqcat_la_CFLAGS = -I./include -I../zstd/
 libqcat_la_LDFLAGS = -version-info  0:1:0
 libqcat_la_LIDADD = ../zstd/.libs/libzstd.a
-libqcat_la_SOURCES = src/qcat_hashtable.c src/DynamicIntArray.c src/DynamicByteArray.c src/Huffman.c src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qcat_gnuplot.c src/qcat_dataAnalysis.c src/qcat_compressionAnalysis.c src/sz_dummy_compression.c src/sz_utility.c src/qcat_ssim.c src/qcat_derivativeMetrics.cpp
-libqcat_la_LINK = $(AM_V_CC)$(LIBTOOL) --tag=CC --mode=link $(CCLD) $(libqcat_la_CPPFLAGS) -O3 $(libqcat_la_LDFLAGS) -o $(lib_LTLIBRARIES)
+libqcat_la_SOURCES = src/qcat_hashtable.c src/DynamicIntArray.c src/DynamicByteArray.c src/Huffman.c src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qcat_gnuplot.c src/qcat_dataAnalysis.c src/qcat_compressionAnalysis.c src/sz_dummy_compression.c src/sz_utility.c src/qcat_ssim.c
+libqcat_la_LINK = $(AM_V_CC)$(LIBTOOL) --tag=CC --mode=link $(CCLD) $(libqcat_la_CFLAGS) -O3 $(libqcat_la_LDFLAGS) -o $(lib_LTLIBRARIES)
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .cpp .lo .o .obj
+.SUFFIXES: .c .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -478,8 +458,6 @@ src/libqcat_la-sz_utility.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libqcat_la-qcat_ssim.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/libqcat_la-qcat_derivativeMetrics.lo: src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 
 libqcat.la: $(libqcat_la_OBJECTS) $(libqcat_la_DEPENDENCIES) $(EXTRA_libqcat_la_DEPENDENCIES) 
 	$(AM_V_GEN)$(libqcat_la_LINK) -rpath $(libdir) $(libqcat_la_OBJECTS) $(libqcat_la_LIBADD) $(LIBS)
@@ -500,7 +478,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-Huffman.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_derivativeMetrics.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_hashtable.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo@am__quote@ # am--include-marker
@@ -539,133 +516,102 @@ am--depfiles: $(am__depfiles_remade)
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
 src/libqcat_la-qcat_hashtable.lo: src/qcat_hashtable.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_hashtable.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_hashtable.Tpo -c -o src/libqcat_la-qcat_hashtable.lo `test -f 'src/qcat_hashtable.c' || echo '$(srcdir)/'`src/qcat_hashtable.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_hashtable.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_hashtable.Tpo -c -o src/libqcat_la-qcat_hashtable.lo `test -f 'src/qcat_hashtable.c' || echo '$(srcdir)/'`src/qcat_hashtable.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_hashtable.Tpo src/$(DEPDIR)/libqcat_la-qcat_hashtable.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qcat_hashtable.c' object='src/libqcat_la-qcat_hashtable.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_hashtable.lo `test -f 'src/qcat_hashtable.c' || echo '$(srcdir)/'`src/qcat_hashtable.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_hashtable.lo `test -f 'src/qcat_hashtable.c' || echo '$(srcdir)/'`src/qcat_hashtable.c
 
 src/libqcat_la-DynamicIntArray.lo: src/DynamicIntArray.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicIntArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicIntArray.Tpo -c -o src/libqcat_la-DynamicIntArray.lo `test -f 'src/DynamicIntArray.c' || echo '$(srcdir)/'`src/DynamicIntArray.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicIntArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicIntArray.Tpo -c -o src/libqcat_la-DynamicIntArray.lo `test -f 'src/DynamicIntArray.c' || echo '$(srcdir)/'`src/DynamicIntArray.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-DynamicIntArray.Tpo src/$(DEPDIR)/libqcat_la-DynamicIntArray.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicIntArray.c' object='src/libqcat_la-DynamicIntArray.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicIntArray.lo `test -f 'src/DynamicIntArray.c' || echo '$(srcdir)/'`src/DynamicIntArray.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicIntArray.lo `test -f 'src/DynamicIntArray.c' || echo '$(srcdir)/'`src/DynamicIntArray.c
 
 src/libqcat_la-DynamicByteArray.lo: src/DynamicByteArray.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicByteArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicByteArray.Tpo -c -o src/libqcat_la-DynamicByteArray.lo `test -f 'src/DynamicByteArray.c' || echo '$(srcdir)/'`src/DynamicByteArray.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicByteArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicByteArray.Tpo -c -o src/libqcat_la-DynamicByteArray.lo `test -f 'src/DynamicByteArray.c' || echo '$(srcdir)/'`src/DynamicByteArray.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-DynamicByteArray.Tpo src/$(DEPDIR)/libqcat_la-DynamicByteArray.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicByteArray.c' object='src/libqcat_la-DynamicByteArray.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicByteArray.lo `test -f 'src/DynamicByteArray.c' || echo '$(srcdir)/'`src/DynamicByteArray.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicByteArray.lo `test -f 'src/DynamicByteArray.c' || echo '$(srcdir)/'`src/DynamicByteArray.c
 
 src/libqcat_la-Huffman.lo: src/Huffman.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-Huffman.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-Huffman.Tpo -c -o src/libqcat_la-Huffman.lo `test -f 'src/Huffman.c' || echo '$(srcdir)/'`src/Huffman.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-Huffman.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-Huffman.Tpo -c -o src/libqcat_la-Huffman.lo `test -f 'src/Huffman.c' || echo '$(srcdir)/'`src/Huffman.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-Huffman.Tpo src/$(DEPDIR)/libqcat_la-Huffman.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/Huffman.c' object='src/libqcat_la-Huffman.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-Huffman.lo `test -f 'src/Huffman.c' || echo '$(srcdir)/'`src/Huffman.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-Huffman.lo `test -f 'src/Huffman.c' || echo '$(srcdir)/'`src/Huffman.c
 
 src/libqcat_la-rw.lo: src/rw.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-rw.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-rw.Tpo -c -o src/libqcat_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-rw.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-rw.Tpo -c -o src/libqcat_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-rw.Tpo src/$(DEPDIR)/libqcat_la-rw.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rw.c' object='src/libqcat_la-rw.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-rw.lo `test -f 'src/rw.c' || echo '$(srcdir)/'`src/rw.c
 
 src/libqcat_la-ByteToolkit.lo: src/ByteToolkit.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-ByteToolkit.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-ByteToolkit.Tpo -c -o src/libqcat_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-ByteToolkit.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-ByteToolkit.Tpo -c -o src/libqcat_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-ByteToolkit.Tpo src/$(DEPDIR)/libqcat_la-ByteToolkit.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/ByteToolkit.c' object='src/libqcat_la-ByteToolkit.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-ByteToolkit.lo `test -f 'src/ByteToolkit.c' || echo '$(srcdir)/'`src/ByteToolkit.c
 
 src/libqcat_la-DynamicFloatArray.lo: src/DynamicFloatArray.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicFloatArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Tpo -c -o src/libqcat_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicFloatArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Tpo -c -o src/libqcat_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Tpo src/$(DEPDIR)/libqcat_la-DynamicFloatArray.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicFloatArray.c' object='src/libqcat_la-DynamicFloatArray.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicFloatArray.lo `test -f 'src/DynamicFloatArray.c' || echo '$(srcdir)/'`src/DynamicFloatArray.c
 
 src/libqcat_la-DynamicDoubleArray.lo: src/DynamicDoubleArray.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicDoubleArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Tpo -c -o src/libqcat_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-DynamicDoubleArray.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Tpo -c -o src/libqcat_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Tpo src/$(DEPDIR)/libqcat_la-DynamicDoubleArray.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/DynamicDoubleArray.c' object='src/libqcat_la-DynamicDoubleArray.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-DynamicDoubleArray.lo `test -f 'src/DynamicDoubleArray.c' || echo '$(srcdir)/'`src/DynamicDoubleArray.c
 
 src/libqcat_la-qcat_gnuplot.lo: src/qcat_gnuplot.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_gnuplot.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Tpo -c -o src/libqcat_la-qcat_gnuplot.lo `test -f 'src/qcat_gnuplot.c' || echo '$(srcdir)/'`src/qcat_gnuplot.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_gnuplot.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Tpo -c -o src/libqcat_la-qcat_gnuplot.lo `test -f 'src/qcat_gnuplot.c' || echo '$(srcdir)/'`src/qcat_gnuplot.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Tpo src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qcat_gnuplot.c' object='src/libqcat_la-qcat_gnuplot.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_gnuplot.lo `test -f 'src/qcat_gnuplot.c' || echo '$(srcdir)/'`src/qcat_gnuplot.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_gnuplot.lo `test -f 'src/qcat_gnuplot.c' || echo '$(srcdir)/'`src/qcat_gnuplot.c
 
 src/libqcat_la-qcat_dataAnalysis.lo: src/qcat_dataAnalysis.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_dataAnalysis.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Tpo -c -o src/libqcat_la-qcat_dataAnalysis.lo `test -f 'src/qcat_dataAnalysis.c' || echo '$(srcdir)/'`src/qcat_dataAnalysis.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_dataAnalysis.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Tpo -c -o src/libqcat_la-qcat_dataAnalysis.lo `test -f 'src/qcat_dataAnalysis.c' || echo '$(srcdir)/'`src/qcat_dataAnalysis.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Tpo src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qcat_dataAnalysis.c' object='src/libqcat_la-qcat_dataAnalysis.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_dataAnalysis.lo `test -f 'src/qcat_dataAnalysis.c' || echo '$(srcdir)/'`src/qcat_dataAnalysis.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_dataAnalysis.lo `test -f 'src/qcat_dataAnalysis.c' || echo '$(srcdir)/'`src/qcat_dataAnalysis.c
 
 src/libqcat_la-qcat_compressionAnalysis.lo: src/qcat_compressionAnalysis.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_compressionAnalysis.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Tpo -c -o src/libqcat_la-qcat_compressionAnalysis.lo `test -f 'src/qcat_compressionAnalysis.c' || echo '$(srcdir)/'`src/qcat_compressionAnalysis.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_compressionAnalysis.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Tpo -c -o src/libqcat_la-qcat_compressionAnalysis.lo `test -f 'src/qcat_compressionAnalysis.c' || echo '$(srcdir)/'`src/qcat_compressionAnalysis.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Tpo src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qcat_compressionAnalysis.c' object='src/libqcat_la-qcat_compressionAnalysis.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_compressionAnalysis.lo `test -f 'src/qcat_compressionAnalysis.c' || echo '$(srcdir)/'`src/qcat_compressionAnalysis.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_compressionAnalysis.lo `test -f 'src/qcat_compressionAnalysis.c' || echo '$(srcdir)/'`src/qcat_compressionAnalysis.c
 
 src/libqcat_la-sz_dummy_compression.lo: src/sz_dummy_compression.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-sz_dummy_compression.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Tpo -c -o src/libqcat_la-sz_dummy_compression.lo `test -f 'src/sz_dummy_compression.c' || echo '$(srcdir)/'`src/sz_dummy_compression.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-sz_dummy_compression.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Tpo -c -o src/libqcat_la-sz_dummy_compression.lo `test -f 'src/sz_dummy_compression.c' || echo '$(srcdir)/'`src/sz_dummy_compression.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Tpo src/$(DEPDIR)/libqcat_la-sz_dummy_compression.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/sz_dummy_compression.c' object='src/libqcat_la-sz_dummy_compression.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-sz_dummy_compression.lo `test -f 'src/sz_dummy_compression.c' || echo '$(srcdir)/'`src/sz_dummy_compression.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-sz_dummy_compression.lo `test -f 'src/sz_dummy_compression.c' || echo '$(srcdir)/'`src/sz_dummy_compression.c
 
 src/libqcat_la-sz_utility.lo: src/sz_utility.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-sz_utility.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-sz_utility.Tpo -c -o src/libqcat_la-sz_utility.lo `test -f 'src/sz_utility.c' || echo '$(srcdir)/'`src/sz_utility.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-sz_utility.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-sz_utility.Tpo -c -o src/libqcat_la-sz_utility.lo `test -f 'src/sz_utility.c' || echo '$(srcdir)/'`src/sz_utility.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-sz_utility.Tpo src/$(DEPDIR)/libqcat_la-sz_utility.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/sz_utility.c' object='src/libqcat_la-sz_utility.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-sz_utility.lo `test -f 'src/sz_utility.c' || echo '$(srcdir)/'`src/sz_utility.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-sz_utility.lo `test -f 'src/sz_utility.c' || echo '$(srcdir)/'`src/sz_utility.c
 
 src/libqcat_la-qcat_ssim.lo: src/qcat_ssim.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_ssim.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_ssim.Tpo -c -o src/libqcat_la-qcat_ssim.lo `test -f 'src/qcat_ssim.c' || echo '$(srcdir)/'`src/qcat_ssim.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -MT src/libqcat_la-qcat_ssim.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_ssim.Tpo -c -o src/libqcat_la-qcat_ssim.lo `test -f 'src/qcat_ssim.c' || echo '$(srcdir)/'`src/qcat_ssim.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_ssim.Tpo src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/qcat_ssim.c' object='src/libqcat_la-qcat_ssim.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_ssim.lo `test -f 'src/qcat_ssim.c' || echo '$(srcdir)/'`src/qcat_ssim.c
-
-.cpp.o:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
-
-.cpp.obj:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.cpp.lo:
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
-@am__fastdepCXX_TRUE@	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
-@am__fastdepCXX_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
-
-src/libqcat_la-qcat_derivativeMetrics.lo: src/qcat_derivativeMetrics.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/libqcat_la-qcat_derivativeMetrics.lo -MD -MP -MF src/$(DEPDIR)/libqcat_la-qcat_derivativeMetrics.Tpo -c -o src/libqcat_la-qcat_derivativeMetrics.lo `test -f 'src/qcat_derivativeMetrics.cpp' || echo '$(srcdir)/'`src/qcat_derivativeMetrics.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libqcat_la-qcat_derivativeMetrics.Tpo src/$(DEPDIR)/libqcat_la-qcat_derivativeMetrics.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/qcat_derivativeMetrics.cpp' object='src/libqcat_la-qcat_derivativeMetrics.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libqcat_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/libqcat_la-qcat_derivativeMetrics.lo `test -f 'src/qcat_derivativeMetrics.cpp' || echo '$(srcdir)/'`src/qcat_derivativeMetrics.cpp
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libqcat_la_CFLAGS) $(CFLAGS) -c -o src/libqcat_la-qcat_ssim.lo `test -f 'src/qcat_ssim.c' || echo '$(srcdir)/'`src/qcat_ssim.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -833,7 +779,6 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/libqcat_la-Huffman.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo
-	-rm -f src/$(DEPDIR)/libqcat_la-qcat_derivativeMetrics.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_hashtable.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo
@@ -893,7 +838,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/libqcat_la-Huffman.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_compressionAnalysis.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_dataAnalysis.Plo
-	-rm -f src/$(DEPDIR)/libqcat_la-qcat_derivativeMetrics.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_gnuplot.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_hashtable.Plo
 	-rm -f src/$(DEPDIR)/libqcat_la-qcat_ssim.Plo

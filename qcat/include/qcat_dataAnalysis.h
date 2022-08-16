@@ -66,6 +66,16 @@ void computeLaplacian_float(float *data, float *lap, size_t r5, size_t r4, size_
 void computeLaplacian_double(double *data, double *lap, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
 int computeLaplacian(void *data, void *lap, int dataType, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
 
+double calculateSobolevNorm_s0_p2_float(float *data, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
+double calculateSobolevNorm_s1_p2_float(float *data, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
+double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
+
+double calculateSobolevNorm_s0_p2_double(double *data, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
+double calculateSobolevNorm_s1_p2_double(double *data, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
+double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
+
+double calculateSobolevNorm_p2(void *data, int dataType, int order, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1);
+
 #ifdef __cplusplus
 }
 #endif
