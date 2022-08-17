@@ -594,6 +594,564 @@ int computeLaplacian(void *data, void *lap, int dataType, size_t r5, size_t r4, 
 
 }
 
+void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1)
+{
+	size_t i, j, k, index;
+	double gradx, grady, gradz;
+	
+	if(r2==0)
+	{
+		gradMag[0] = data[1] - data[0];
+		gradMag[r1-1] = data[r1-1]-data[r1-2];
+		for(i=1;i<r1-1;i++)
+			gradMag[i] = (data[i+1]-data[i-1])/2;
+	}
+	else if(r3==0)
+	{
+		//process four corners
+		gradx = data[1]-data[0];
+		grady = data[r1]-data[0];
+		gradMag[0] = sqrt(gradx*gradx+grady*grady);
+		index = r1-1;
+		gradx = data[index]-data[index-1];
+		grady = data[index+r1]-data[index];
+		gradMag[index] = sqrt(gradx*gradx+grady*grady);		
+		index = (r2-1)*r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];
+		gradMag[index] = sqrt(gradx*gradx+grady*grady);	
+		index = (r2-1)*r1 + r1 - 1;			
+		gradx = data[index]-data[index-1];
+		grady = data[index]-data[index-r1];
+		gradMag[index] = sqrt(gradx*gradx+grady*grady);								
+		
+		//process four edges
+		for(i=1;i<r1-1;i++)
+		{
+			index = i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index+r1]-data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);			
+		}
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r2-1)*r1 + i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index]-data[index-r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);			
+		}
+		
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1;
+			gradx = (data[index+1] - data[index]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);						
+		}
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1+r1-1;
+			gradx = (data[index] - data[index-1]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);						
+		}		
+		
+		//process all interior points
+		for(i=1;i<r2-1;i++)
+			for(j=1;j<r1-1;j++)
+			{
+				index = i*r1+j;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady);
+			}
+		
+	}else if(r4==0) //3D
+	{
+		size_t r2r1 = r2*r1;
+		//process all 8 corners
+		gradx = data[1]-data[0];
+		grady = data[r1]-data[0];
+		gradz = data[r2r1]-data[0];		
+		gradMag[0] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = r1-1;
+		gradx = data[index]-data[index-1];
+		grady = data[index+r1]-data[index];		
+		gradz = data[index+r2r1]-data[index];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r2-1)*r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index+r2r1]-data[index];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+
+		index = (r2-1)*r1 + r1 - 1;
+		gradx = data[index]-data[index-1];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index+r2r1]-data[index];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r3-1)*r2r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r3-1)*r2r1+r1-1;
+		gradx = data[index]-data[index-1];
+		grady = data[index+r1]-data[index];		
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r3-1)*r2r1 + (r2-1)*r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+
+		index = (r3-1)*r2r1 + (r2-1)*r1 + r1 - 1;
+		gradx = data[index]-data[index-1];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);		
+				
+		//process all 8 edges
+		for(i=1;i<r1-1;i++)
+		{
+			index = i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index+r1]-data[index];
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r2-1)*r1 + i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index]-data[index-r1];
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+		
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1;
+			gradx = (data[index+1] - data[index]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1+r1-1;
+			gradx = (data[index] - data[index-1]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r3-1)*r2r1 + 0;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index+r1]-data[index];
+			gradz = data[index] - data[index-r2r1];
+			gradMag[i] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r3-1)*r2r1 + (r2-1)*r1 + i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index]-data[index-r1];
+			gradz = data[index] - data[index-r2r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+		
+		for(i=1;i<r2-1;i++)
+		{
+			index = (r3-1)*r2r1+i*r1;
+			gradx = (data[index+1] - data[index]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index] - data[index-r2r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		for(i=1;i<r2-1;i++)
+		{
+			index = (r3-1)*r2r1+i*r1+r1-1;
+			gradx = (data[index] - data[index-1]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index] - data[index-r2r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		
+		//process all 6 sides
+		for(i=1;i<r2-1;i++)
+			for(j=1;j<r1-1;j++)
+			{
+				index = i*r1+j;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = data[index+r2r1] - data[index];
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}		
+
+		for(i=1;i<r2-1;i++)
+			for(j=1;j<r1-1;j++)
+			{
+				index = (r3-1)*r2r1 + i*r1 + j;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = data[index] - data[index-r2r1];
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}				
+		
+		for(i=1;i<r3-1;i++)
+			for(k=1;k<r1-1;k++)
+			{
+				index = (r3-1)*r2r1 + k; //j is always 0
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = data[index+r1] - data[index];
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+			
+		for(i=1;i<r3-1;i++)
+			for(k=1;k<r1-1;k++)
+			{
+				j = r2-1;
+				index = (r3-1)*r2r1 + j*r1 + k;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = data[index] - data[index-r1];
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+
+		for(i=1;i<r3-1;i++)
+			for(j=1;j<r2-1;j++)
+			{
+				index = (r3-1)*r2r1 + j*r1;
+				gradx = data[index+1] - data[index];
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+
+		for(i=1;i<r3-1;i++)
+			for(j=1;j<r2-1;j++)
+			{
+				k = r1-1;
+				index = (r3-1)*r2r1 + j*r1 + k; 
+				gradx = data[index] - data[index-1];
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+		
+		//process interior points
+		for(i=1;i<r3-1;i++)
+		for(j=1;j<r2-1;j++)
+			for(k=1;k<r1-1;k++)
+			{
+				size_t index = i*r2r1+j*r1+k;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}		
+	}
+	
+}
+
+void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1)
+{
+	size_t i, j, k, index;
+	double gradx, grady, gradz;
+	
+	if(r2==0)
+	{
+		gradMag[0] = data[1] - data[0];
+		gradMag[r1-1] = data[r1-1]-data[r1-2];
+		for(i=1;i<r1-1;i++)
+			gradMag[i] = (data[i+1]-data[i-1])/2;
+	}
+	else if(r3==0)
+	{
+		//process four corners
+		gradx = data[1]-data[0];
+		grady = data[r1]-data[0];
+		gradMag[0] = sqrt(gradx*gradx+grady*grady);
+		index = r1-1;
+		gradx = data[index]-data[index-1];
+		grady = data[index+r1]-data[index];
+		gradMag[index] = sqrt(gradx*gradx+grady*grady);		
+		index = (r2-1)*r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];
+		gradMag[index] = sqrt(gradx*gradx+grady*grady);	
+		index = (r2-1)*r1 + r1 - 1;			
+		gradx = data[index]-data[index-1];
+		grady = data[index]-data[index-r1];
+		gradMag[index] = sqrt(gradx*gradx+grady*grady);								
+		
+		//process four edges
+		for(i=1;i<r1-1;i++)
+		{
+			index = i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index+r1]-data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);			
+		}
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r2-1)*r1 + i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index]-data[index-r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);			
+		}
+		
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1;
+			gradx = (data[index+1] - data[index]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);						
+		}
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1+r1-1;
+			gradx = (data[index] - data[index-1]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradMag[index] = sqrt(gradx*gradx+grady*grady);						
+		}		
+		
+		//process all interior points
+		for(i=1;i<r2-1;i++)
+			for(j=1;j<r1-1;j++)
+			{
+				index = i*r1+j;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady);
+			}
+		
+	}else if(r4==0) //3D
+	{
+		size_t r2r1 = r2*r1;
+		//process all 8 corners
+		gradx = data[1]-data[0];
+		grady = data[r1]-data[0];
+		gradz = data[r2r1]-data[0];		
+		gradMag[0] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = r1-1;
+		gradx = data[index]-data[index-1];
+		grady = data[index+r1]-data[index];		
+		gradz = data[index+r2r1]-data[index];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r2-1)*r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index+r2r1]-data[index];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+
+		index = (r2-1)*r1 + r1 - 1;
+		gradx = data[index]-data[index-1];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index+r2r1]-data[index];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r3-1)*r2r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r3-1)*r2r1+r1-1;
+		gradx = data[index]-data[index-1];
+		grady = data[index+r1]-data[index];		
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+		
+		index = (r3-1)*r2r1 + (r2-1)*r1;
+		gradx = data[index+1]-data[index];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+
+		index = (r3-1)*r2r1 + (r2-1)*r1 + r1 - 1;
+		gradx = data[index]-data[index-1];
+		grady = data[index]-data[index-r1];		
+		gradz = data[index]-data[index-r2r1];		
+		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);		
+				
+		//process all 8 edges
+		for(i=1;i<r1-1;i++)
+		{
+			index = i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index+r1]-data[index];
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r2-1)*r1 + i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index]-data[index-r1];
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+		
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1;
+			gradx = (data[index+1] - data[index]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		for(i=1;i<r2-1;i++)
+		{
+			index = i*r1+r1-1;
+			gradx = (data[index] - data[index-1]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index+r2r1] - data[index];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r3-1)*r2r1 + 0;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index+r1]-data[index];
+			gradz = data[index] - data[index-r2r1];
+			gradMag[i] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+
+		for(i=1;i<r1-1;i++)
+		{
+			index = (r3-1)*r2r1 + (r2-1)*r1 + i;
+			gradx = (data[index+1]-data[index-1])/2;
+			grady = data[index]-data[index-r1];
+			gradz = data[index] - data[index-r2r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);			
+		}
+		
+		for(i=1;i<r2-1;i++)
+		{
+			index = (r3-1)*r2r1+i*r1;
+			gradx = (data[index+1] - data[index]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index] - data[index-r2r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		for(i=1;i<r2-1;i++)
+		{
+			index = (r3-1)*r2r1+i*r1+r1-1;
+			gradx = (data[index] - data[index-1]);
+			grady = (data[index+r1]-data[index-r1])/2;
+			gradz = data[index] - data[index-r2r1];
+			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
+		}
+		
+		//process all 6 sides
+		for(i=1;i<r2-1;i++)
+			for(j=1;j<r1-1;j++)
+			{
+				index = i*r1+j;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = data[index+r2r1] - data[index];
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}		
+
+		for(i=1;i<r2-1;i++)
+			for(j=1;j<r1-1;j++)
+			{
+				index = (r3-1)*r2r1 + i*r1 + j;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = data[index] - data[index-r2r1];
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}				
+		
+		for(i=1;i<r3-1;i++)
+			for(k=1;k<r1-1;k++)
+			{
+				index = (r3-1)*r2r1 + k; //j is always 0
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = data[index+r1] - data[index];
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+			
+		for(i=1;i<r3-1;i++)
+			for(k=1;k<r1-1;k++)
+			{
+				j = r2-1;
+				index = (r3-1)*r2r1 + j*r1 + k;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = data[index] - data[index-r1];
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+
+		for(i=1;i<r3-1;i++)
+			for(j=1;j<r2-1;j++)
+			{
+				index = (r3-1)*r2r1 + j*r1;
+				gradx = data[index+1] - data[index];
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+
+		for(i=1;i<r3-1;i++)
+			for(j=1;j<r2-1;j++)
+			{
+				k = r1-1;
+				index = (r3-1)*r2r1 + j*r1 + k; 
+				gradx = data[index] - data[index-1];
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}
+		
+		//process interior points
+		for(i=1;i<r3-1;i++)
+		for(j=1;j<r2-1;j++)
+			for(k=1;k<r1-1;k++)
+			{
+				size_t index = i*r2r1+j*r1+k;
+				gradx = (data[index+1] - data[index-1])/2;
+				grady = (data[index+r1] - data[index-r1])/2;
+				gradz = (data[index+r2r1] - data[index-r2r1])/2;
+				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+			}		
+	}
+	
+}
+
+int computeGradientLength(void* data, void*gradMag, int dataType, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1)
+{
+	if(dataType==QCAT_FLOAT)
+		computeGradientLength_float(data, gradMag, r5, r4, r3, r2, r1);
+	else if(dataType==QCAT_DOUBLE)
+		computeGradientLength_double(data, gradMag, r5, r4, r3, r2, r1);
+	else
+	{
+		printf("Error: support only float or double.\n");
+		return -1;	
+	}
+	return 0;
+}
+
 
 //the sum of square / nbEle
 double calculateSobolevNorm_s0_p2_float(float *data, size_t r5, size_t r4, size_t r3, size_t r2, size_t r1)
@@ -705,7 +1263,7 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 				sum += xy_dev*xy_dev;
 			}
 			
-			return sqrt(sum/nbEle);
+		return sqrt(sum/nbEle);
 	}
 	else if(dim==3)
 	{
@@ -737,6 +1295,8 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 				
 		return sqrt(sum/nbEle);
 	}
+	
+	return -1;
 }
 
 //the sum of square / nbEle
@@ -849,7 +1409,7 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 				sum += xy_dev*xy_dev;
 			}
 			
-			return sqrt(sum/nbEle);
+		return sqrt(sum/nbEle);
 	}
 	else if(dim==3)
 	{
@@ -881,6 +1441,8 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 				
 		return sqrt(sum/nbEle);
 	}
+	
+	return -1;
 }
 
 

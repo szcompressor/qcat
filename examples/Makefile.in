@@ -103,7 +103,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertEndianType$(EXEEXT) computeDataAutoCorrelation$(EXEEXT) \
 	computeErrAutoCorrelation$(EXEEXT) compressQuantBins$(EXEEXT) \
 	computeAccuracyGain$(EXEEXT) computeLaplacian$(EXEEXT) \
-	calculateSobolevNorm$(EXEEXT)
+	calculateSobolevNorm$(EXEEXT) computeGradientLength$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -164,6 +164,10 @@ computeErrAutoCorrelation_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 am_computeErrPDF_OBJECTS = computeErrPDF.$(OBJEXT)
 computeErrPDF_OBJECTS = $(am_computeErrPDF_OBJECTS)
 computeErrPDF_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
+am_computeGradientLength_OBJECTS = computeGradientLength.$(OBJEXT)
+computeGradientLength_OBJECTS = $(am_computeGradientLength_OBJECTS)
+computeGradientLength_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 	../zstd/.libs/libzstd.a
 am_computeLaplacian_OBJECTS = computeLaplacian.$(OBJEXT)
 computeLaplacian_OBJECTS = $(am_computeLaplacian_OBJECTS)
@@ -250,7 +254,9 @@ am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/computeDataAutoCorrelation.Po \
 	./$(DEPDIR)/computeDataPDF.Po \
 	./$(DEPDIR)/computeErrAutoCorrelation.Po \
-	./$(DEPDIR)/computeErrPDF.Po ./$(DEPDIR)/computeLaplacian.Po \
+	./$(DEPDIR)/computeErrPDF.Po \
+	./$(DEPDIR)/computeGradientLength.Po \
+	./$(DEPDIR)/computeLaplacian.Po \
 	./$(DEPDIR)/convertBytesToTxtDouble.Po \
 	./$(DEPDIR)/convertBytesToTxtFloat.Po \
 	./$(DEPDIR)/convertDataToLogDouble.Po \
@@ -291,8 +297,8 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(computeAccuracyGain_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
-	$(computeErrPDF_SOURCES) $(computeLaplacian_SOURCES) \
-	$(convertBytesToTxtDouble_SOURCES) \
+	$(computeErrPDF_SOURCES) $(computeGradientLength_SOURCES) \
+	$(computeLaplacian_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDataToLogFloat_SOURCES) $(convertDataType_SOURCES) \
@@ -310,8 +316,8 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(computeAccuracyGain_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
-	$(computeErrPDF_SOURCES) $(computeLaplacian_SOURCES) \
-	$(convertBytesToTxtDouble_SOURCES) \
+	$(computeErrPDF_SOURCES) $(computeGradientLength_SOURCES) \
+	$(computeLaplacian_SOURCES) $(convertBytesToTxtDouble_SOURCES) \
 	$(convertBytesToTxtFloat_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDataToLogFloat_SOURCES) $(convertDataType_SOURCES) \
@@ -531,6 +537,8 @@ computeLaplacian_SOURCES = computeLaplacian.c
 computeLaplacian_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 calculateSobolevNorm_SOURCES = calculateSobolevNorm.c
 calculateSobolevNorm_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeGradientLength_SOURCES = computeGradientLength.c
+computeGradientLength_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -658,6 +666,10 @@ computeErrPDF$(EXEEXT): $(computeErrPDF_OBJECTS) $(computeErrPDF_DEPENDENCIES) $
 	@rm -f computeErrPDF$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(computeErrPDF_OBJECTS) $(computeErrPDF_LDADD) $(LIBS)
 
+computeGradientLength$(EXEEXT): $(computeGradientLength_OBJECTS) $(computeGradientLength_DEPENDENCIES) $(EXTRA_computeGradientLength_DEPENDENCIES) 
+	@rm -f computeGradientLength$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(computeGradientLength_OBJECTS) $(computeGradientLength_LDADD) $(LIBS)
+
 computeLaplacian$(EXEEXT): $(computeLaplacian_OBJECTS) $(computeLaplacian_DEPENDENCIES) $(EXTRA_computeLaplacian_DEPENDENCIES) 
 	@rm -f computeLaplacian$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(computeLaplacian_OBJECTS) $(computeLaplacian_LDADD) $(LIBS)
@@ -747,6 +759,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataPDF.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrAutoCorrelation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrPDF.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeGradientLength.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeLaplacian.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertBytesToTxtFloat.Po@am__quote@ # am--include-marker
@@ -940,6 +953,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeErrPDF.Po
+	-rm -f ./$(DEPDIR)/computeGradientLength.Po
 	-rm -f ./$(DEPDIR)/computeLaplacian.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
@@ -1014,6 +1028,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeErrPDF.Po
+	-rm -f ./$(DEPDIR)/computeGradientLength.Po
 	-rm -f ./$(DEPDIR)/computeLaplacian.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtDouble.Po
 	-rm -f ./$(DEPDIR)/convertBytesToTxtFloat.Po
