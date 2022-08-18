@@ -812,7 +812,7 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 		for(i=1;i<r3-1;i++)
 			for(k=1;k<r1-1;k++)
 			{
-				index = (r3-1)*r2r1 + k; //j is always 0
+				index = i*r2r1 + k; //j is always 0
 				gradx = (data[index+1] - data[index-1])/2;
 				grady = data[index+r1] - data[index];
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;
@@ -823,7 +823,7 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 			for(k=1;k<r1-1;k++)
 			{
 				j = r2-1;
-				index = (r3-1)*r2r1 + j*r1 + k;
+				index = i*r2r1 + j*r1 + k;
 				gradx = (data[index+1] - data[index-1])/2;
 				grady = data[index] - data[index-r1];
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;
@@ -833,7 +833,7 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 		for(i=1;i<r3-1;i++)
 			for(j=1;j<r2-1;j++)
 			{
-				index = (r3-1)*r2r1 + j*r1;
+				index = i*r2r1 + j*r1;
 				gradx = data[index+1] - data[index];
 				grady = (data[index+r1] - data[index-r1])/2;
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;
@@ -844,7 +844,7 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 			for(j=1;j<r2-1;j++)
 			{
 				k = r1-1;
-				index = (r3-1)*r2r1 + j*r1 + k; 
+				index = i*r2r1 + j*r1 + k; 
 				gradx = data[index] - data[index-1];
 				grady = (data[index+r1] - data[index-r1])/2;
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;
@@ -853,15 +853,15 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 		
 		//process interior points
 		for(i=1;i<r3-1;i++)
-		for(j=1;j<r2-1;j++)
-			for(k=1;k<r1-1;k++)
-			{
-				size_t index = i*r2r1+j*r1+k;
-				gradx = (data[index+1] - data[index-1])/2;
-				grady = (data[index+r1] - data[index-r1])/2;
-				gradz = (data[index+r2r1] - data[index-r2r1])/2;
-				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
-			}		
+			for(j=1;j<r2-1;j++)
+				for(k=1;k<r1-1;k++)
+				{
+					size_t index = i*r2r1+j*r1+k;
+					gradx = (data[index+1] - data[index-1])/2;
+					grady = (data[index+r1] - data[index-r1])/2;
+					gradz = (data[index+r2r1] - data[index-r2r1])/2;
+					gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+				}		
 	}
 	
 }
@@ -1084,7 +1084,7 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 		for(i=1;i<r3-1;i++)
 			for(k=1;k<r1-1;k++)
 			{
-				index = (r3-1)*r2r1 + k; //j is always 0
+				index = i*r2r1 + k; //j is always 0
 				gradx = (data[index+1] - data[index-1])/2;
 				grady = data[index+r1] - data[index];
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;
@@ -1095,7 +1095,7 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 			for(k=1;k<r1-1;k++)
 			{
 				j = r2-1;
-				index = (r3-1)*r2r1 + j*r1 + k;
+				index = i*r2r1 + j*r1 + k;
 				gradx = (data[index+1] - data[index-1])/2;
 				grady = data[index] - data[index-r1];
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;
@@ -1105,7 +1105,7 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 		for(i=1;i<r3-1;i++)
 			for(j=1;j<r2-1;j++)
 			{
-				index = (r3-1)*r2r1 + j*r1;
+				index = i*r2r1 + j*r1;
 				gradx = data[index+1] - data[index];
 				grady = (data[index+r1] - data[index-r1])/2;
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;
@@ -1116,7 +1116,7 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 			for(j=1;j<r2-1;j++)
 			{
 				k = r1-1;
-				index = (r3-1)*r2r1 + j*r1 + k; 
+				index = i*r2r1 + j*r1 + k; 
 				gradx = data[index] - data[index-1];
 				grady = (data[index+r1] - data[index-r1])/2;
 				gradz = (data[index+r2r1] - data[index-r2r1])/2;

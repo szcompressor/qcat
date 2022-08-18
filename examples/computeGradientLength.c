@@ -25,7 +25,7 @@ int main(int argc, char * argv[])
     {
 		printf("Usage: computeGradientLength [datatype (-f or -d)] [original data file (input)] [laplacian matrix file (output)]\n");
 		printf("			-f means single precision; -d means double precision\n");
-		printf("Example: computeGradientLength -f CLOUD_100x500x500.dat CLOUD_100x500x500_lap.dat 500 500 100\n");
+		printf("Example: computeGradientLength -f CLOUD_100x500x500.dat CLOUD_100x500x500.dat.gradl 500 500 100\n");
 		exit(0);
     }
    
@@ -67,6 +67,7 @@ int main(int argc, char * argv[])
 		ori_data = readFloatData(oriFilePath, &nbEle, &status);
 		
 		float* gradLen_data = (float *)malloc(nbEle*sizeof(float));
+		memset(gradLen_data, 0, nbEle*sizeof(float));
 		
 		printf("calcaulting....\n");
 		computeGradientLength(ori_data, gradLen_data, dType, 0, r4, r3, r2, r1);
@@ -88,7 +89,7 @@ int main(int argc, char * argv[])
 		double* gradLen_data = (double *)malloc(nbEle*sizeof(double));
 
 		printf("calcaulting....\n");
-		computeLaplacian(ori_data, gradLen_data, dType, 0, r4, r3, r2, r1);
+		computeGradientLength(ori_data, gradLen_data, dType, 0, r4, r3, r2, r1);
 	
 		//writing results
 		printf("Writing resulting data to %s\n", gradLenFilePath);
