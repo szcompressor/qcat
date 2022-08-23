@@ -695,7 +695,7 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 		
 		index = (r3-1)*r2r1;
 		gradx = data[index+1]-data[index];
-		grady = data[index]-data[index-r1];
+		grady = data[index+r1]-data[index];
 		gradz = data[index]-data[index-r2r1];		
 		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
 		
@@ -755,7 +755,7 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 		
 		for(i=1;i<r1-1;i++)
 		{
-			index = (r3-1)*r2r1 + 0;
+			index = (r3-1)*r2r1 + i;
 			gradx = (data[index+1]-data[index-1])/2;
 			grady = data[index+r1]-data[index];
 			gradz = data[index] - data[index-r2r1];
@@ -779,6 +779,7 @@ void computeGradientLength_float(float* data, float*gradMag, size_t r5, size_t r
 			gradz = data[index] - data[index-r2r1];
 			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
 		}
+		
 		for(i=1;i<r2-1;i++)
 		{
 			index = (r3-1)*r2r1+i*r1+r1-1;
@@ -967,7 +968,7 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 		
 		index = (r3-1)*r2r1;
 		gradx = data[index+1]-data[index];
-		grady = data[index]-data[index-r1];
+		grady = data[index+r1]-data[index];
 		gradz = data[index]-data[index-r2r1];		
 		gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
 		
@@ -1027,7 +1028,7 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 		
 		for(i=1;i<r1-1;i++)
 		{
-			index = (r3-1)*r2r1 + 0;
+			index = (r3-1)*r2r1 + i;
 			gradx = (data[index+1]-data[index-1])/2;
 			grady = data[index+r1]-data[index];
 			gradz = data[index] - data[index-r2r1];
@@ -1051,6 +1052,7 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 			gradz = data[index] - data[index-r2r1];
 			gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);						
 		}
+		
 		for(i=1;i<r2-1;i++)
 		{
 			index = (r3-1)*r2r1+i*r1+r1-1;
@@ -1125,15 +1127,15 @@ void computeGradientLength_double(double* data, double*gradMag, size_t r5, size_
 		
 		//process interior points
 		for(i=1;i<r3-1;i++)
-		for(j=1;j<r2-1;j++)
-			for(k=1;k<r1-1;k++)
-			{
-				size_t index = i*r2r1+j*r1+k;
-				gradx = (data[index+1] - data[index-1])/2;
-				grady = (data[index+r1] - data[index-r1])/2;
-				gradz = (data[index+r2r1] - data[index-r2r1])/2;
-				gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
-			}		
+			for(j=1;j<r2-1;j++)
+				for(k=1;k<r1-1;k++)
+				{
+					size_t index = i*r2r1+j*r1+k;
+					gradx = (data[index+1] - data[index-1])/2;
+					grady = (data[index+r1] - data[index-r1])/2;
+					gradz = (data[index+r2r1] - data[index-r2r1])/2;
+					gradMag[index] = sqrt(gradx*gradx+grady*grady+gradz*gradz);
+				}		
 	}
 	
 }
