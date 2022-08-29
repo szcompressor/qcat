@@ -1173,17 +1173,18 @@ double calculateSobolevNorm_s1_p2_float(float *data, size_t r5, size_t r4, size_
 {
 	size_t i, j, k;
 	int dim = computeDimension(r5, r4, r3, r2, r1);
-	size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
+	//size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
 	double sum = 0;
+	size_t counter =  0;
 	if(dim==1)
 	{
 		for(i=1;i<r1-1;i++)
 		{
 			sum += data[i]*data[i];
 			sum += (data[i+1]-data[i-1])*(data[i+1]-data[i-1])/4;
+			counter ++;
 		}
-		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	else if(dim==2)
 	{
@@ -1195,10 +1196,11 @@ double calculateSobolevNorm_s1_p2_float(float *data, size_t r5, size_t r4, size_
 				sum += data[index]*data[index];
 				sum += (data[index+1]-data[index-1])*(data[index+1]-data[index-1])/4;
 				sum += (data[index+r1]-data[index-r1])*(data[index+r1]-data[index-r1])/4;
+				counter ++;
 			}
 		}				
 		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	else if(dim==3)
 	{
@@ -1213,12 +1215,13 @@ double calculateSobolevNorm_s1_p2_float(float *data, size_t r5, size_t r4, size_
 					sum += data[index]*data[index];
 					sum += (data[index+1]-data[index-1])*(data[index+1]-data[index-1])/4;
 					sum += (data[index+r1]-data[index-r1])*(data[index+r1]-data[index-r1])/4;
-					sum += (data[index+r2r1]-data[index-r2r1])*(data[index+r2r1]-data[index-r2r1])/4;					
+					sum += (data[index+r2r1]-data[index-r2r1])*(data[index+r2r1]-data[index-r2r1])/4;		
+					counter ++;			
 				}
 			}
 		}			
 		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	
 	return -1; //error or does not support dim>3
@@ -1229,7 +1232,8 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 {
 	size_t i, j, k;
 	int dim = computeDimension(r5, r4, r3, r2, r1);
-	size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
+	//size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
+	size_t counter = 0;
 	double sum = 0;
 	if(dim==1)
 	{
@@ -1241,9 +1245,10 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 			sum += data[i]*data[i];
 			sum += x1_dev*x1_dev;
 			sum += x2_dev*x2_dev;
+			counter ++;
 		}
 		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}	
 	else if(dim==2)
 	{
@@ -1263,9 +1268,10 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 				sum += y1_dev*y1_dev;
 				sum += y2_dev*y2_dev;
 				sum += xy_dev*xy_dev;
+				counter ++;
 			}
 			
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	else if(dim==3)
 	{
@@ -1293,9 +1299,10 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 					sum += xy_dev*xy_dev;
 					sum += yz_dev*yz_dev;
 					sum += xz_dev*xz_dev;
+					counter ++;
 				}
 				
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	
 	return -1;
@@ -1319,7 +1326,8 @@ double calculateSobolevNorm_s1_p2_double(double *data, size_t r5, size_t r4, siz
 {
 	size_t i, j, k;
 	int dim = computeDimension(r5, r4, r3, r2, r1);
-	size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
+	//size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
+	size_t counter = 0;
 	double sum = 0;
 	if(dim==1)
 	{
@@ -1327,9 +1335,10 @@ double calculateSobolevNorm_s1_p2_double(double *data, size_t r5, size_t r4, siz
 		{
 			sum += data[i]*data[i];
 			sum += (data[i+1]-data[i-1])*(data[i+1]-data[i-1])/4;
+			counter ++;
 		}
 		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	else if(dim==2)
 	{
@@ -1341,10 +1350,11 @@ double calculateSobolevNorm_s1_p2_double(double *data, size_t r5, size_t r4, siz
 				sum += data[index]*data[index];
 				sum += (data[index+1]-data[index-1])*(data[index+1]-data[index-1])/4;
 				sum += (data[index+r1]-data[index-r1])*(data[index+r1]-data[index-r1])/4;
+				counter ++;
 			}
 		}				
 		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	else if(dim==3)
 	{
@@ -1359,12 +1369,13 @@ double calculateSobolevNorm_s1_p2_double(double *data, size_t r5, size_t r4, siz
 					sum += data[index]*data[index];
 					sum += (data[index+1]-data[index-1])*(data[index+1]-data[index-1])/4;
 					sum += (data[index+r1]-data[index-r1])*(data[index+r1]-data[index-r1])/4;
-					sum += (data[index+r2r1]-data[index-r2r1])*(data[index+r2r1]-data[index-r2r1])/4;					
+					sum += (data[index+r2r1]-data[index-r2r1])*(data[index+r2r1]-data[index-r2r1])/4;				
+					counter ++;	
 				}
 			}
 		}			
 		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	
 	return -1; //error or does not support dim>3
@@ -1375,7 +1386,8 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 {
 	size_t i, j, k;
 	int dim = computeDimension(r5, r4, r3, r2, r1);
-	size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
+	//size_t nbEle = computeDataLength(r5, r4, r3, r2, r1);
+	size_t counter = 0;
 	double sum = 0;
 	if(dim==1)
 	{
@@ -1387,9 +1399,10 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 			sum += data[i]*data[i];
 			sum += x1_dev*x1_dev;
 			sum += x2_dev*x2_dev;
+			counter ++;
 		}
 		
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}	
 	else if(dim==2)
 	{
@@ -1409,9 +1422,10 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 				sum += y1_dev*y1_dev;
 				sum += y2_dev*y2_dev;
 				sum += xy_dev*xy_dev;
+				counter ++;
 			}
 			
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	else if(dim==3)
 	{
@@ -1439,9 +1453,10 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 					sum += xy_dev*xy_dev;
 					sum += yz_dev*yz_dev;
 					sum += xz_dev*xz_dev;
+					counter ++;
 				}
 				
-		return sqrt(sum/nbEle);
+		return sqrt(sum/counter);
 	}
 	
 	return -1;
