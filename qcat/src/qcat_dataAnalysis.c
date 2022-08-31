@@ -1260,7 +1260,7 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 				float x2_dev = (data[index+1]-data[index])-(data[index]-data[index-1]);
 				float y1_dev = (data[index+r1]-data[index-r1])/2;
 				float y2_dev = (data[index+r1]-data[index])-(data[index]-data[index-r1]);
-				float xy_dev = (data[index-r1+1]+data[index+r1-1]-data[index-r1-1]-data[index+r1+1])/2;
+				float xy_dev = (data[index-r1-1]+data[index+r1+1]-data[index-r1+1]-data[index+r1-1])/4;
 				
 				sum += data[index]*data[index];
 				sum += x1_dev*x1_dev;
@@ -1287,8 +1287,9 @@ double calculateSobolevNorm_s2_p2_float(float *data, size_t r5, size_t r4, size_
 					float y2_dev = (data[index+r1]-data[index])-(data[index]-data[index-r1]);
 					float z1_dev = (data[index+r2r1]-data[index-r2r1])/2;
 					float z2_dev = (data[index+r2r1]-data[index])-(data[index]-data[index-r2r1]);										
-					float xy_dev = (data[index-r1+1]+data[index+r1-1]-data[index-r1-1]-data[index+r1+1])/2;
-					float yz_dev = (data[index-r2r1+r1]+data[index+r2r1-r1]-data[index-r2r1-r1]-data[index+r2r1+r1])/2;float xz_dev = (data[index-r2r1+1]+data[index+r2r1-1]-data[index-r2r1-1]-data[index+r2r1+1])/2;
+					float xy_dev = (data[index-r1-1]+data[index+r1+1] - data[index-r1+1] - data[index+r1-1])/4;
+					float yz_dev = (data[index-r2r1-r1]+data[index+r2r1+r1] - data[index-r2r1+r1] - data[index+r2r1-r1])/4;
+					float xz_dev = (data[index-r2r1-1]+data[index+r2r1+1]-data[index-r2r1+1]-data[index+r2r1-1])/4;
 					sum += data[index]*data[index];
 					sum += x1_dev*x1_dev;
 					sum += x2_dev*x2_dev;
@@ -1414,7 +1415,7 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 				float x2_dev = (data[index+1]-data[index])-(data[index]-data[index-1]);
 				float y1_dev = (data[index+r1]-data[index-r1])/2;
 				float y2_dev = (data[index+r1]-data[index])-(data[index]-data[index-r1]);
-				float xy_dev = (data[index-r1+1]+data[index+r1-1]-data[index-r1-1]-data[index+r1+1])/2;
+				float xy_dev = (data[index-r1-1]+data[index+r1+1]-data[index-r1+1]-data[index+r1-1])/4;
 				
 				sum += data[index]*data[index];
 				sum += x1_dev*x1_dev;
@@ -1441,8 +1442,9 @@ double calculateSobolevNorm_s2_p2_double(double *data, size_t r5, size_t r4, siz
 					float y2_dev = (data[index+r1]-data[index])-(data[index]-data[index-r1]);
 					float z1_dev = (data[index+r2r1]-data[index-r2r1])/2;
 					float z2_dev = (data[index+r2r1]-data[index])-(data[index]-data[index-r2r1]);										
-					float xy_dev = (data[index-r1+1]+data[index+r1-1]-data[index-r1-1]-data[index+r1+1])/2;
-					float yz_dev = (data[index-r2r1+r1]+data[index+r2r1-r1]-data[index-r2r1-r1]-data[index+r2r1+r1])/2;float xz_dev = (data[index-r2r1+1]+data[index+r2r1-1]-data[index-r2r1-1]-data[index+r2r1+1])/2;
+					float xy_dev = (data[index-r1-1]+data[index+r1+1] - data[index-r1+1] - data[index+r1-1])/4;
+					float yz_dev = (data[index-r2r1-r1]+data[index+r2r1+r1] - data[index-r2r1+r1] - data[index+r2r1-r1])/4;
+					float xz_dev = (data[index-r2r1-1]+data[index+r2r1+1]-data[index-r2r1+1]-data[index+r2r1-1])/4;
 					sum += data[index]*data[index];
 					sum += x1_dev*x1_dev;
 					sum += x2_dev*x2_dev;
