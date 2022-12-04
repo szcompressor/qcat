@@ -103,7 +103,8 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertEndianType$(EXEEXT) computeDataAutoCorrelation$(EXEEXT) \
 	computeErrAutoCorrelation$(EXEEXT) compressQuantBins$(EXEEXT) \
 	computeAccuracyGain$(EXEEXT) computeLaplacian$(EXEEXT) \
-	calculateSobolevNorm$(EXEEXT) computeGradientLength$(EXEEXT)
+	calculateSobolevNorm$(EXEEXT) computeGradientLength$(EXEEXT) \
+	splitDataFile$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -230,6 +231,10 @@ simSZ_DEPENDENCIES = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a
 am_splitComplexData_OBJECTS = splitComplexData.$(OBJEXT)
 splitComplexData_OBJECTS = $(am_splitComplexData_OBJECTS)
 splitComplexData_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_splitDataFile_OBJECTS = splitDataFile.$(OBJEXT)
+splitDataFile_OBJECTS = $(am_splitDataFile_OBJECTS)
+splitDataFile_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -271,7 +276,7 @@ am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/generateRandomData.Po \
 	./$(DEPDIR)/generateRandomData2.Po ./$(DEPDIR)/predCR.Po \
 	./$(DEPDIR)/printProperty.Po ./$(DEPDIR)/simSZ.Po \
-	./$(DEPDIR)/splitComplexData.Po
+	./$(DEPDIR)/splitComplexData.Po ./$(DEPDIR)/splitDataFile.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -309,7 +314,7 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
 	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
-	$(splitComplexData_SOURCES)
+	$(splitComplexData_SOURCES) $(splitDataFile_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(calculateSobolevNorm_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(compressQuantBins_SOURCES) \
@@ -328,7 +333,7 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
 	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
-	$(splitComplexData_SOURCES)
+	$(splitComplexData_SOURCES) $(splitDataFile_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -539,6 +544,8 @@ calculateSobolevNorm_SOURCES = calculateSobolevNorm.c
 calculateSobolevNorm_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeGradientLength_SOURCES = computeGradientLength.c
 computeGradientLength_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+splitDataFile_SOURCES = splitDataFile.c
+splitDataFile_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -742,6 +749,10 @@ splitComplexData$(EXEEXT): $(splitComplexData_OBJECTS) $(splitComplexData_DEPEND
 	@rm -f splitComplexData$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(splitComplexData_OBJECTS) $(splitComplexData_LDADD) $(LIBS)
 
+splitDataFile$(EXEEXT): $(splitDataFile_OBJECTS) $(splitDataFile_DEPENDENCIES) $(EXTRA_splitDataFile_DEPENDENCIES) 
+	@rm -f splitDataFile$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(splitDataFile_OBJECTS) $(splitDataFile_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -778,6 +789,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printProperty.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simSZ.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splitComplexData.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splitDataFile.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -972,6 +984,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/printProperty.Po
 	-rm -f ./$(DEPDIR)/simSZ.Po
 	-rm -f ./$(DEPDIR)/splitComplexData.Po
+	-rm -f ./$(DEPDIR)/splitDataFile.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -1047,6 +1060,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/printProperty.Po
 	-rm -f ./$(DEPDIR)/simSZ.Po
 	-rm -f ./$(DEPDIR)/splitComplexData.Po
+	-rm -f ./$(DEPDIR)/splitDataFile.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
