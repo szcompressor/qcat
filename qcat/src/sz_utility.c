@@ -384,6 +384,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
         register int s = 0;
 		register int prev_quant_value = 0;
 		register int curr_quant_value = 0;
+		register int x = 0;
 				
         data_recip = data[0]*recip_Precision;
         s = data_recip>=-0.5f?0:1;
@@ -395,7 +396,9 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 			data_recip = data[i]*recip_Precision;
 			s = data_recip>=-0.5f?0:1;
 			curr_quant_value = (int)(data_recip+0.5f) - s;
-			out[i] = curr_quant_value - prev_quant_value;
+			
+			x = curr_quant_value - prev_quant_value;
+			out[i] = (x << 1) ^ ( x >> 31);
 			prev_quant_value = curr_quant_value;		
 		}
 	}
@@ -403,6 +406,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 	{
         register int s = 0;	
 		register int curr_quant_value = 0;
+		register int x = 0;
 				
         data_recip = data[0]*recip_Precision;
         s = data_recip>=-0.5f?0:1;
@@ -421,7 +425,9 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 			data_recip = data[i]*recip_Precision;
 			s = data_recip>=-0.5f?0:1;
 			curr_quant_value = (int)(data_recip+0.5f) - s;
-			out[i] = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+
+			x = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+			out[i] = (x << 1) ^ ( x >> 31);			
 			prev2_quant_value = prev1_quant_value;
 			prev1_quant_value = curr_quant_value;
 		}	
@@ -430,6 +436,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 	{
         register int s = 0;	
 		register int curr_quant_value = 0;		
+		register int x = 0;		
 		
         data_recip = data[0]*recip_Precision;
         s = data_recip>=-0.5f?0:1;
@@ -452,7 +459,9 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 			data_recip = data[i]*recip_Precision;
 			s = data_recip>=-0.5f?0:1;
 			curr_quant_value = (int)(data_recip+0.5f) - s;
-			out[i] = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+
+			x = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+			out[i] = (x << 1) ^ ( x >> 31);			
 			prev3_quant_value = prev2_quant_value;
 			prev2_quant_value = prev1_quant_value;
 			prev1_quant_value = curr_quant_value;
@@ -492,6 +501,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
         register int s = 0;
 		register int prev_quant_value = 0;
 		register int curr_quant_value = 0;
+		register int x = 0;			
 				
         data_recip = data[0]*recip_Precision;
         s = data_recip>=-0.5?0:1;
@@ -503,7 +513,9 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 			data_recip = data[i]*recip_Precision;
 			s = data_recip>=-0.5?0:1;
 			curr_quant_value = (int)(data_recip+0.5) - s;
-			out[i] = curr_quant_value - prev_quant_value;
+			
+			x = curr_quant_value - prev_quant_value;
+			out[i] = (x << 1) ^ ( x >> 31);
 			prev_quant_value = curr_quant_value;		
 		}
 	}
@@ -511,6 +523,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 	{
         register int s = 0;	
 		register int curr_quant_value = 0;
+		register int x = 0;			
 				
         data_recip = data[0]*recip_Precision;
         s = data_recip>=-0.5?0:1;
@@ -529,7 +542,9 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 			data_recip = data[i]*recip_Precision;
 			s = data_recip>=-0.5?0:1;
 			curr_quant_value = (int)(data_recip+0.5) - s;
-			out[i] = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+			
+			x = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+			out[i] = (x << 1) ^ ( x >> 31);					
 			prev2_quant_value = prev1_quant_value;
 			prev1_quant_value = curr_quant_value;
 		}	
@@ -537,7 +552,8 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 	else if(mode==LORENZO_1D_3LAYER)
 	{
         register int s = 0;
-		register int curr_quant_value = 0;			
+		register int curr_quant_value = 0;		
+		register int x = 0;				
 		
         data_recip = data[0]*recip_Precision;
         s = data_recip>=-0.5?0:1;
@@ -560,7 +576,9 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 			data_recip = data[i]*recip_Precision;
 			s = data_recip>=-0.5?0:1;
 			curr_quant_value = (int)(data_recip+0.5) - s;
-			out[i] = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+
+			x = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+			out[i] = (x << 1) ^ ( x >> 31);				
 			prev3_quant_value = prev2_quant_value;
 			prev2_quant_value = prev1_quant_value;
 			prev1_quant_value = curr_quant_value;
@@ -594,6 +612,7 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, d
 	
 	register int curQuantValue = 0;
 	register float e2 = errorBound*2;
+	register int x = 0;
 	
 	if(mode==LORENZO_1D_1LAYER)
 	{
@@ -601,8 +620,9 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, d
 		result[0] = e2*preQuantValue;
 		for(i=1;i<nbEle;i++)
 		{
-			curQuantValue = preQuantValue + diffQuantData[i];
-			result[i] = e2*curQuantValue;
+			x = diffQuantData[i];
+			curQuantValue = preQuantValue + ((x >> 1) ^ (-(x&1)));
+			result[i] = e2*curQuantValue;			
 			preQuantValue = curQuantValue;
 		}
 	}
@@ -615,7 +635,8 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, d
 						
 		for(i=2;i<nbEle;i++)
 		{
-			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + diffQuantData[i];
+			x = diffQuantData[i];
+			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + ((x >> 1) ^ (-(x&1)));
 			result[i] = e2*curQuantValue;
 			pred2_quant_value = pred1_quant_value;
 			pred1_quant_value = curQuantValue;
@@ -632,7 +653,8 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, d
 						
 		for(i=3;i<nbEle;i++)
 		{
-			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + diffQuantData[i];
+			x = diffQuantData[i];
+			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + ((x >> 1) ^ (-(x&1)));
 			result[i] = e2*curQuantValue;
 			pred3_quant_value = pred2_quant_value;
 			pred2_quant_value = pred1_quant_value;
@@ -664,15 +686,17 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, 
 	
 	register int curQuantValue = 0;
 	register double e2 = errorBound*2;
-	
+	register int x = 0;
+		
 	if(mode==LORENZO_1D_1LAYER)
 	{
 		int preQuantValue = diffQuantData[0];
 		result[0] = e2*preQuantValue;
 		for(i=1;i<nbEle;i++)
 		{
-			curQuantValue = preQuantValue + diffQuantData[i];
-			result[i] = e2*curQuantValue;
+			x = diffQuantData[i];
+			curQuantValue = preQuantValue + ((x >> 1) ^ (-(x&1)));
+			result[i] = e2*curQuantValue;			
 			preQuantValue = curQuantValue;
 		}
 	}
@@ -685,7 +709,8 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, 
 						
 		for(i=2;i<nbEle;i++)
 		{
-			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + diffQuantData[i];
+			x = diffQuantData[i];
+			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + ((x >> 1) ^ (-(x&1)));
 			result[i] = e2*curQuantValue;
 			pred2_quant_value = pred1_quant_value;
 			pred1_quant_value = curQuantValue;
@@ -702,7 +727,8 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, 
 						
 		for(i=3;i<nbEle;i++)
 		{
-			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + diffQuantData[i];
+			x = diffQuantData[i];
+			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + ((x >> 1) ^ (-(x&1)));
 			result[i] = e2*curQuantValue;
 			pred3_quant_value = pred2_quant_value;
 			pred2_quant_value = pred1_quant_value;
