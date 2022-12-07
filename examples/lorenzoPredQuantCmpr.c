@@ -1,9 +1,9 @@
 /**
- *  @file lorenzoPredQuant.c
+ *  @file lorenzoPredQuantCmpr.c
  *  @author Sheng Di
- *  @date April, 2022
+ *  @date Dec, 2022
  *  @brief This is an example of using compression interface
- *  (C) 2015 by Mathematics and Computer Science (MCS), Argonne National Laboratory.
+ *  (C) 2022 by Mathematics and Computer Science (MCS), Argonne National Laboratory.
  *      See COPYRIGHT in top-level directory.
  */
 
@@ -101,11 +101,12 @@ int main(int argc, char * argv[])
     int dataType = 0; 
     size_t nbEle = computeDataLength(0, 0, r3, r2, r1);
     int* out = (int*)malloc(sizeof(int)*nbEle);
-    if(strcmp(type, "-f")==0)
+    if(strcmp(type, "-f")==0) //data type is float
     {
 	dataType = QCAT_FLOAT;
 	float *data = readFloatData(oriFilePath, &nbEle, &status);
 	cost_start();
+	//mode means lorenzo_mode, mode2 means quantizationCodeFormat
 	status = lorenzoPredictorQuant_Cmpr_NoOutlier(data, dataType, mode, mode2, errorBound, r3, r2, r1, out);
 	cost_end();
 	printf("total time cost = %f\n", totalCost);
