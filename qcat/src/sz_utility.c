@@ -370,7 +370,7 @@ inline void sizeToBytes(unsigned char* outBytes, size_t size)
 	longToBytes_bigEndian(outBytes, size);//8
 }
 
-int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
+int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
 {
 	size_t i = 0;
 	size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
@@ -391,16 +391,36 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
         out[0] = (int)(data_recip+0.5f) - s;
         prev_quant_value = out[0];
       
-		for(i = 1;i<nbEle;i++)
+        if(codeFormat == QUANT_CODE_ORIGINAL)
 		{
-			data_recip = data[i]*recip_Precision;
-			s = data_recip>=-0.5f?0:1;
-			curr_quant_value = (int)(data_recip+0.5f) - s;
-			
-			x = curr_quant_value - prev_quant_value;
-			out[i] = (x << 1) ^ ( x >> 31);
-			prev_quant_value = curr_quant_value;		
+			for(i = 1;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5f?0:1;
+				curr_quant_value = (int)(data_recip+0.5f) - s;
+				
+				out[i] = curr_quant_value - prev_quant_value;
+				prev_quant_value = curr_quant_value;		
+			}
 		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
+		{
+			for(i = 1;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5f?0:1;
+				curr_quant_value = (int)(data_recip+0.5f) - s;
+				
+				x = curr_quant_value - prev_quant_value;
+				out[i] = (x << 1) ^ ( x >> 31);
+				prev_quant_value = curr_quant_value;		
+			}
+		}
+		else //QUANT_CODE_SHIFT
+		{
+			
+		}
+		
 	}
 	else if(mode==LORENZO_1D_2LAYER)
 	{
@@ -420,17 +440,37 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 		register int prev1_quant_value = out[1];
         
 		//quantization  & 2-layer 1D prediction
-		for(i=2;i<nbEle;i++)
+        if(codeFormat == QUANT_CODE_ORIGINAL)
 		{
-			data_recip = data[i]*recip_Precision;
-			s = data_recip>=-0.5f?0:1;
-			curr_quant_value = (int)(data_recip+0.5f) - s;
+			for(i=2;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5f?0:1;
+				curr_quant_value = (int)(data_recip+0.5f) - s;
 
-			x = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
-			out[i] = (x << 1) ^ ( x >> 31);			
-			prev2_quant_value = prev1_quant_value;
-			prev1_quant_value = curr_quant_value;
-		}	
+				out[i] = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;
+			}	
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
+		{
+			for(i=2;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5f?0:1;
+				curr_quant_value = (int)(data_recip+0.5f) - s;
+
+				x = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+				out[i] = (x << 1) ^ ( x >> 31);			
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;
+			}				
+		}
+		else //QUANT_CODE_SHIFT
+		{
+			
+		}
 	}
 	else if(mode==LORENZO_1D_3LAYER)
 	{
@@ -454,17 +494,38 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 		register int prev2_quant_value = out[1];
 		register int prev1_quant_value = out[2];
 
-		for(i=3;i<nbEle;i++)
+        if(codeFormat == QUANT_CODE_ORIGINAL)
 		{
-			data_recip = data[i]*recip_Precision;
-			s = data_recip>=-0.5f?0:1;
-			curr_quant_value = (int)(data_recip+0.5f) - s;
+			for(i=3;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5f?0:1;
+				curr_quant_value = (int)(data_recip+0.5f) - s;
 
-			x = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
-			out[i] = (x << 1) ^ ( x >> 31);			
-			prev3_quant_value = prev2_quant_value;
-			prev2_quant_value = prev1_quant_value;
-			prev1_quant_value = curr_quant_value;
+				out[i] = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+				prev3_quant_value = prev2_quant_value;
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;
+			}
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
+		{
+			for(i=3;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5f?0:1;
+				curr_quant_value = (int)(data_recip+0.5f) - s;
+
+				x = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+				out[i] = (x << 1) ^ ( x >> 31);			
+				prev3_quant_value = prev2_quant_value;
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;
+			}			
+		}
+		else //QUANT_CODE_SHIFT
+		{
+			
 		}
 	}
 	else if(mode==LORENZO_2D_1LAYER)
@@ -487,7 +548,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double err
 	
 }
 
-int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
+int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
 {
 	size_t i = 0;
 	size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
@@ -507,16 +568,34 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
         s = data_recip>=-0.5?0:1;
         out[0] = (int)(data_recip+0.5) - s;
         prev_quant_value = out[0];
-      
-		for(i = 1;i<nbEle;i++)
+        if(codeFormat == QUANT_CODE_ORIGINAL)
+		{      
+			for(i = 1;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5?0:1;
+				curr_quant_value = (int)(data_recip+0.5) - s;
+					
+				out[i] = curr_quant_value - prev_quant_value;
+				prev_quant_value = curr_quant_value;		
+			}
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
 		{
-			data_recip = data[i]*recip_Precision;
-			s = data_recip>=-0.5?0:1;
-			curr_quant_value = (int)(data_recip+0.5) - s;
+			for(i = 1;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5?0:1;
+				curr_quant_value = (int)(data_recip+0.5) - s;
+				
+				x = curr_quant_value - prev_quant_value;
+				out[i] = (x << 1) ^ ( x >> 31);
+				prev_quant_value = curr_quant_value;		
+			}			
+		}
+		else //codeFormat == QUANT_CODE_SHIFT
+		{
 			
-			x = curr_quant_value - prev_quant_value;
-			out[i] = (x << 1) ^ ( x >> 31);
-			prev_quant_value = curr_quant_value;		
 		}
 	}
 	else if(mode==LORENZO_1D_2LAYER)
@@ -537,17 +616,34 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 		register int prev1_quant_value = out[1];
         
 		//quantization  & 2-layer 1D prediction
-		for(i=2;i<nbEle;i++)
+        if(codeFormat == QUANT_CODE_ORIGINAL)
+		{      		
+			for(i=2;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5?0:1;
+				curr_quant_value = (int)(data_recip+0.5) - s;
+				
+				out[i] = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;
+			}	
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
 		{
-			data_recip = data[i]*recip_Precision;
-			s = data_recip>=-0.5?0:1;
-			curr_quant_value = (int)(data_recip+0.5) - s;
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5?0:1;
+				curr_quant_value = (int)(data_recip+0.5) - s;
+				
+				x = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+				out[i] = (x << 1) ^ ( x >> 31);					
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;			
+		}
+		else //codeFormat == QUANT_CODE_SHIFT
+		{
 			
-			x = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
-			out[i] = (x << 1) ^ ( x >> 31);					
-			prev2_quant_value = prev1_quant_value;
-			prev1_quant_value = curr_quant_value;
-		}	
+		}
 	}
 	else if(mode==LORENZO_1D_3LAYER)
 	{
@@ -571,17 +667,38 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 		register int prev2_quant_value = out[1];
 		register int prev1_quant_value = out[2];
 
-		for(i=3;i<nbEle;i++)
-		{
-			data_recip = data[i]*recip_Precision;
-			s = data_recip>=-0.5?0:1;
-			curr_quant_value = (int)(data_recip+0.5) - s;
+        if(codeFormat == QUANT_CODE_ORIGINAL)
+		{      
+			for(i=3;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5?0:1;
+				curr_quant_value = (int)(data_recip+0.5) - s;
 
-			x = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
-			out[i] = (x << 1) ^ ( x >> 31);				
-			prev3_quant_value = prev2_quant_value;
-			prev2_quant_value = prev1_quant_value;
-			prev1_quant_value = curr_quant_value;
+				out[i] = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+				prev3_quant_value = prev2_quant_value;
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;
+			}
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
+		{
+			for(i=3;i<nbEle;i++)
+			{
+				data_recip = data[i]*recip_Precision;
+				s = data_recip>=-0.5?0:1;
+				curr_quant_value = (int)(data_recip+0.5) - s;
+
+				x = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+				out[i] = (x << 1) ^ ( x >> 31);				
+				prev3_quant_value = prev2_quant_value;
+				prev2_quant_value = prev1_quant_value;
+				prev1_quant_value = curr_quant_value;
+			}			
+		}
+		else //codeFormat == QUANT_CODE_SHIFT
+		{
+			
 		}
 	}
 	else if(mode==LORENZO_2D_1LAYER)
@@ -603,7 +720,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double e
 	return 0;
 }
 
-int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, double errorBound, size_t n3, size_t n2, size_t n1, float* result)
+int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1, float* result)
 {
 	size_t i = 0;
 	
@@ -614,35 +731,68 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, d
 	register float e2 = errorBound*2;
 	register int x = 0;
 	
-	if(mode==LORENZO_1D_1LAYER)
+	if(mode == LORENZO_1D_1LAYER)
 	{
 		int preQuantValue = diffQuantData[0];
 		result[0] = e2*preQuantValue;
-		for(i=1;i<nbEle;i++)
+		
+		if(codeFormat == QUANT_CODE_ORIGINAL)
 		{
-			x = diffQuantData[i];
-			curQuantValue = preQuantValue + ((x >> 1) ^ (-(x&1)));
-			result[i] = e2*curQuantValue;			
-			preQuantValue = curQuantValue;
+			for(i=1;i<nbEle;i++)
+			{
+				curQuantValue = preQuantValue + diffQuantData[i];
+				result[i] = e2*curQuantValue;			
+				preQuantValue = curQuantValue;
+			}			
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
+		{
+			for(i=1;i<nbEle;i++)
+			{
+				x = diffQuantData[i];
+				curQuantValue = preQuantValue + ((x >> 1) ^ (-(x&1)));
+				result[i] = e2*curQuantValue;			
+				preQuantValue = curQuantValue;
+			}				
+		}
+		else //QUANT_CODE_SHIFT
+		{
+			
 		}
 	}
-	else if(mode==LORENZO_1D_2LAYER)
+	else if(mode == LORENZO_1D_2LAYER)
 	{
 		result[0] = e2*diffQuantData[0];
 		result[1] = e2*diffQuantData[1];
 		register int pred2_quant_value = diffQuantData[0];
 		register int pred1_quant_value = diffQuantData[1];		
-						
-		for(i=2;i<nbEle;i++)
+		if(codeFormat == QUANT_CODE_ORIGINAL)
+		{						
+			for(i=2;i<nbEle;i++)
+			{
+				curQuantValue = (2*pred1_quant_value - pred2_quant_value) + diffQuantData[i];
+				result[i] = e2*curQuantValue;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
 		{
-			x = diffQuantData[i];
-			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + ((x >> 1) ^ (-(x&1)));
-			result[i] = e2*curQuantValue;
-			pred2_quant_value = pred1_quant_value;
-			pred1_quant_value = curQuantValue;
-		}		
+			for(i=2;i<nbEle;i++)
+			{
+				x = diffQuantData[i];
+				curQuantValue = (2*pred1_quant_value - pred2_quant_value) + ((x >> 1) ^ (-(x&1)));
+				result[i] = e2*curQuantValue;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}			
+		}	
+		else //QUANT_CODE_SHIFT
+		{
+			
+		}
 	}	
-	else if(mode==LORENZO_1D_3LAYER)
+	else if(mode == LORENZO_1D_3LAYER)
 	{
 		result[0] = e2*diffQuantData[0];
 		result[1] = e2*diffQuantData[1];
@@ -650,24 +800,42 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, d
 		register int pred3_quant_value = diffQuantData[0];
 		register int pred2_quant_value = diffQuantData[1];		
 		register int pred1_quant_value = diffQuantData[2];				
-						
-		for(i=3;i<nbEle;i++)
+
+		if(codeFormat == QUANT_CODE_ORIGINAL)
+		{							
+			for(i=3;i<nbEle;i++)
+			{
+				curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + diffQuantData[i];
+				result[i] = e2*curQuantValue;
+				pred3_quant_value = pred2_quant_value;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)				
 		{
-			x = diffQuantData[i];
-			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + ((x >> 1) ^ (-(x&1)));
-			result[i] = e2*curQuantValue;
-			pred3_quant_value = pred2_quant_value;
-			pred2_quant_value = pred1_quant_value;
-			pred1_quant_value = curQuantValue;
-		}				
+			for(i=3;i<nbEle;i++)
+			{
+				x = diffQuantData[i];
+				curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + ((x >> 1) ^ (-(x&1)));
+				result[i] = e2*curQuantValue;
+				pred3_quant_value = pred2_quant_value;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}			
+		}
+		else //QUANT_CODE_SHIFT
+		{
+			
+		}
 	}
-	else if(mode==LORENZO_2D_1LAYER)
+	else if(mode == LORENZO_2D_1LAYER)
 	{
 		if(dim==1)
 			return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
 		//TODO implement 2D lorenzo			
 	}
-	else if(mode==LORENZO_3D_1LAYER)
+	else if(mode == LORENZO_3D_1LAYER)
 	{
 		if(dim==1 || dim==2)
 			return 1;
@@ -677,7 +845,7 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, d
 	return 0;	
 }
 
-int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, double errorBound, size_t n3, size_t n2, size_t n1, double* result)
+int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1, double* result)
 {
 	size_t i = 0;
 	
@@ -688,35 +856,69 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, 
 	register double e2 = errorBound*2;
 	register int x = 0;
 		
-	if(mode==LORENZO_1D_1LAYER)
+	if(mode == LORENZO_1D_1LAYER)
 	{
 		int preQuantValue = diffQuantData[0];
 		result[0] = e2*preQuantValue;
-		for(i=1;i<nbEle;i++)
+		
+		if(codeFormat == QUANT_CODE_ORIGINAL)
+		{		
+			for(i=1;i<nbEle;i++)
+			{
+				curQuantValue = preQuantValue + diffQuantData[i];
+				result[i] = e2*curQuantValue;			
+				preQuantValue = curQuantValue;
+			}
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
 		{
-			x = diffQuantData[i];
-			curQuantValue = preQuantValue + ((x >> 1) ^ (-(x&1)));
-			result[i] = e2*curQuantValue;			
-			preQuantValue = curQuantValue;
+			for(i=1;i<nbEle;i++)
+			{
+				x = diffQuantData[i];
+				curQuantValue = preQuantValue + ((x >> 1) ^ (-(x&1)));
+				result[i] = e2*curQuantValue;			
+				preQuantValue = curQuantValue;
+			}			
+		}
+		else
+		{
+			
 		}
 	}
-	else if(mode==LORENZO_1D_2LAYER)
+	else if(mode == LORENZO_1D_2LAYER)
 	{
 		result[0] = e2*diffQuantData[0];
 		result[1] = e2*diffQuantData[1];
 		register int pred2_quant_value = diffQuantData[0];
 		register int pred1_quant_value = diffQuantData[1];		
-						
-		for(i=2;i<nbEle;i++)
+
+		if(codeFormat == QUANT_CODE_ORIGINAL)
+		{							
+			for(i=2;i<nbEle;i++)
+			{	
+				curQuantValue = (2*pred1_quant_value - pred2_quant_value) + diffQuantData[i];
+				result[i] = e2*curQuantValue;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}		
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
 		{
-			x = diffQuantData[i];
-			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + ((x >> 1) ^ (-(x&1)));
-			result[i] = e2*curQuantValue;
-			pred2_quant_value = pred1_quant_value;
-			pred1_quant_value = curQuantValue;
-		}		
+			for(i=2;i<nbEle;i++)
+			{	
+				x = diffQuantData[i];
+				curQuantValue = (2*pred1_quant_value - pred2_quant_value) + ((x >> 1) ^ (-(x&1)));
+				result[i] = e2*curQuantValue;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}					
+		}
+		else if(codeFormat == QUANT_CODE_SHIFT)
+		{
+			
+		}
 	}	
-	else if(mode==LORENZO_1D_3LAYER)
+	else if(mode == LORENZO_1D_3LAYER)
 	{
 		result[0] = e2*diffQuantData[0];
 		result[1] = e2*diffQuantData[1];
@@ -724,24 +926,42 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, 
 		register int pred3_quant_value = diffQuantData[0];
 		register int pred2_quant_value = diffQuantData[1];		
 		register int pred1_quant_value = diffQuantData[2];				
-						
-		for(i=3;i<nbEle;i++)
+					
+		if(codeFormat == QUANT_CODE_ORIGINAL)
+		{								
+			for(i=3;i<nbEle;i++)
+			{
+				curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + diffQuantData[i];
+				result[i] = e2*curQuantValue;
+				pred3_quant_value = pred2_quant_value;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}				
+		}
+		else if(codeFormat == QUANT_CODE_NORMALIZE)
 		{
-			x = diffQuantData[i];
-			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + ((x >> 1) ^ (-(x&1)));
-			result[i] = e2*curQuantValue;
-			pred3_quant_value = pred2_quant_value;
-			pred2_quant_value = pred1_quant_value;
-			pred1_quant_value = curQuantValue;
-		}				
+			for(i=3;i<nbEle;i++)
+			{
+				x = diffQuantData[i];
+				curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + ((x >> 1) ^ (-(x&1)));
+				result[i] = e2*curQuantValue;
+				pred3_quant_value = pred2_quant_value;
+				pred2_quant_value = pred1_quant_value;
+				pred1_quant_value = curQuantValue;
+			}						
+		}
+		else if(codeFormat == QUANT_CODE_SHIFT)
+		{
+			
+		}
 	}
-	else if(mode==LORENZO_2D_1LAYER)
+	else if(mode == LORENZO_2D_1LAYER)
 	{
 		if(dim==1)
 			return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
 		//TODO implement 2D lorenzo			
 	}
-	else if(mode==LORENZO_3D_1LAYER)
+	else if(mode == LORENZO_3D_1LAYER)
 	{
 		if(dim==1 || dim==2)
 			return 1;
@@ -751,30 +971,30 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, 
 }
 
 
-int lorenzoPredictorQuant_Cmpr_NoOutlier(void* data, int dataType, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
+int lorenzoPredictorQuant_Cmpr_NoOutlier(void* data, int dataType, int lorenzoMode, int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
 {
 	int status = 0;
 	if(dataType==QCAT_FLOAT)
 	{
-		status = lorenzoPredictorQuant_Cmpr_NoOutlier_float(data, mode, errorBound, n3, n2, n1, out);
+		status = lorenzoPredictorQuant_Cmpr_NoOutlier_float(data, lorenzoMode, codeFormat, errorBound, n3, n2, n1, out);
 	}
 	else if(dataType==QCAT_DOUBLE)
 	{
-		status = lorenzoPredictorQuant_Cmpr_NoOutlier_double(data, mode, errorBound, n3, n2, n1, out);
+		status = lorenzoPredictorQuant_Cmpr_NoOutlier_double(data, lorenzoMode, codeFormat, errorBound, n3, n2, n1, out);
 	}
 	return status;
 }
 
-int lorenzoPredictorQuant_Decmpr_NoOutlier(int* diffQuantData, int dataType, int mode, double errorBound, size_t n3, size_t n2, size_t n1, void* result)
+int lorenzoPredictorQuant_Decmpr_NoOutlier(int* diffQuantData, int dataType, int lorenzoMode,  int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1, void* result)
 {
 	int status = 0;
 	if(dataType==QCAT_FLOAT)
 	{
-		status = lorenzoPredictorQuant_Decmpr_NoOutlier_float(diffQuantData, mode, errorBound, n3, n2, n1, result);
+		status = lorenzoPredictorQuant_Decmpr_NoOutlier_float(diffQuantData, lorenzoMode, codeFormat, errorBound, n3, n2, n1, result);
 	}
 	else if(dataType==QCAT_DOUBLE)
 	{
-		status = lorenzoPredictorQuant_Decmpr_NoOutlier_double(diffQuantData, mode, errorBound, n3, n2, n1, result);
+		status = lorenzoPredictorQuant_Decmpr_NoOutlier_double(diffQuantData, lorenzoMode, codeFormat, errorBound, n3, n2, n1, result);
 	}
 	
 	return status;

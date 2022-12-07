@@ -44,11 +44,12 @@ int main(int argc, char * argv[])
     int status = 0;
     char oriFilePath[640], outFilePath[645];
     char lmode[30];
+    char qmode[30];
     char type[3];
     if(argc < 3)
     {
-	printf("Test case: lorenzoPredQuantCmpr [type(-f/-d)] [dataFilePath] [lorenzo_mode] [error_bound] [dims...]\n");
-	printf("Example: lorenzoPredQuantCmpr -f Hurricane.dat LORENZO_1D_1LAYER 1E-2 500 500 100\n");
+	printf("Test case: lorenzoPredQuantCmpr [type(-f/-d)] [dataFilePath] [lorenzo_mode] [quant_mode(QUANT_CODE_ORIGINAL/QUANT_CODE_NORMALIZE] [error_bound] [dims...]\n");
+	printf("Example: lorenzoPredQuantCmpr -f Hurricane.dat LORENZO_1D_1LAYER QUANT_CODE_ORIGINAL 1E-2 500 500 100\n");
 	exit(0);
     }
   
@@ -57,14 +58,15 @@ int main(int argc, char * argv[])
     sprintf(outFilePath, "%s.i32", oriFilePath);
 
     sprintf(lmode, "%s", argv[3]);
-    double errorBound = atof(argv[4]);
+    sprintf(qmode, "%s", argv[4]);
+    double errorBound = atof(argv[5]);
 
-    if(argc>=6)
-	r1 = atoi(argv[5]); //8
     if(argc>=7)
-	r2 = atoi(argv[6]); //8
+	r1 = atoi(argv[6]); //8
     if(argc>=8)
-	r3 = atoi(argv[7]); //128
+	r2 = atoi(argv[7]); //8
+    if(argc>=9)
+	r3 = atoi(argv[8]); //128
     
     int mode = 0;
     if(strcmp(lmode, "LORENZO_1D_1LAYER")==0)
@@ -83,6 +85,19 @@ int main(int argc, char * argv[])
 	exit(0);
     }
 
+    int mode2 = 0;
+    if(strcmp(qmode, "QUANT_CODE_ORIGINAL")==0)
+        mode2 = QUANT_CODE_ORIGINAL;
+    else if(strcmp(qmode, "QUANT_CODE_NORMALIZE")==0)
+	mode2 = QUANT_CODE_NORMALIZE;
+    else if(strcmp(qmode, "QUANT_CODE_SHIFT")==0)
+	mode2 = QUANT_CODE_SHIFT;
+    else
+    {
+        printf("Error: wrong quantization_code_mode\n");
+        exit(0);
+    }    
+
     int dataType = 0; 
     size_t nbEle = computeDataLength(0, 0, r3, r2, r1);
     int* out = (int*)malloc(sizeof(int)*nbEle);
@@ -91,7 +106,7 @@ int main(int argc, char * argv[])
 	dataType = QCAT_FLOAT;
 	float *data = readFloatData(oriFilePath, &nbEle, &status);
 	cost_start();
-	status = lorenzoPredictorQuant_Cmpr_NoOutlier(data, dataType, mode, errorBound, r3, r2, r1, out);
+	status = lorenzoPredictorQuant_Cmpr_NoOutlier(data, dataType, mode, mode2, errorBound, r3, r2, r1, out);
 	cost_end();
 	printf("total time cost = %f\n", totalCost);
     }
@@ -100,7 +115,7 @@ int main(int argc, char * argv[])
 	dataType = QCAT_DOUBLE;
 	double *data = readDoubleData(oriFilePath, &nbEle, &status);
 	cost_start();
-	status = lorenzoPredictorQuant_Cmpr_NoOutlier(data, dataType, mode, errorBound, r3, r2, r1, out);
+	status = lorenzoPredictorQuant_Cmpr_NoOutlier(data, dataType, mode, mode2, errorBound, r3, r2, r1, out);
 	cost_end();
 	printf("total time cost = %f\n", totalCost);
     }
