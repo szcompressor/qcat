@@ -69,9 +69,6 @@ void convertUIntArrayToBytes(unsigned int* states, size_t stateLength, unsigned 
 void convertLongArrayToBytes(int64_t* states, size_t stateLength, unsigned char* bytes);
 void convertULongArrayToBytes(uint64_t* states, size_t stateLength, unsigned char* bytes);
 
-size_t bytesToSize(unsigned char* bytes);
-void sizeToBytes(unsigned char* outBytes, size_t size);
-
 void put_codes_to_output(unsigned int buf, int bitSize, unsigned char** p, int* lackBits, size_t *outSize);
 
 #ifdef __cplusplus

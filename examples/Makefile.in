@@ -104,7 +104,8 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	computeErrAutoCorrelation$(EXEEXT) compressQuantBins$(EXEEXT) \
 	computeAccuracyGain$(EXEEXT) computeLaplacian$(EXEEXT) \
 	calculateSobolevNorm$(EXEEXT) computeGradientLength$(EXEEXT) \
-	splitDataFile$(EXEEXT)
+	splitDataFile$(EXEEXT) lorenzoPredQuantCmpr$(EXEEXT) \
+	lorenzoPredQuantDecmpr$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -219,6 +220,14 @@ generateRandomData_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_generateRandomData2_OBJECTS = generateRandomData2.$(OBJEXT)
 generateRandomData2_OBJECTS = $(am_generateRandomData2_OBJECTS)
 generateRandomData2_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_lorenzoPredQuantCmpr_OBJECTS = lorenzoPredQuantCmpr.$(OBJEXT)
+lorenzoPredQuantCmpr_OBJECTS = $(am_lorenzoPredQuantCmpr_OBJECTS)
+lorenzoPredQuantCmpr_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
+am_lorenzoPredQuantDecmpr_OBJECTS = lorenzoPredQuantDecmpr.$(OBJEXT)
+lorenzoPredQuantDecmpr_OBJECTS = $(am_lorenzoPredQuantDecmpr_OBJECTS)
+lorenzoPredQuantDecmpr_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_predCR_OBJECTS = predCR.$(OBJEXT)
 predCR_OBJECTS = $(am_predCR_OBJECTS)
 predCR_DEPENDENCIES = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a
@@ -274,7 +283,9 @@ am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/convertTxtToBytesFloat.Po \
 	./$(DEPDIR)/extractSliceFrom3D.Po \
 	./$(DEPDIR)/generateRandomData.Po \
-	./$(DEPDIR)/generateRandomData2.Po ./$(DEPDIR)/predCR.Po \
+	./$(DEPDIR)/generateRandomData2.Po \
+	./$(DEPDIR)/lorenzoPredQuantCmpr.Po \
+	./$(DEPDIR)/lorenzoPredQuantDecmpr.Po ./$(DEPDIR)/predCR.Po \
 	./$(DEPDIR)/printProperty.Po ./$(DEPDIR)/simSZ.Po \
 	./$(DEPDIR)/splitComplexData.Po ./$(DEPDIR)/splitDataFile.Po
 am__mv = mv -f
@@ -312,7 +323,8 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
+	$(generateRandomData2_SOURCES) $(lorenzoPredQuantCmpr_SOURCES) \
+	$(lorenzoPredQuantDecmpr_SOURCES) $(predCR_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
 	$(splitComplexData_SOURCES) $(splitDataFile_SOURCES)
 DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
@@ -331,7 +343,8 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(predCR_SOURCES) \
+	$(generateRandomData2_SOURCES) $(lorenzoPredQuantCmpr_SOURCES) \
+	$(lorenzoPredQuantDecmpr_SOURCES) $(predCR_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
 	$(splitComplexData_SOURCES) $(splitDataFile_SOURCES)
 am__can_run_installinfo = \
@@ -546,6 +559,10 @@ computeGradientLength_SOURCES = computeGradientLength.c
 computeGradientLength_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 splitDataFile_SOURCES = splitDataFile.c
 splitDataFile_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+lorenzoPredQuantCmpr_SOURCES = lorenzoPredQuantCmpr.c
+lorenzoPredQuantCmpr_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+lorenzoPredQuantDecmpr_SOURCES = lorenzoPredQuantDecmpr.c
+lorenzoPredQuantDecmpr_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -733,6 +750,14 @@ generateRandomData2$(EXEEXT): $(generateRandomData2_OBJECTS) $(generateRandomDat
 	@rm -f generateRandomData2$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(generateRandomData2_OBJECTS) $(generateRandomData2_LDADD) $(LIBS)
 
+lorenzoPredQuantCmpr$(EXEEXT): $(lorenzoPredQuantCmpr_OBJECTS) $(lorenzoPredQuantCmpr_DEPENDENCIES) $(EXTRA_lorenzoPredQuantCmpr_DEPENDENCIES) 
+	@rm -f lorenzoPredQuantCmpr$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lorenzoPredQuantCmpr_OBJECTS) $(lorenzoPredQuantCmpr_LDADD) $(LIBS)
+
+lorenzoPredQuantDecmpr$(EXEEXT): $(lorenzoPredQuantDecmpr_OBJECTS) $(lorenzoPredQuantDecmpr_DEPENDENCIES) $(EXTRA_lorenzoPredQuantDecmpr_DEPENDENCIES) 
+	@rm -f lorenzoPredQuantDecmpr$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lorenzoPredQuantDecmpr_OBJECTS) $(lorenzoPredQuantDecmpr_LDADD) $(LIBS)
+
 predCR$(EXEEXT): $(predCR_OBJECTS) $(predCR_DEPENDENCIES) $(EXTRA_predCR_DEPENDENCIES) 
 	@rm -f predCR$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(predCR_OBJECTS) $(predCR_LDADD) $(LIBS)
@@ -785,6 +810,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extractSliceFrom3D.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData2.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lorenzoPredQuantCmpr.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lorenzoPredQuantDecmpr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/predCR.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printProperty.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simSZ.Po@am__quote@ # am--include-marker
@@ -980,6 +1007,8 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/extractSliceFrom3D.Po
 	-rm -f ./$(DEPDIR)/generateRandomData.Po
 	-rm -f ./$(DEPDIR)/generateRandomData2.Po
+	-rm -f ./$(DEPDIR)/lorenzoPredQuantCmpr.Po
+	-rm -f ./$(DEPDIR)/lorenzoPredQuantDecmpr.Po
 	-rm -f ./$(DEPDIR)/predCR.Po
 	-rm -f ./$(DEPDIR)/printProperty.Po
 	-rm -f ./$(DEPDIR)/simSZ.Po
@@ -1056,6 +1085,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/extractSliceFrom3D.Po
 	-rm -f ./$(DEPDIR)/generateRandomData.Po
 	-rm -f ./$(DEPDIR)/generateRandomData2.Po
+	-rm -f ./$(DEPDIR)/lorenzoPredQuantCmpr.Po
+	-rm -f ./$(DEPDIR)/lorenzoPredQuantDecmpr.Po
 	-rm -f ./$(DEPDIR)/predCR.Po
 	-rm -f ./$(DEPDIR)/printProperty.Po
 	-rm -f ./$(DEPDIR)/simSZ.Po

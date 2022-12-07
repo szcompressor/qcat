@@ -20,6 +20,12 @@ extern "C" {
 
 #define DynArrayInitLen 1024
 
+#define LORENZO_1D_1LAYER 0
+#define LORENZO_1D_2LAYER 1
+#define LORENZO_1D_3LAYER 2
+#define LORENZO_2D_1LAYER 3
+#define LORENZO_3D_1LAYER 4
+
 typedef struct DoubleValueCompressElement
 {
 	double data;
@@ -69,6 +75,15 @@ float computeRangeSize_float(float* oriData, size_t size, float* valueRangeSize,
 double computeRangeSize_double(double* oriData, size_t size, double* valueRangeSize, double* medianValue);
 size_t bytesToSize(unsigned char* bytes);
 void sizeToBytes(unsigned char* outBytes, size_t size);
+
+int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out);
+int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out);
+
+int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, double errorBound, size_t n3, size_t n2, size_t n1, float* result);
+int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, double errorBound, size_t n3, size_t n2, size_t n1, double* result);
+
+int lorenzoPredictorQuant_Cmpr_NoOutlier(void* data, int dataType, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out);
+int lorenzoPredictorQuant_Decmpr_NoOutlier(int* diffQuantData, int dataType, int mode, double errorBound, size_t n3, size_t n2, size_t n1, void* result);
 
 #ifdef __cplusplus
 }

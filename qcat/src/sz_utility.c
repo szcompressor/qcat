@@ -369,3 +369,387 @@ inline void sizeToBytes(unsigned char* outBytes, size_t size)
 {
 	longToBytes_bigEndian(outBytes, size);//8
 }
+
+int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
+{
+	size_t i = 0;
+	size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
+	int dim = computeDimension(0, 0, n3, n2, n1);
+	
+	register float data_recip = 0;
+	register float recip_Precision = 0.5f/errorBound;		
+	
+	if(mode==LORENZO_1D_1LAYER)
+	{		
+        register int s = 0;
+		register int prev_quant_value = 0;
+		register int curr_quant_value = 0;
+				
+        data_recip = data[0]*recip_Precision;
+        s = data_recip>=-0.5f?0:1;
+        out[0] = (int)(data_recip+0.5f) - s;
+        prev_quant_value = out[0];
+      
+		for(i = 1;i<nbEle;i++)
+		{
+			data_recip = data[i]*recip_Precision;
+			s = data_recip>=-0.5f?0:1;
+			curr_quant_value = (int)(data_recip+0.5f) - s;
+			out[i] = curr_quant_value - prev_quant_value;
+			prev_quant_value = curr_quant_value;		
+		}
+	}
+	else if(mode==LORENZO_1D_2LAYER)
+	{
+        register int s = 0;	
+		register int curr_quant_value = 0;
+				
+        data_recip = data[0]*recip_Precision;
+        s = data_recip>=-0.5f?0:1;
+        out[0] = (int)(data_recip+0.5f) - s;
+        
+        data_recip = data[1]*recip_Precision;
+        s = data_recip>=-0.5f?0:1;
+        out[1] = (int)(data_recip+0.5f) - s;        
+        
+		register int prev2_quant_value = out[0];
+		register int prev1_quant_value = out[1];
+        
+		//quantization  & 2-layer 1D prediction
+		for(i=2;i<nbEle;i++)
+		{
+			data_recip = data[i]*recip_Precision;
+			s = data_recip>=-0.5f?0:1;
+			curr_quant_value = (int)(data_recip+0.5f) - s;
+			out[i] = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+			prev2_quant_value = prev1_quant_value;
+			prev1_quant_value = curr_quant_value;
+		}	
+	}
+	else if(mode==LORENZO_1D_3LAYER)
+	{
+        register int s = 0;	
+		register int curr_quant_value = 0;		
+		
+        data_recip = data[0]*recip_Precision;
+        s = data_recip>=-0.5f?0:1;
+        out[0] = (int)(data_recip+0.5f) - s;
+        
+        data_recip = data[1]*recip_Precision;
+        s = data_recip>=-0.5f?0:1;
+        out[1] = (int)(data_recip+0.5f) - s; 
+        
+        data_recip = data[1]*recip_Precision;
+        s = data_recip>=-0.5f?0:1;
+        out[2] = (int)(data_recip+0.5f) - s; 		
+        
+		register int prev3_quant_value = out[0];
+		register int prev2_quant_value = out[1];
+		register int prev1_quant_value = out[2];
+
+		for(i=3;i<nbEle;i++)
+		{
+			data_recip = data[i]*recip_Precision;
+			s = data_recip>=-0.5f?0:1;
+			curr_quant_value = (int)(data_recip+0.5f) - s;
+			out[i] = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+			prev3_quant_value = prev2_quant_value;
+			prev2_quant_value = prev1_quant_value;
+			prev1_quant_value = curr_quant_value;
+		}
+	}
+	else if(mode==LORENZO_2D_1LAYER)
+	{
+		if(dim==1)
+			return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
+		//TODO implement 2D lorenzo	
+			
+	}
+	
+	else if(mode==LORENZO_3D_1LAYER)
+	{
+		if(dim==1 || dim==2)
+			return 1;
+		//TODO implement 3D lorenzo
+		
+	}
+	
+	return 0;
+	
+}
+
+int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
+{
+	size_t i = 0;
+	size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
+	int dim = computeDimension(0, 0, n3, n2, n1);
+	
+	register double data_recip = 0;
+	register double recip_Precision = 0.5/errorBound;		
+	
+	if(mode==LORENZO_1D_1LAYER)
+	{		
+        register int s = 0;
+		register int prev_quant_value = 0;
+		register int curr_quant_value = 0;
+				
+        data_recip = data[0]*recip_Precision;
+        s = data_recip>=-0.5?0:1;
+        out[0] = (int)(data_recip+0.5) - s;
+        prev_quant_value = out[0];
+      
+		for(i = 1;i<nbEle;i++)
+		{
+			data_recip = data[i]*recip_Precision;
+			s = data_recip>=-0.5?0:1;
+			curr_quant_value = (int)(data_recip+0.5) - s;
+			out[i] = curr_quant_value - prev_quant_value;
+			prev_quant_value = curr_quant_value;		
+		}
+	}
+	else if(mode==LORENZO_1D_2LAYER)
+	{
+        register int s = 0;	
+		register int curr_quant_value = 0;
+				
+        data_recip = data[0]*recip_Precision;
+        s = data_recip>=-0.5?0:1;
+        out[0] = (int)(data_recip+0.5) - s;
+        
+        data_recip = data[1]*recip_Precision;
+        s = data_recip>=-0.5?0:1;
+        out[1] = (int)(data_recip+0.5) - s;        
+        
+		register int prev2_quant_value = out[0];
+		register int prev1_quant_value = out[1];
+        
+		//quantization  & 2-layer 1D prediction
+		for(i=2;i<nbEle;i++)
+		{
+			data_recip = data[i]*recip_Precision;
+			s = data_recip>=-0.5?0:1;
+			curr_quant_value = (int)(data_recip+0.5) - s;
+			out[i] = curr_quant_value - (2*prev1_quant_value - prev2_quant_value);
+			prev2_quant_value = prev1_quant_value;
+			prev1_quant_value = curr_quant_value;
+		}	
+	}
+	else if(mode==LORENZO_1D_3LAYER)
+	{
+        register int s = 0;
+		register int curr_quant_value = 0;			
+		
+        data_recip = data[0]*recip_Precision;
+        s = data_recip>=-0.5?0:1;
+        out[0] = (int)(data_recip+0.5) - s;
+        
+        data_recip = data[1]*recip_Precision;
+        s = data_recip>=-0.5?0:1;
+        out[1] = (int)(data_recip+0.5) - s;        
+        
+        data_recip = data[1]*recip_Precision;
+        s = data_recip>=-0.5?0:1;
+        out[2] = (int)(data_recip+0.5) - s; 		
+        
+		register int prev3_quant_value = out[0];
+		register int prev2_quant_value = out[1];
+		register int prev1_quant_value = out[2];
+
+		for(i=3;i<nbEle;i++)
+		{
+			data_recip = data[i]*recip_Precision;
+			s = data_recip>=-0.5?0:1;
+			curr_quant_value = (int)(data_recip+0.5) - s;
+			out[i] = curr_quant_value - (3*prev1_quant_value - 3*prev2_quant_value+prev3_quant_value);
+			prev3_quant_value = prev2_quant_value;
+			prev2_quant_value = prev1_quant_value;
+			prev1_quant_value = curr_quant_value;
+		}
+	}
+	else if(mode==LORENZO_2D_1LAYER)
+	{
+		if(dim==1)
+			return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
+		//TODO implement 2D lorenzo	
+			
+	}
+	
+	else if(mode==LORENZO_3D_1LAYER)
+	{
+		if(dim==1 || dim==2)
+			return 1;
+		//TODO implement 3D lorenzo
+		
+	}
+	
+	return 0;
+}
+
+int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int* diffQuantData, int mode, double errorBound, size_t n3, size_t n2, size_t n1, float* result)
+{
+	size_t i = 0;
+	
+	size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
+	int dim = computeDimension(0, 0, n3, n2, n1);	
+	
+	register int curQuantValue = 0;
+	register float e2 = errorBound*2;
+	
+	if(mode==LORENZO_1D_1LAYER)
+	{
+		int preQuantValue = diffQuantData[0];
+		result[0] = e2*preQuantValue;
+		for(i=1;i<nbEle;i++)
+		{
+			curQuantValue = preQuantValue + diffQuantData[i];
+			result[i] = e2*curQuantValue;
+			preQuantValue = curQuantValue;
+		}
+	}
+	else if(mode==LORENZO_1D_2LAYER)
+	{
+		result[0] = e2*diffQuantData[0];
+		result[1] = e2*diffQuantData[1];
+		register int pred2_quant_value = diffQuantData[0];
+		register int pred1_quant_value = diffQuantData[1];		
+						
+		for(i=2;i<nbEle;i++)
+		{
+			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + diffQuantData[i];
+			result[i] = e2*curQuantValue;
+			pred2_quant_value = pred1_quant_value;
+			pred1_quant_value = curQuantValue;
+		}		
+	}	
+	else if(mode==LORENZO_1D_3LAYER)
+	{
+		result[0] = e2*diffQuantData[0];
+		result[1] = e2*diffQuantData[1];
+		result[2] = e2*diffQuantData[2];		
+		register int pred3_quant_value = diffQuantData[0];
+		register int pred2_quant_value = diffQuantData[1];		
+		register int pred1_quant_value = diffQuantData[2];				
+						
+		for(i=3;i<nbEle;i++)
+		{
+			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + diffQuantData[i];
+			result[i] = e2*curQuantValue;
+			pred3_quant_value = pred2_quant_value;
+			pred2_quant_value = pred1_quant_value;
+			pred1_quant_value = curQuantValue;
+		}				
+	}
+	else if(mode==LORENZO_2D_1LAYER)
+	{
+		if(dim==1)
+			return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
+		//TODO implement 2D lorenzo			
+	}
+	else if(mode==LORENZO_3D_1LAYER)
+	{
+		if(dim==1 || dim==2)
+			return 1;
+		//TODO implement 3D lorenzo		
+	}
+	
+	return 0;	
+}
+
+int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int* diffQuantData, int mode, double errorBound, size_t n3, size_t n2, size_t n1, double* result)
+{
+	size_t i = 0;
+	
+	size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
+	int dim = computeDimension(0, 0, n3, n2, n1);	
+	
+	register int curQuantValue = 0;
+	register double e2 = errorBound*2;
+	
+	if(mode==LORENZO_1D_1LAYER)
+	{
+		int preQuantValue = diffQuantData[0];
+		result[0] = e2*preQuantValue;
+		for(i=1;i<nbEle;i++)
+		{
+			curQuantValue = preQuantValue + diffQuantData[i];
+			result[i] = e2*curQuantValue;
+			preQuantValue = curQuantValue;
+		}
+	}
+	else if(mode==LORENZO_1D_2LAYER)
+	{
+		result[0] = e2*diffQuantData[0];
+		result[1] = e2*diffQuantData[1];
+		register int pred2_quant_value = diffQuantData[0];
+		register int pred1_quant_value = diffQuantData[1];		
+						
+		for(i=2;i<nbEle;i++)
+		{
+			curQuantValue = (2*pred1_quant_value - pred2_quant_value) + diffQuantData[i];
+			result[i] = e2*curQuantValue;
+			pred2_quant_value = pred1_quant_value;
+			pred1_quant_value = curQuantValue;
+		}		
+	}	
+	else if(mode==LORENZO_1D_3LAYER)
+	{
+		result[0] = e2*diffQuantData[0];
+		result[1] = e2*diffQuantData[1];
+		result[2] = e2*diffQuantData[2];		
+		register int pred3_quant_value = diffQuantData[0];
+		register int pred2_quant_value = diffQuantData[1];		
+		register int pred1_quant_value = diffQuantData[2];				
+						
+		for(i=3;i<nbEle;i++)
+		{
+			curQuantValue = (3*pred1_quant_value - 3*pred2_quant_value + pred3_quant_value) + diffQuantData[i];
+			result[i] = e2*curQuantValue;
+			pred3_quant_value = pred2_quant_value;
+			pred2_quant_value = pred1_quant_value;
+			pred1_quant_value = curQuantValue;
+		}				
+	}
+	else if(mode==LORENZO_2D_1LAYER)
+	{
+		if(dim==1)
+			return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
+		//TODO implement 2D lorenzo			
+	}
+	else if(mode==LORENZO_3D_1LAYER)
+	{
+		if(dim==1 || dim==2)
+			return 1;
+		//TODO implement 3D lorenzo		
+	}
+	return 0;	
+}
+
+
+int lorenzoPredictorQuant_Cmpr_NoOutlier(void* data, int dataType, int mode, double errorBound, size_t n3, size_t n2, size_t n1, int* out)
+{
+	int status = 0;
+	if(dataType==QCAT_FLOAT)
+	{
+		status = lorenzoPredictorQuant_Cmpr_NoOutlier_float(data, mode, errorBound, n3, n2, n1, out);
+	}
+	else if(dataType==QCAT_DOUBLE)
+	{
+		status = lorenzoPredictorQuant_Cmpr_NoOutlier_double(data, mode, errorBound, n3, n2, n1, out);
+	}
+	return status;
+}
+
+int lorenzoPredictorQuant_Decmpr_NoOutlier(int* diffQuantData, int dataType, int mode, double errorBound, size_t n3, size_t n2, size_t n1, void* result)
+{
+	int status = 0;
+	if(dataType==QCAT_FLOAT)
+	{
+		status = lorenzoPredictorQuant_Decmpr_NoOutlier_float(diffQuantData, mode, errorBound, n3, n2, n1, result);
+	}
+	else if(dataType==QCAT_DOUBLE)
+	{
+		status = lorenzoPredictorQuant_Decmpr_NoOutlier_double(diffQuantData, mode, errorBound, n3, n2, n1, result);
+	}
+	
+	return status;
+}
