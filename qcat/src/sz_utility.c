@@ -486,7 +486,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float* data, int mode, int codeFo
         s = data_recip>=-0.5f?0:1;
         out[1] = (int)(data_recip+0.5f) - s; 
         
-        data_recip = data[1]*recip_Precision;
+        data_recip = data[2]*recip_Precision;
         s = data_recip>=-0.5f?0:1;
         out[2] = (int)(data_recip+0.5f) - s; 		
         
@@ -659,7 +659,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_double(double* data, int mode, int code
         s = data_recip>=-0.5?0:1;
         out[1] = (int)(data_recip+0.5) - s;        
         
-        data_recip = data[1]*recip_Precision;
+        data_recip = data[2]*recip_Precision;
         s = data_recip>=-0.5?0:1;
         out[2] = (int)(data_recip+0.5) - s; 		
         
