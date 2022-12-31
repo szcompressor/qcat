@@ -70,3 +70,23 @@ lorenzoPredQuantCmpr_SOURCES=lorenzoPredQuantCmpr.c
 lorenzoPredQuantCmpr_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 lorenzoPredQuantDecmpr_SOURCES=lorenzoPredQuantDecmpr.c
 lorenzoPredQuantDecmpr_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+
+if COMPILE_CUDA
+SUFFIXES = .cu
+
+AM_V_NVCC = $(AM_V_NVCC_@AM_V@)
+AM_V_NVCC_ = $(AM_V_NVCC_@AM_DEFAULT_V@)
+AM_V_NVCC_0 = @echo "  NVCC    " $@;
+AM_V_NVCC_1 =
+
+.cu.o:
+	$(AM_V_NVCC)$(NVCC) $(AM_NVCCFLAGS) $(NVCCFLAGS) -o $@ -c $< -I../qcat/include -I../zstd
+
+bin_PROGRAMS+=lorenzoPredQuantCmpr_GPU lorenzoPredQuantDecmpr_GPU
+lorenzoPredQuantCmpr_GPU_SOURCES=lorenzoPredQuantCmpr_GPU.cu
+lorenzoPredQuantCmpr_GPU_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+lorenzoPredQuantCmpr_GPU_LINK=$(NVCC) -o $@
+lorenzoPredQuantDecmpr_GPU_SOURCES=lorenzoPredQuantDecmpr_GPU.cu
+lorenzoPredQuantDecmpr_GPU_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+lorenzoPredQuantDecmpr_GPU_LINK=$(NVCC) -o $@
+endif

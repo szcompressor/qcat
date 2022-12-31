@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Define to 1 if you have the <cuda_runtime.h> header file. */
+#undef HAVE_CUDA_RUNTIME_H
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
@@ -8,6 +11,15 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `cuda' library (-lcuda). */
+#undef HAVE_LIBCUDA
+
+/* Define to 1 if you have the `stdc++' library (-lstdc++). */
+#undef HAVE_LIBSTDC__
+
+/* Define to 1 if you have the `z' library (-lz). */
+#undef HAVE_LIBZ
 
 /* Define to 1 if you have the <limits.h> header file. */
 #undef HAVE_LIMITS_H
@@ -97,6 +109,9 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Defined if CUDA should be used */
+#undef WITH_CUDA
 
 /* Define to rpl_malloc if the replacement function should be used. */
 #undef malloc
