@@ -634,6 +634,12 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+NVCCFLAGS
+CUDA_LIBS
+CUDA_CFLAGS
+NVCC
+COMPILE_CUDA_FALSE
+COMPILE_CUDA_TRUE
 LIBOBJS
 MAINT
 MAINTAINER_MODE_FALSE
@@ -738,6 +744,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -772,6 +779,9 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 enable_maintainer_mode
+enable_32bit
+with_cuda
+with_nvcc
 '
       ac_precious_vars='build_alias
 host_alias
@@ -825,6 +835,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1077,6 +1088,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1214,7 +1234,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1367,6 +1387,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1419,6 +1440,7 @@ Optional Features:
   --enable-maintainer-mode
                           enable make rules and dependencies not useful (and
                           sometimes confusing) to the casual installer
+  --enable-32bit          force compilation in 32 bit mode.
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1431,6 +1453,9 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
+  --with-cuda=PATH        path where cuda is installed (default not using cuda
+  --with-nvcc=PATH        path where nvcc is installed (e.g.
+                          /usr/local/cuda/bin)
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -6138,7 +6163,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
   lt_cv_deplibs_check_method=pass_all
   ;;
 
-netbsd*)
+netbsd* | netbsdelf*-gnu)
   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
     lt_cv_deplibs_check_method='match_pattern /lib[^/]+(\.so\.[0-9]+\.[0-9]+|_pic\.a)$'
   else
@@ -6501,7 +6526,7 @@ esac
 fi
 
 : ${AR=ar}
-: ${AR_FLAGS=cru}
+: ${AR_FLAGS=cr}
 
 
 
@@ -7002,11 +7027,8 @@ _LT_EOF
   test $ac_status = 0; }; then
     # Now try to grab the symbols.
     nlist=conftest.nm
-    if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$NM conftest.$ac_objext \| "$lt_cv_sys_global_symbol_pipe" \> $nlist\""; } >&5
-  (eval $NM conftest.$ac_objext \| "$lt_cv_sys_global_symbol_pipe" \> $nlist) 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; } && test -s "$nlist"; then
+    $ECHO "$as_me:$LINENO: $NM conftest.$ac_objext | $lt_cv_sys_global_symbol_pipe > $nlist" >&5
+    if eval "$NM" conftest.$ac_objext \| "$lt_cv_sys_global_symbol_pipe" \> $nlist 2>&5 && test -s "$nlist"; then
       # Try sorting and uniquifying the output.
       if sort "$nlist" | uniq > "$nlist"T; then
 	mv -f "$nlist"T "$nlist"
@@ -8225,8 +8247,8 @@ int forced_loaded() { return 2;}
 _LT_EOF
       echo "$LTCC $LTCFLAGS -c -o conftest.o conftest.c" >&5
       $LTCC $LTCFLAGS -c -o conftest.o conftest.c 2>&5
-      echo "$AR cru libconftest.a conftest.o" >&5
-      $AR cru libconftest.a conftest.o 2>&5
+      echo "$AR cr libconftest.a conftest.o" >&5
+      $AR cr libconftest.a conftest.o 2>&5
       echo "$RANLIB libconftest.a" >&5
       $RANLIB libconftest.a 2>&5
       cat > conftest.c << _LT_EOF
@@ -9361,6 +9383,12 @@ lt_prog_compiler_static=
 	lt_prog_compiler_pic='-KPIC'
 	lt_prog_compiler_static='-static'
         ;;
+      # flang / f18. f95 an alias for gfortran or flang on Debian
+      flang* | f18* | f95*)
+	lt_prog_compiler_wl='-Wl,'
+	lt_prog_compiler_pic='-fPIC'
+	lt_prog_compiler_static='-static'
+        ;;
       # icc used to be incompatible with GCC.
       # ICC 10 doesn't accept -KPIC any more.
       icc* | ifort*)
@@ -9837,6 +9865,9 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
   openbsd* | bitrig*)
     with_gnu_ld=no
     ;;
+  linux* | k*bsd*-gnu | gnu*)
+    link_all_deplibs=no
+    ;;
   esac
 
   ld_shlibs=yes
@@ -10091,7 +10122,7 @@ _LT_EOF
       fi
       ;;
 
-    netbsd*)
+    netbsd* | netbsdelf*-gnu)
       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
 	archive_cmds='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
 	wlarc=
@@ -10761,6 +10792,7 @@ $as_echo "$lt_cv_irix_exported_symbol" >&6; }
 	if test yes = "$lt_cv_irix_exported_symbol"; then
           archive_expsym_cmds='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags $wl-soname $wl$soname `test -n "$verstring" && func_echo_all "$wl-set_version $wl$verstring"` $wl-update_registry $wl$output_objdir/so_locations $wl-exports_file $wl$export_symbols -o $lib'
 	fi
+	link_all_deplibs=no
       else
 	archive_cmds='$CC -shared $libobjs $deplibs $compiler_flags -soname $soname `test -n "$verstring" && func_echo_all "-set_version $verstring"` -update_registry $output_objdir/so_locations -o $lib'
 	archive_expsym_cmds='$CC -shared $libobjs $deplibs $compiler_flags -soname $soname `test -n "$verstring" && func_echo_all "-set_version $verstring"` -update_registry $output_objdir/so_locations -exports_file $export_symbols -o $lib'
@@ -10782,7 +10814,7 @@ $as_echo "$lt_cv_irix_exported_symbol" >&6; }
       esac
       ;;
 
-    netbsd*)
+    netbsd* | netbsdelf*-gnu)
       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
 	archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
       else
@@ -11877,9 +11909,6 @@ fi
   # before this can be enabled.
   hardcode_into_libs=yes
 
-  # Add ABI-specific directories to the system library path.
-  sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib"
-
   # Ideally, we could use ldconfig to report *all* directores which are
   # searched for libraries, however this is still not possible.  Aside from not
   # being certain /sbin/ldconfig is available, command
@@ -11888,7 +11917,7 @@ fi
   # appending ld.so.conf contents (and includes) to the search path.
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="$sys_lib_dlsearch_path_spec $lt_ld_extra"
+    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -11898,6 +11927,18 @@ fi
   # people can always --disable-shared, the test was removed, and we
   # assume the GNU/Linux dynamic linker is in use.
   dynamic_linker='GNU/Linux ld.so'
+  ;;
+
+netbsdelf*-gnu)
+  version_type=linux
+  need_lib_prefix=no
+  need_version=no
+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
+  soname_spec='${libname}${release}${shared_ext}$major'
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=no
+  hardcode_into_libs=yes
+  dynamic_linker='NetBSD ld.elf_so'
   ;;
 
 netbsd*)
@@ -13290,7 +13331,7 @@ with_gnu_ld=$lt_cv_prog_gnu_ld
       # Commands to make compiler produce verbose output that lists
       # what "hidden" libraries, object files and flags are used when
       # linking a shared library.
-      output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
+      output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP " \-L"'
 
     else
       GXX=no
@@ -13782,7 +13823,7 @@ fi
             # explicitly linking system object files so we need to strip them
             # from the output so that they don't get included in the library
             # dependencies.
-            output_verbose_link_cmd='templist=`($CC -b $CFLAGS -v conftest.$objext 2>&1) | $EGREP "\-L"`; list= ; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
+            output_verbose_link_cmd='templist=`($CC -b $CFLAGS -v conftest.$objext 2>&1) | $EGREP " \-L"`; list= ; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
             ;;
           *)
             if test yes = "$GXX"; then
@@ -13847,7 +13888,7 @@ fi
 	    # explicitly linking system object files so we need to strip them
 	    # from the output so that they don't get included in the library
 	    # dependencies.
-	    output_verbose_link_cmd='templist=`($CC -b $CFLAGS -v conftest.$objext 2>&1) | $GREP "\-L"`; list= ; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
+	    output_verbose_link_cmd='templist=`($CC -b $CFLAGS -v conftest.$objext 2>&1) | $GREP " \-L"`; list= ; for z in $templist; do case $z in conftest.$objext) list="$list $z";; *.$objext);; *) list="$list $z";;esac; done; func_echo_all "$list"'
 	    ;;
           *)
 	    if test yes = "$GXX"; then
@@ -14186,7 +14227,7 @@ fi
 	      # Commands to make compiler produce verbose output that lists
 	      # what "hidden" libraries, object files and flags are used when
 	      # linking a shared library.
-	      output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
+	      output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP " \-L"'
 
 	    else
 	      # FIXME: insert proper C++ library support
@@ -14270,7 +14311,7 @@ fi
 	        # Commands to make compiler produce verbose output that lists
 	        # what "hidden" libraries, object files and flags are used when
 	        # linking a shared library.
-	        output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
+	        output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP " \-L"'
 	      else
 	        # g++ 2.7 appears to require '-G' NOT '-shared' on this
 	        # platform.
@@ -14281,7 +14322,7 @@ fi
 	        # Commands to make compiler produce verbose output that lists
 	        # what "hidden" libraries, object files and flags are used when
 	        # linking a shared library.
-	        output_verbose_link_cmd='$CC -G $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP "\-L"'
+	        output_verbose_link_cmd='$CC -G $CFLAGS -v conftest.$objext 2>&1 | $GREP -v "^Configured with:" | $GREP " \-L"'
 	      fi
 
 	      hardcode_libdir_flag_spec_CXX='$wl-R $wl$libdir'
@@ -14794,7 +14835,7 @@ lt_prog_compiler_static_CXX=
 	    ;;
 	esac
 	;;
-      netbsd*)
+      netbsd* | netbsdelf*-gnu)
 	;;
       *qnx* | *nto*)
         # QNX uses GNU C++, but need to define -shared option too, otherwise
@@ -15168,6 +15209,9 @@ $as_echo_n "checking whether the $compiler linker ($LD) supports shared librarie
       exclude_expsyms_CXX='[_]+GLOBAL_OFFSET_TABLE_|[_]+GLOBAL__[FID]_.*|[_]+head_[A-Za-z0-9_]+_dll|[A-Za-z0-9_]+_dll_iname'
       ;;
     esac
+    ;;
+  linux* | k*bsd*-gnu | gnu*)
+    link_all_deplibs_CXX=no
     ;;
   *)
     export_symbols_cmds_CXX='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
@@ -15842,9 +15886,6 @@ fi
   # before this can be enabled.
   hardcode_into_libs=yes
 
-  # Add ABI-specific directories to the system library path.
-  sys_lib_dlsearch_path_spec="/lib64 /usr/lib64 /lib /usr/lib"
-
   # Ideally, we could use ldconfig to report *all* directores which are
   # searched for libraries, however this is still not possible.  Aside from not
   # being certain /sbin/ldconfig is available, command
@@ -15853,7 +15894,7 @@ fi
   # appending ld.so.conf contents (and includes) to the search path.
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="$sys_lib_dlsearch_path_spec $lt_ld_extra"
+    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -15863,6 +15904,18 @@ fi
   # people can always --disable-shared, the test was removed, and we
   # assume the GNU/Linux dynamic linker is in use.
   dynamic_linker='GNU/Linux ld.so'
+  ;;
+
+netbsdelf*-gnu)
+  version_type=linux
+  need_lib_prefix=no
+  need_version=no
+  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
+  soname_spec='${libname}${release}${shared_ext}$major'
+  shlibpath_var=LD_LIBRARY_PATH
+  shlibpath_overrides_runpath=no
+  hardcode_into_libs=yes
+  dynamic_linker='NetBSD ld.elf_so'
   ;;
 
 netbsd*)
@@ -16429,6 +16482,388 @@ fi
 done
 
 
+# Setup CUDA paths
+#default: 64bit
+# Check whether --enable-32bit was given.
+if test "${enable_32bit+set}" = set; then :
+  enableval=$enable_32bit; ARCH="386"; CUDA_LIB_DIR="lib"; PLATFORM="-m32";
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: Enabling 32bit compilation" >&5
+$as_echo "$as_me: Enabling 32bit compilation" >&6;}
+
+else
+  ARCH="x86_64"; CUDA_LIB_DIR="lib64"; PLATFORM="-m64";
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: Enabling 64bit compilation" >&5
+$as_echo "$as_me: Enabling 64bit compilation" >&6;}
+
+
+fi
+
+
+
+# Check whether --with-cuda was given.
+if test "${with_cuda+set}" = set; then :
+  withval=$with_cuda; CUDA_HOME=$withval
+else
+  CUDA_HOME=notusing
+fi
+
+
+#AC_ARG_WITH([dummy],
+#	[AC_HELP_STRING([--without-cuda],[disable CUDA compilation])]
+#	)
+#AC_MSG_RESULT($CUDA_HOME)
+
+ if test "x$CUDA_HOME" != "xnotusing"; then
+  COMPILE_CUDA_TRUE=
+  COMPILE_CUDA_FALSE='#'
+else
+  COMPILE_CUDA_TRUE='#'
+  COMPILE_CUDA_FALSE=
+fi
+
+
+if test "x$CUDA_HOME" != "xnotusing"; then :
+
+
+	CUDA_CFLAGS="-I$CUDA_HOME/include"
+	CUDA_LIBS="-L$CUDA_HOME/$CUDA_LIB_DIR"
+	CUDA_LDFLAGS="-L$CUDA_HOME/$CUDA_LIB_DIR"
+
+	as_ac_File=`$as_echo "ac_cv_file_$CUDA_HOME/$CUDA_LIB_DIR/libcudart.so" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CUDA_HOME/$CUDA_LIB_DIR/libcudart.so" >&5
+$as_echo_n "checking for $CUDA_HOME/$CUDA_LIB_DIR/libcudart.so... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "$CUDA_HOME/$CUDA_LIB_DIR/libcudart.so"; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+
+else
+  as_fn_error $? "libcudart.so library not found in path: $CUDA_HOME/$CUDA_LIB_DIR. Try running
+	                  configure again with the './configure --with-cuda=PATH' argument." "$LINENO" 5
+
+fi
+
+
+# Check whether --with-nvcc was given.
+if test "${with_nvcc+set}" = set; then :
+  withval=$with_nvcc; NVCC_PATH=$withval
+else
+  NVCC_PATH=$CUDA_HOME/bin
+
+fi
+
+	# Extract the first word of "nvcc", so it can be a program name with args.
+set dummy nvcc; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_path_NVCC+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  case $NVCC in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_NVCC="$NVCC" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $NVCC_PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_path_NVCC="$as_dir/$ac_word$ac_exec_ext"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+NVCC=$ac_cv_path_NVCC
+if test -n "$NVCC"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $NVCC" >&5
+$as_echo "$NVCC" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+	if test -z $NVCC; then
+		as_fn_error $? "CUDA nvcc compiler not found in path: $NVCC_PATH. Try running
+	                  configure again with the './configure --with-nvcc=PATH' argument." "$LINENO" 5
+	fi
+
+	#NVCCFLAGS="--compiler-bindir $NVCC_COMPILER_BINDIR $CUDA_CFLAGS"
+
+	#
+	# Check for CUDA libraries
+	#
+	save_LDFLAGS="$LDFLAGS"
+	if [ $ARCH == "386" ]; then
+		LDFLAGS="$LDFLAGS $CUDA_LDFLAGS -m32"
+		echo $LDFLAGS
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for deflate in -lz" >&5
+$as_echo_n "checking for deflate in -lz... " >&6; }
+if ${ac_cv_lib_z_deflate+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lz  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char deflate ();
+int
+main ()
+{
+return deflate ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_z_deflate=yes
+else
+  ac_cv_lib_z_deflate=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_z_deflate" >&5
+$as_echo "$ac_cv_lib_z_deflate" >&6; }
+if test "x$ac_cv_lib_z_deflate" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBZ 1
+_ACEOF
+
+  LIBS="-lz $LIBS"
+
+else
+  as_fn_error $? "
+	                  libz.so:i386 error. Install the lib32z1-dev package or
+	                  try running configure again with the './configure --enable-64bit' argument.
+	                  You can also supply a ./configure LDFLAGS='-L<DIR>', where <DIR>
+	                  is the directory where the 32bit version of libz.so resides." "$LINENO" 5
+
+fi
+
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for memcpy in -lstdc++" >&5
+$as_echo_n "checking for memcpy in -lstdc++... " >&6; }
+if ${ac_cv_lib_stdcpp_memcpy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lstdc++  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char memcpy ();
+int
+main ()
+{
+return memcpy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_stdcpp_memcpy=yes
+else
+  ac_cv_lib_stdcpp_memcpy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_stdcpp_memcpy" >&5
+$as_echo "$ac_cv_lib_stdcpp_memcpy" >&6; }
+if test "x$ac_cv_lib_stdcpp_memcpy" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBSTDC__ 1
+_ACEOF
+
+  LIBS="-lstdc++ $LIBS"
+
+else
+  as_fn_error $? "
+	                  libstdc++.so:i386 error. Install the g++-multilib package or
+	                  try running configure again with the './configure --enable-64bit' argument.
+	                  You can also supply a ./configure LDFLAGS='-L<DIR>', where <DIR>
+	                  is the directory where the 32bit version of libstdc++.so resides." "$LINENO" 5
+
+fi
+
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for cuMemcpy in -lcuda" >&5
+$as_echo_n "checking for cuMemcpy in -lcuda... " >&6; }
+if ${ac_cv_lib_cuda_cuMemcpy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lcuda  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char cuMemcpy ();
+int
+main ()
+{
+return cuMemcpy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_cuda_cuMemcpy=yes
+else
+  ac_cv_lib_cuda_cuMemcpy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_cuda_cuMemcpy" >&5
+$as_echo "$ac_cv_lib_cuda_cuMemcpy" >&6; }
+if test "x$ac_cv_lib_cuda_cuMemcpy" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBCUDA 1
+_ACEOF
+
+  LIBS="-lcuda $LIBS"
+
+else
+  as_fn_error $? "
+	                  libcuda.so:i386 error. Install the CUDA 32bit package or
+	                  try running configure again with the './configure --enable-64bit' argument.
+	                  You can also supply a ./configure LDFLAGS='-L<DIR>', where <DIR>
+	                  is the directory where the 32bit version of libcuda.so resides." "$LINENO" 5
+
+fi
+
+	else
+		LDFLAGS="$LDFLAGS $CUDA_LDFLAGS"
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for cuMemcpy in -lcuda" >&5
+$as_echo_n "checking for cuMemcpy in -lcuda... " >&6; }
+if ${ac_cv_lib_cuda_cuMemcpy+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lcuda  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char cuMemcpy ();
+int
+main ()
+{
+return cuMemcpy ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_cuda_cuMemcpy=yes
+else
+  ac_cv_lib_cuda_cuMemcpy=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_cuda_cuMemcpy" >&5
+$as_echo "$ac_cv_lib_cuda_cuMemcpy" >&6; }
+if test "x$ac_cv_lib_cuda_cuMemcpy" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBCUDA 1
+_ACEOF
+
+  LIBS="-lcuda $LIBS"
+
+else
+  as_fn_error $? "
+	                  libcuda.so (cuMemcpy) was not found." "$LINENO" 5
+
+fi
+
+	fi
+	LDFLAGS="$save_LDFLAGS"
+
+	save_CPPFLAGS="$LDFLAGS"
+	CPPFLAGS+=$CUDA_CFLAGS
+	# Checks for header files.
+	for ac_header in cuda_runtime.h
+do :
+  ac_fn_cxx_check_header_mongrel "$LINENO" "cuda_runtime.h" "ac_cv_header_cuda_runtime_h" "$ac_includes_default"
+if test "x$ac_cv_header_cuda_runtime_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_CUDA_RUNTIME_H 1
+_ACEOF
+
+else
+  as_fn_error $? "Missing required header files." "$LINENO" 5
+fi
+
+done
+
+	CPPFLAGS="$save_CPPFLAGS"
+
+
+
+$as_echo "#define WITH_CUDA 1" >>confdefs.h
+
+	NVCCFLAGS="$CUDA_CFLAGS $NVCCFLAGS $NVCC_COMPILER_BINDIR $NVCC_CUDA_ARCH $NVCC_CUDA_DEBUG $CUDA_REGISTERS"
+
+
+
+
+
+
+fi
+
+
 ac_config_files="$ac_config_files Makefile zstd/Makefile qcat/Makefile examples/Makefile"
 
 cat >confcache <<\_ACEOF
@@ -16570,6 +17005,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
   as_fn_error $? "conditional \"MAINTAINER_MODE\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${COMPILE_CUDA_TRUE}" && test -z "${COMPILE_CUDA_FALSE}"; then
+  as_fn_error $? "conditional \"COMPILE_CUDA\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -18229,9 +18668,7 @@ $as_echo X/"$am_mf" |
     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "Something went wrong bootstrapping makefile fragments
-    for automatic dependency tracking.  If GNU make was not used, consider
-    re-running the configure script with MAKE=\"gmake\" (or whatever is
-    necessary).  You can also try re-running configure with the
+    for automatic dependency tracking.  Try re-running configure with the
     '--disable-dependency-tracking' option to at least be able to build
     the package (albeit without support for automatic dependency tracking).
 See \`config.log' for more details" "$LINENO" 5; }
@@ -18258,7 +18695,6 @@ See \`config.log' for more details" "$LINENO" 5; }
     cat <<_LT_EOF >> "$cfgfile"
 #! $SHELL
 # Generated automatically by $as_me ($PACKAGE) $VERSION
-# Libtool was configured on host `(hostname || uname -n) 2>/dev/null | sed 1q`:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
