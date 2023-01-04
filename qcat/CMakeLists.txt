@@ -31,10 +31,10 @@ install (TARGETS qcat EXPORT QcatTargets)
 install (DIRECTORY ./include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qcat)
 install(EXPORT QcatTargets NAMESPACE Qcat:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Qcat/)
 include(CMakePackageConfigHelpers)
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/QcatConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/QcatConfig.cmake"
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Qcat
-)
+#configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/QcatConfig.cmake.in
+#  "${CMAKE_CURRENT_BINARY_DIR}/QcatConfig.cmake"
+#  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Qcat
+#)
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/QcatConfigVersion.cmake"
   VERSION "${PROJECT_VERSION}"
