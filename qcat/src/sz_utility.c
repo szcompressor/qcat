@@ -554,7 +554,7 @@ int lorenzoPredictorQuant_Cmpr_NoOutlier_float(float *data, int mode, int codeFo
 
 int
 lorenzoPredictorQuant_Cmpr_NoOutlier_double(double *data, int mode, int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1, int *out) {
-    size_t i = 0;
+    size_t i = 0, j = 0, k = 0;
     size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
     int dim = computeDimension(0, 0, n3, n2, n1);
 
@@ -683,15 +683,95 @@ lorenzoPredictorQuant_Cmpr_NoOutlier_double(double *data, int mode, int codeForm
 
         }
     } else if (mode == LORENZO_2D_1LAYER) {
-        if (dim == 1)
+        if (dim == 1) {
             return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
-        //TODO implement 2D lorenzo
+        }
+        register int x = 0, s = 0;
+        size_t dim2_offset = n1 + 1;
+
+        int *quant_with_buffer = calloc(2 * dim2_offset, sizeof(int));
+        int *quant = quant_with_buffer + dim2_offset + 1;
+
+        if (codeFormat == QUANT_CODE_ORIGINAL) {
+            for (j = 0; j < n3 * n2; j++) {
+                for (i = 0; i < n1; i++) {
+                    data_recip = data[j * n1 + i] * recip_Precision;
+                    s = (data_recip >= -0.5f ? 0 : 1);
+                    quant[i] = (int) (data_recip + 0.5f) - s;
+
+                    out[j * n1 + i] = quant[i] - (quant[i - 1] + quant[i - dim2_offset] - quant[i - 1 - dim2_offset]);
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim2_offset, dim2_offset);
+            }
+        } else if (codeFormat == QUANT_CODE_NORMALIZE) {
+            for (j = 0; j < n3 * n2; j++) {
+                for (i = 0; i < n1; i++) {
+                    data_recip = data[j * n1 + i] * recip_Precision;
+                    s = (data_recip >= -0.5f ? 0 : 1);
+                    quant[i] = (int) (data_recip + 0.5f) - s;
+
+                    x = quant[i] - (quant[i - 1] + quant[i - dim2_offset] - quant[i - 1 - dim2_offset]);
+                    out[j * n1 + i] = (x << 1) ^ (x >> 31);
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim2_offset, dim2_offset);
+            }
+        } else {//QUANT_CODE_SHIFT
+
+        }
 
     } else if (mode == LORENZO_3D_1LAYER) {
-        if (dim == 1 || dim == 2)
+        if (dim == 1 || dim == 2) {
             return 1;
-        //TODO implement 3D lorenzo
+        }
+        register int x = 0, s = 0;
+        size_t dim2_offset = n1 + 1;
+        size_t dim3_offset = (n1 + 1) * (n2 + 1);
 
+        int *quant_with_buffer = calloc(2 * dim3_offset, sizeof(int));
+        int *quant = quant_with_buffer + dim3_offset + dim2_offset + 1;
+
+        if (codeFormat == QUANT_CODE_ORIGINAL) {
+            for (k = 0; k < n3; k++) {
+                int *quant_p = quant;
+                for (j = 0; j < n2; j++) {
+                    for (i = 0; i < n1; i++) {
+                        data_recip = data[k * n2 * n1 + j * n1 + i] * recip_Precision;
+                        s = (data_recip >= -0.5f ? 0 : 1);
+                        *quant_p = (int) (data_recip + 0.5f) - s;
+
+                        out[k * n1 * n2 + j * n1 + i] = *quant_p -
+                                                        (quant_p[-1] + quant_p[-dim2_offset] + quant_p[-dim3_offset]
+                                                         - quant_p[-dim2_offset - 1] - quant_p[-dim3_offset - 1] -
+                                                         quant_p[-dim3_offset - dim2_offset] +
+                                                         quant_p[-dim3_offset - dim2_offset - 1]);
+                        quant_p++;
+                    }
+                    quant_p++;
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim3_offset, dim3_offset);
+            }
+        } else if (codeFormat == QUANT_CODE_NORMALIZE) {
+            for (k = 0; k < n3; k++) {
+                int *quant_p = quant;
+                for (j = 0; j < n2; j++) {
+                    for (i = 0; i < n1; i++) {
+                        data_recip = data[k * n2 * n1 + j * n1 + i] * recip_Precision;
+                        s = (data_recip >= -0.5f ? 0 : 1);
+                        *quant_p = (int) (data_recip + 0.5f) - s;
+
+                        x = *quant_p - (quant_p[-1] + quant_p[-dim2_offset] + quant_p[-dim3_offset]
+                                        - quant_p[-dim2_offset - 1] - quant_p[-dim3_offset - 1] - quant_p[-dim3_offset - dim2_offset] +
+                                        quant_p[-dim3_offset - dim2_offset - 1]);
+                        out[k * n1 * n2 + j * n1 + i] = (x << 1) ^ (x >> 31);
+                        quant_p++;
+                    }
+                    quant_p++;
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim3_offset, dim3_offset);
+            }
+        } else {//QUANT_CODE_SHIFT
+
+        }
     }
 
     return 0;
@@ -864,7 +944,7 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_float(int *diffQuantData, int mode, i
 
 int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int *diffQuantData, int mode, int codeFormat, double errorBound, size_t n3, size_t n2, size_t n1,
                                                   double *result) {
-    size_t i = 0;
+    size_t i = 0, j = 0, k = 0;
 
     size_t nbEle = computeDataLength(0, 0, n3, n2, n1);
     int dim = computeDimension(0, 0, n3, n2, n1);
@@ -948,12 +1028,80 @@ int lorenzoPredictorQuant_Decmpr_NoOutlier_double(int *diffQuantData, int mode, 
     } else if (mode == LORENZO_2D_1LAYER) {
         if (dim == 1)
             return 1; //error! The dimension is 1 but the mode is required to be LORENZO_2D_1LAYER
-        //TODO implement 2D lorenzo
+        size_t dim2_offset = n1 + 1;
+
+        int *quant_with_buffer = calloc(2 * dim2_offset, sizeof(int));
+        int *quant = quant_with_buffer + dim2_offset + 1;
+
+        if (codeFormat == QUANT_CODE_ORIGINAL) {
+            for (j = 0; j < n3 * n2; j++) {
+                for (i = 0; i < n1; i++) {
+                    quant[i] = diffQuantData[j * n1 + i] + (quant[i - 1] + quant[i - dim2_offset] - quant[i - 1 - dim2_offset]);
+                    result[j * n1 + i] = e2 * quant[i];
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim2_offset, dim2_offset);
+            }
+        } else if (codeFormat == QUANT_CODE_NORMALIZE) {
+            for (j = 0; j < n3 * n2; j++) {
+                for (i = 0; i < n1; i++) {
+                    x = diffQuantData[j * n1 + i];
+                    quant[i] = ((x >> 1) ^ (-(x & 1))) + (quant[i - 1] + quant[i - dim2_offset] - quant[i - 1 - dim2_offset]);
+                    result[j * n1 + i] = e2 * quant[i];
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim2_offset, dim2_offset);
+            }
+        } else {//QUANT_CODE_SHIFT
+
+        }
     } else if (mode == LORENZO_3D_1LAYER) {
-        if (dim == 1 || dim == 2)
+        if (dim == 1 || dim == 2) {
             return 1;
-        //TODO implement 3D lorenzo
+        }
+        size_t dim2_offset = n1 + 1;
+        size_t dim3_offset = (n1 + 1) * (n2 + 1);
+
+        int *quant_with_buffer = calloc(2 * dim3_offset, sizeof(int));
+        int *quant = quant_with_buffer + dim3_offset + dim2_offset + 1;
+
+        if (codeFormat == QUANT_CODE_ORIGINAL) {
+            for (k = 0; k < n3; k++) {
+                int *quant_p = quant;
+                for (j = 0; j < n2; j++) {
+                    for (i = 0; i < n1; i++) {
+                        *quant_p = diffQuantData[k * n2 * n1 + j * n1 + i] + (quant_p[-1] + quant_p[-dim2_offset] + quant_p[-dim3_offset]
+                                                                              - quant_p[-dim2_offset - 1] - quant_p[-dim3_offset - 1] -
+                                                                              quant_p[-dim3_offset - dim2_offset] +
+                                                                              quant_p[-dim3_offset - dim2_offset - 1]);
+                        result[k * n2 * n1 + j * n1 + i] = e2 * (*quant_p);
+
+                        quant_p++;
+                    }
+                    quant_p++;
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim3_offset, dim3_offset);
+            }
+        } else if (codeFormat == QUANT_CODE_NORMALIZE) {
+            for (k = 0; k < n3; k++) {
+                int *quant_p = quant;
+                for (j = 0; j < n2; j++) {
+                    for (i = 0; i < n1; i++) {
+                        x = diffQuantData[k * n2 * n1 + j * n1 + i];
+                        *quant_p = ((x >> 1) ^ (-(x & 1))) + (quant_p[-1] + quant_p[-dim2_offset] + quant_p[-dim3_offset]
+                                                              - quant_p[-dim2_offset - 1] - quant_p[-dim3_offset - 1] -
+                                                              quant_p[-dim3_offset - dim2_offset] +
+                                                              quant_p[-dim3_offset - dim2_offset - 1]);
+                        result[k * n2 * n1 + j * n1 + i] = e2 * (*quant_p);
+                        quant_p++;
+                    }
+                    quant_p++;
+                }
+                memcpy(quant_with_buffer, quant_with_buffer + dim3_offset, dim3_offset);
+            }
+        } else {//QUANT_CODE_SHIFT
+
+        }
     }
+
     return 0;
 }
 
