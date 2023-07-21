@@ -2,7 +2,7 @@ AUTOMAKE_OPTIONS=foreign
 AM_CPPFLAGS = -I../qcat/include -I../zstd
 AM_CFLAGS = -I../qcat/include -I../zstd
 
-bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexData convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins computeAccuracyGain computeLaplacian calculateSobolevNorm computeGradientLength splitDataFile lorenzoPredQuantCmpr lorenzoPredQuantDecmpr
+bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexDataFloat splitComplexDataDouble convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins computeAccuracyGain computeLaplacian calculateSobolevNorm computeGradientLength splitDataFile lorenzoPredQuantCmpr lorenzoPredQuantDecmpr computeAutoCorrelation
 
 printProperty_SOURCES=printProperty.c
 printProperty_LDADD=../qcat/.libs/libqcat.a -lm
@@ -16,8 +16,10 @@ convertBytesToTxtFloat_SOURCES=convertBytesToTxtFloat.c
 convertBytesToTxtFloat_LDADD=../qcat/.libs/libqcat.a -lm
 convertBytesToTxtDouble_SOURCES=convertBytesToTxtDouble.c
 convertBytesToTxtDouble_LDADD=../qcat/.libs/libqcat.a -lm
-splitComplexData_SOURCES=splitComplexData.c
-splitComplexData_LDADD=../qcat/.libs/libqcat.a -lm
+splitComplexDataFloat_SOURCES=splitComplexDataFloat.c
+splitComplexDataFloat_LDADD=../qcat/.libs/libqcat.a -lm
+splitComplexDataDouble_SOURCES=splitComplexDataDouble.c
+splitComplexDataDouble_LDADD=../qcat/.libs/libqcat.a -lm
 convertDataToLogDouble_SOURCES=convertDataToLogDouble.c
 convertDataToLogDouble_LDADD=../qcat/.libs/libqcat.a -lm
 convertDataToLogFloat_SOURCES=convertDataToLogFloat.c
@@ -54,6 +56,8 @@ computeDataAutoCorrelation_SOURCES=computeDataAutoCorrelation.c
 computeDataAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeErrAutoCorrelation_SOURCES=computeErrAutoCorrelation.c
 computeErrAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+computeAutoCorrelation_SOURCES=computeAutoCorrelation.c
+computeAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 compressQuantBins_SOURCES=compressQuantBins.c
 compressQuantBins_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeAccuracyGain_SOURCES=computeAccuracyGain.c
@@ -70,23 +74,3 @@ lorenzoPredQuantCmpr_SOURCES=lorenzoPredQuantCmpr.c
 lorenzoPredQuantCmpr_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 lorenzoPredQuantDecmpr_SOURCES=lorenzoPredQuantDecmpr.c
 lorenzoPredQuantDecmpr_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
-
-if COMPILE_CUDA
-SUFFIXES = .cu
-
-AM_V_NVCC = $(AM_V_NVCC_@AM_V@)
-AM_V_NVCC_ = $(AM_V_NVCC_@AM_DEFAULT_V@)
-AM_V_NVCC_0 = @echo "  NVCC    " $@;
-AM_V_NVCC_1 =
-
-.cu.o:
-	$(AM_V_NVCC)$(NVCC) $(AM_NVCCFLAGS) $(NVCCFLAGS) -o $@ -c $< -I../qcat/include -I../zstd
-
-bin_PROGRAMS+=lorenzoPredQuantCmpr_GPU lorenzoPredQuantDecmpr_GPU
-lorenzoPredQuantCmpr_GPU_SOURCES=lorenzoPredQuantCmpr_GPU.cu
-lorenzoPredQuantCmpr_GPU_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
-lorenzoPredQuantCmpr_GPU_LINK=$(NVCC) -o $@
-lorenzoPredQuantDecmpr_GPU_SOURCES=lorenzoPredQuantDecmpr_GPU.cu
-lorenzoPredQuantDecmpr_GPU_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
-lorenzoPredQuantDecmpr_GPU_LINK=$(NVCC) -o $@
-endif
