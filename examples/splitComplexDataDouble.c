@@ -20,8 +20,8 @@ int main(int argc, char * argv[])
     
     if(argc < 2)
     {
-		printf("Test case: splitComplexData [srcFilePath] newsize\n");
-		printf("Example: splitComplexData testfloat_8_8_128.dat 200\n");
+		printf("Test case: splitComplexDataDouble [srcFilePath] newsize\n");
+		printf("Example: splitComplexDataDouble testdouble_8_8_128.dat 200\n");
 		exit(0);
     }
    
