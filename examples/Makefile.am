@@ -2,7 +2,7 @@ AUTOMAKE_OPTIONS=foreign
 AM_CPPFLAGS = -I../qcat/include -I../zstd
 AM_CFLAGS = -I../qcat/include -I../zstd
 
-bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexDataFloat splitComplexDataDouble convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins computeAccuracyGain computeLaplacian calculateSobolevNorm computeGradientLength splitDataFile lorenzoPredQuantCmpr lorenzoPredQuantDecmpr computeAutoCorrelation
+bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexDataFloat splitComplexDataDouble convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins computeAccuracyGain computeLaplacian calculateSobolevNorm computeGradientLength splitDataFile lorenzoPredQuantCmpr lorenzoPredQuantDecmpr
 
 printProperty_SOURCES=printProperty.c
 printProperty_LDADD=../qcat/.libs/libqcat.a -lm
@@ -56,8 +56,6 @@ computeDataAutoCorrelation_SOURCES=computeDataAutoCorrelation.c
 computeDataAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeErrAutoCorrelation_SOURCES=computeErrAutoCorrelation.c
 computeErrAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
-computeAutoCorrelation_SOURCES=computeAutoCorrelation.c
-computeAutoCorrelation_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 compressQuantBins_SOURCES=compressQuantBins.c
 compressQuantBins_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeAccuracyGain_SOURCES=computeAccuracyGain.c

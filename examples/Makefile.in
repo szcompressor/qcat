@@ -106,8 +106,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	computeAccuracyGain$(EXEEXT) computeLaplacian$(EXEEXT) \
 	calculateSobolevNorm$(EXEEXT) computeGradientLength$(EXEEXT) \
 	splitDataFile$(EXEEXT) lorenzoPredQuantCmpr$(EXEEXT) \
-	lorenzoPredQuantDecmpr$(EXEEXT) \
-	computeAutoCorrelation$(EXEEXT)
+	lorenzoPredQuantDecmpr$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -148,10 +147,6 @@ compressQuantBins_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 am_computeAccuracyGain_OBJECTS = computeAccuracyGain.$(OBJEXT)
 computeAccuracyGain_OBJECTS = $(am_computeAccuracyGain_OBJECTS)
 computeAccuracyGain_DEPENDENCIES = ../qcat/.libs/libqcat.a \
-	../zstd/.libs/libzstd.a
-am_computeAutoCorrelation_OBJECTS = computeAutoCorrelation.$(OBJEXT)
-computeAutoCorrelation_OBJECTS = $(am_computeAutoCorrelation_OBJECTS)
-computeAutoCorrelation_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 	../zstd/.libs/libzstd.a
 am_computeDataAutoCorrelation_OBJECTS =  \
 	computeDataAutoCorrelation.$(OBJEXT)
@@ -274,7 +269,6 @@ am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/changeDataSize.Po ./$(DEPDIR)/compareData.Po \
 	./$(DEPDIR)/compressQuantBins.Po \
 	./$(DEPDIR)/computeAccuracyGain.Po \
-	./$(DEPDIR)/computeAutoCorrelation.Po \
 	./$(DEPDIR)/computeDataAutoCorrelation.Po \
 	./$(DEPDIR)/computeDataPDF.Po \
 	./$(DEPDIR)/computeErrAutoCorrelation.Po \
@@ -323,7 +317,6 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(calculateSobolevNorm_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(compressQuantBins_SOURCES) \
 	$(computeAccuracyGain_SOURCES) \
-	$(computeAutoCorrelation_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
 	$(computeErrPDF_SOURCES) $(computeGradientLength_SOURCES) \
@@ -345,7 +338,6 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(calculateSobolevNorm_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(compressQuantBins_SOURCES) \
 	$(computeAccuracyGain_SOURCES) \
-	$(computeAutoCorrelation_SOURCES) \
 	$(computeDataAutoCorrelation_SOURCES) \
 	$(computeDataPDF_SOURCES) $(computeErrAutoCorrelation_SOURCES) \
 	$(computeErrPDF_SOURCES) $(computeGradientLength_SOURCES) \
@@ -565,8 +557,6 @@ computeDataAutoCorrelation_SOURCES = computeDataAutoCorrelation.c
 computeDataAutoCorrelation_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeErrAutoCorrelation_SOURCES = computeErrAutoCorrelation.c
 computeErrAutoCorrelation_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
-computeAutoCorrelation_SOURCES = computeAutoCorrelation.c
-computeAutoCorrelation_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 compressQuantBins_SOURCES = compressQuantBins.c
 compressQuantBins_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 computeAccuracyGain_SOURCES = computeAccuracyGain.c
@@ -694,10 +684,6 @@ computeAccuracyGain$(EXEEXT): $(computeAccuracyGain_OBJECTS) $(computeAccuracyGa
 	@rm -f computeAccuracyGain$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(computeAccuracyGain_OBJECTS) $(computeAccuracyGain_LDADD) $(LIBS)
 
-computeAutoCorrelation$(EXEEXT): $(computeAutoCorrelation_OBJECTS) $(computeAutoCorrelation_DEPENDENCIES) $(EXTRA_computeAutoCorrelation_DEPENDENCIES) 
-	@rm -f computeAutoCorrelation$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(computeAutoCorrelation_OBJECTS) $(computeAutoCorrelation_LDADD) $(LIBS)
-
 computeDataAutoCorrelation$(EXEEXT): $(computeDataAutoCorrelation_OBJECTS) $(computeDataAutoCorrelation_DEPENDENCIES) $(EXTRA_computeDataAutoCorrelation_DEPENDENCIES) 
 	@rm -f computeDataAutoCorrelation$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(computeDataAutoCorrelation_OBJECTS) $(computeDataAutoCorrelation_LDADD) $(LIBS)
@@ -819,7 +805,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compareData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compressQuantBins.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeAccuracyGain.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeAutoCorrelation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataAutoCorrelation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeDataPDF.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/computeErrAutoCorrelation.Po@am__quote@ # am--include-marker
@@ -1018,7 +1003,6 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/compareData.Po
 	-rm -f ./$(DEPDIR)/compressQuantBins.Po
 	-rm -f ./$(DEPDIR)/computeAccuracyGain.Po
-	-rm -f ./$(DEPDIR)/computeAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po
@@ -1098,7 +1082,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/compareData.Po
 	-rm -f ./$(DEPDIR)/compressQuantBins.Po
 	-rm -f ./$(DEPDIR)/computeAccuracyGain.Po
-	-rm -f ./$(DEPDIR)/computeAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataAutoCorrelation.Po
 	-rm -f ./$(DEPDIR)/computeDataPDF.Po
 	-rm -f ./$(DEPDIR)/computeErrAutoCorrelation.Po

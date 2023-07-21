@@ -1,5 +1,5 @@
 /**
- *  @file compute auto correlation for dataset
+ *  @file compute auto correlation for compression error
  *  @author Sheng Di
  *  @date Nov., 2021
  *  @brief 
@@ -25,9 +25,9 @@ int main(int argc, char * argv[])
 
     if(argc < 3)
     {
-	printf("Usage: computeDataAutoCorrelation [datatype (-f/-d)] (optional: -o [data file])\n");
-	printf("Example 1: computeDataAutoCorrelation -f test.f32\n");
-	printf("Example 2: computeDataAutoCorrelation -f test.f32 -o test.f32.ac\n");	
+	printf("Usage: computeErrAutoCorrelation [datatype (-f/-d)] (optional: -o [data file])\n");
+	printf("Example 1: computeAutoCorrelation -f test.f32\n");
+	printf("Example 2: computeAutoCorrelation -f test.f32 -o test.f32.ac\n");	
 	exit(0);
     }
    
@@ -52,7 +52,7 @@ int main(int argc, char * argv[])
     
     double* acEffs = NULL;
 
-    size_t nbEle = 0;
+    size_t i = 0, nbEle = 0;
 
     if(strcmp(dataType, "-f")==0)
     {
@@ -73,7 +73,8 @@ int main(int argc, char * argv[])
 	printf("Error: wrong data type!\n");
 	exit(0);
     }
-    printf("Lag-1 auto correlation: %.20G\n", acEffs[1]);
+    for(i = 0;i<512;i++)
+    	printf("Lag-%zu auto correlation: %.20G\n", i, acEffs[i]);
 
     if(argc > 4)
     {
@@ -81,6 +82,7 @@ int main(int argc, char * argv[])
 
     	printf("The full result has been written to %s\n", outputFilePath);
     }
-	
+
+    free(acEffs); 
     return 0;
 }

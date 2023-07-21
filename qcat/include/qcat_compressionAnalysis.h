@@ -18,7 +18,7 @@
 #define _QCAT_COMPRESSIONANALYSIS_H
 
 #define PDF_INTERVALS 10000
-#define AUTOCORR_SIZE 100
+#define AUTOCORR_SIZE 512
 
 #ifdef __cplusplus
 extern "C" {
