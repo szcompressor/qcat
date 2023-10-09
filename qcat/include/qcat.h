@@ -14,7 +14,7 @@
 #define _QCAT_H
 
 #define MAJOR_VERSION 1
-#define MINOR_VERSION 6
+#define MINOR_VERSION 7
 #define REVISION_VERSION 0
 
 #ifdef __cplusplus
