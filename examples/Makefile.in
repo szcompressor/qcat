@@ -97,9 +97,9 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	convertTxtToBytesDouble$(EXEEXT) \
 	convertTxtToBytesFloat$(EXEEXT) PlotSliceImage$(EXEEXT) \
 	convertFloatToDouble$(EXEEXT) convertDoubleToFloat$(EXEEXT) \
-	compareData$(EXEEXT) extractSliceFrom3D$(EXEEXT) \
-	computeDataPDF$(EXEEXT) computeErrPDF$(EXEEXT) \
-	calculateSSIM$(EXEEXT) predCR$(EXEEXT) \
+	convertUInt16ToFloat$(EXEEXT) compareData$(EXEEXT) \
+	extractSliceFrom3D$(EXEEXT) computeDataPDF$(EXEEXT) \
+	computeErrPDF$(EXEEXT) calculateSSIM$(EXEEXT) predCR$(EXEEXT) \
 	convertDataType$(EXEEXT) simSZ$(EXEEXT) \
 	convertEndianType$(EXEEXT) computeDataAutoCorrelation$(EXEEXT) \
 	computeErrAutoCorrelation$(EXEEXT) compressQuantBins$(EXEEXT) \
@@ -212,6 +212,9 @@ convertTxtToBytesDouble_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_convertTxtToBytesFloat_OBJECTS = convertTxtToBytesFloat.$(OBJEXT)
 convertTxtToBytesFloat_OBJECTS = $(am_convertTxtToBytesFloat_OBJECTS)
 convertTxtToBytesFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_convertUInt16ToFloat_OBJECTS = convertUInt16ToFloat.$(OBJEXT)
+convertUInt16ToFloat_OBJECTS = $(am_convertUInt16ToFloat_OBJECTS)
+convertUInt16ToFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a
 am_extractSliceFrom3D_OBJECTS = extractSliceFrom3D.$(OBJEXT)
 extractSliceFrom3D_OBJECTS = $(am_extractSliceFrom3D_OBJECTS)
 extractSliceFrom3D_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -285,6 +288,7 @@ am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/convertFloatToDouble.Po \
 	./$(DEPDIR)/convertTxtToBytesDouble.Po \
 	./$(DEPDIR)/convertTxtToBytesFloat.Po \
+	./$(DEPDIR)/convertUInt16ToFloat.Po \
 	./$(DEPDIR)/extractSliceFrom3D.Po \
 	./$(DEPDIR)/generateRandomData.Po \
 	./$(DEPDIR)/generateRandomData2.Po \
@@ -328,8 +332,9 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
-	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(lorenzoPredQuantCmpr_SOURCES) \
+	$(convertUInt16ToFloat_SOURCES) $(extractSliceFrom3D_SOURCES) \
+	$(generateRandomData_SOURCES) $(generateRandomData2_SOURCES) \
+	$(lorenzoPredQuantCmpr_SOURCES) \
 	$(lorenzoPredQuantDecmpr_SOURCES) $(predCR_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
 	$(splitComplexDataDouble_SOURCES) \
@@ -349,8 +354,9 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertFloatToDouble_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
-	$(extractSliceFrom3D_SOURCES) $(generateRandomData_SOURCES) \
-	$(generateRandomData2_SOURCES) $(lorenzoPredQuantCmpr_SOURCES) \
+	$(convertUInt16ToFloat_SOURCES) $(extractSliceFrom3D_SOURCES) \
+	$(generateRandomData_SOURCES) $(generateRandomData2_SOURCES) \
+	$(lorenzoPredQuantCmpr_SOURCES) \
 	$(lorenzoPredQuantDecmpr_SOURCES) $(predCR_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
 	$(splitComplexDataDouble_SOURCES) \
@@ -535,6 +541,8 @@ convertFloatToDouble_SOURCES = convertFloatToDouble.c
 convertFloatToDouble_LDADD = ../qcat/.libs/libqcat.a -lm
 convertDoubleToFloat_SOURCES = convertDoubleToFloat.c
 convertDoubleToFloat_LDADD = ../qcat/.libs/libqcat.a -lm
+convertUInt16ToFloat_SOURCES = convertUInt16ToFloat.c
+convertUInt16ToFloat_LDADD = ../qcat/.libs/libqcat.a -lm
 compareData_SOURCES = compareData.c
 compareData_LDADD = ../qcat/.libs/libqcat.a -lm
 extractSliceFrom3D_SOURCES = extractSliceFrom3D.c
@@ -748,6 +756,10 @@ convertTxtToBytesFloat$(EXEEXT): $(convertTxtToBytesFloat_OBJECTS) $(convertTxtT
 	@rm -f convertTxtToBytesFloat$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(convertTxtToBytesFloat_OBJECTS) $(convertTxtToBytesFloat_LDADD) $(LIBS)
 
+convertUInt16ToFloat$(EXEEXT): $(convertUInt16ToFloat_OBJECTS) $(convertUInt16ToFloat_DEPENDENCIES) $(EXTRA_convertUInt16ToFloat_DEPENDENCIES) 
+	@rm -f convertUInt16ToFloat$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(convertUInt16ToFloat_OBJECTS) $(convertUInt16ToFloat_LDADD) $(LIBS)
+
 extractSliceFrom3D$(EXEEXT): $(extractSliceFrom3D_OBJECTS) $(extractSliceFrom3D_DEPENDENCIES) $(EXTRA_extractSliceFrom3D_DEPENDENCIES) 
 	@rm -f extractSliceFrom3D$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(extractSliceFrom3D_OBJECTS) $(extractSliceFrom3D_LDADD) $(LIBS)
@@ -821,6 +833,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertFloatToDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesFloat.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertUInt16ToFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extractSliceFrom3D.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/generateRandomData2.Po@am__quote@ # am--include-marker
@@ -1019,6 +1032,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/convertFloatToDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesFloat.Po
+	-rm -f ./$(DEPDIR)/convertUInt16ToFloat.Po
 	-rm -f ./$(DEPDIR)/extractSliceFrom3D.Po
 	-rm -f ./$(DEPDIR)/generateRandomData.Po
 	-rm -f ./$(DEPDIR)/generateRandomData2.Po
@@ -1098,6 +1112,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/convertFloatToDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesFloat.Po
+	-rm -f ./$(DEPDIR)/convertUInt16ToFloat.Po
 	-rm -f ./$(DEPDIR)/extractSliceFrom3D.Po
 	-rm -f ./$(DEPDIR)/generateRandomData.Po
 	-rm -f ./$(DEPDIR)/generateRandomData2.Po
