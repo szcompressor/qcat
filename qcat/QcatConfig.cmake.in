@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/QcatTargets.cmake")
+
+if(@ZSTD_FOUND)
+  find_package(PkgConfig)
+  pkg_search_module(ZSTD IMPORTED_TARGET GLOBAL libzstd)
+endif()
+check_required_components(Qcat)
