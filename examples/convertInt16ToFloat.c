@@ -57,7 +57,7 @@ int main(int argc, char * argv[])
     int16_t max = int16Data[0];
     for(i=0;i<nbEle;i++)
     {	
-	uint16_t value = int16Data[i];
+	int16_t value = int16Data[i];
 	floatData[i] = value;
 	if(min>value)
 		min = value;
