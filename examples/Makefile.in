@@ -106,7 +106,7 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	computeAccuracyGain$(EXEEXT) computeLaplacian$(EXEEXT) \
 	calculateSobolevNorm$(EXEEXT) computeGradientLength$(EXEEXT) \
 	splitDataFile$(EXEEXT) lorenzoPredQuantCmpr$(EXEEXT) \
-	lorenzoPredQuantDecmpr$(EXEEXT)
+	lorenzoPredQuantDecmpr$(EXEEXT) convertInt16ToFloat$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -204,6 +204,10 @@ convertEndianType_DEPENDENCIES = ../qcat/.libs/libqcat.a \
 am_convertFloatToDouble_OBJECTS = convertFloatToDouble.$(OBJEXT)
 convertFloatToDouble_OBJECTS = $(am_convertFloatToDouble_OBJECTS)
 convertFloatToDouble_DEPENDENCIES = ../qcat/.libs/libqcat.a
+am_convertInt16ToFloat_OBJECTS = convertInt16ToFloat.$(OBJEXT)
+convertInt16ToFloat_OBJECTS = $(am_convertInt16ToFloat_OBJECTS)
+convertInt16ToFloat_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_convertTxtToBytesDouble_OBJECTS =  \
 	convertTxtToBytesDouble.$(OBJEXT)
 convertTxtToBytesDouble_OBJECTS =  \
@@ -286,6 +290,7 @@ am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/convertDoubleToFloat.Po \
 	./$(DEPDIR)/convertEndianType.Po \
 	./$(DEPDIR)/convertFloatToDouble.Po \
+	./$(DEPDIR)/convertInt16ToFloat.Po \
 	./$(DEPDIR)/convertTxtToBytesDouble.Po \
 	./$(DEPDIR)/convertTxtToBytesFloat.Po \
 	./$(DEPDIR)/convertUInt16ToFloat.Po \
@@ -329,7 +334,7 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDataToLogFloat_SOURCES) $(convertDataType_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) $(convertEndianType_SOURCES) \
-	$(convertFloatToDouble_SOURCES) \
+	$(convertFloatToDouble_SOURCES) $(convertInt16ToFloat_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(convertUInt16ToFloat_SOURCES) $(extractSliceFrom3D_SOURCES) \
@@ -351,7 +356,7 @@ DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(convertDataToLogDouble_SOURCES) \
 	$(convertDataToLogFloat_SOURCES) $(convertDataType_SOURCES) \
 	$(convertDoubleToFloat_SOURCES) $(convertEndianType_SOURCES) \
-	$(convertFloatToDouble_SOURCES) \
+	$(convertFloatToDouble_SOURCES) $(convertInt16ToFloat_SOURCES) \
 	$(convertTxtToBytesDouble_SOURCES) \
 	$(convertTxtToBytesFloat_SOURCES) \
 	$(convertUInt16ToFloat_SOURCES) $(extractSliceFrom3D_SOURCES) \
@@ -398,7 +403,6 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
@@ -500,6 +504,7 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -581,6 +586,8 @@ lorenzoPredQuantCmpr_SOURCES = lorenzoPredQuantCmpr.c
 lorenzoPredQuantCmpr_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 lorenzoPredQuantDecmpr_SOURCES = lorenzoPredQuantDecmpr.c
 lorenzoPredQuantDecmpr_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+convertInt16ToFloat_SOURCES = convertInt16ToFloat.c
+convertInt16ToFloat_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 all: all-am
 
 .SUFFIXES:
@@ -748,6 +755,10 @@ convertFloatToDouble$(EXEEXT): $(convertFloatToDouble_OBJECTS) $(convertFloatToD
 	@rm -f convertFloatToDouble$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(convertFloatToDouble_OBJECTS) $(convertFloatToDouble_LDADD) $(LIBS)
 
+convertInt16ToFloat$(EXEEXT): $(convertInt16ToFloat_OBJECTS) $(convertInt16ToFloat_DEPENDENCIES) $(EXTRA_convertInt16ToFloat_DEPENDENCIES) 
+	@rm -f convertInt16ToFloat$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(convertInt16ToFloat_OBJECTS) $(convertInt16ToFloat_LDADD) $(LIBS)
+
 convertTxtToBytesDouble$(EXEEXT): $(convertTxtToBytesDouble_OBJECTS) $(convertTxtToBytesDouble_DEPENDENCIES) $(EXTRA_convertTxtToBytesDouble_DEPENDENCIES) 
 	@rm -f convertTxtToBytesDouble$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(convertTxtToBytesDouble_OBJECTS) $(convertTxtToBytesDouble_LDADD) $(LIBS)
@@ -831,6 +842,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertDoubleToFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertEndianType.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertFloatToDouble.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertInt16ToFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesDouble.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertTxtToBytesFloat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/convertUInt16ToFloat.Po@am__quote@ # am--include-marker
@@ -1030,6 +1042,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/convertDoubleToFloat.Po
 	-rm -f ./$(DEPDIR)/convertEndianType.Po
 	-rm -f ./$(DEPDIR)/convertFloatToDouble.Po
+	-rm -f ./$(DEPDIR)/convertInt16ToFloat.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesFloat.Po
 	-rm -f ./$(DEPDIR)/convertUInt16ToFloat.Po
@@ -1110,6 +1123,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/convertDoubleToFloat.Po
 	-rm -f ./$(DEPDIR)/convertEndianType.Po
 	-rm -f ./$(DEPDIR)/convertFloatToDouble.Po
+	-rm -f ./$(DEPDIR)/convertInt16ToFloat.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesDouble.Po
 	-rm -f ./$(DEPDIR)/convertTxtToBytesFloat.Po
 	-rm -f ./$(DEPDIR)/convertUInt16ToFloat.Po

@@ -2,7 +2,7 @@ AUTOMAKE_OPTIONS=foreign
 AM_CPPFLAGS = -I../qcat/include -I../zstd
 AM_CFLAGS = -I../qcat/include -I../zstd
 
-bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexDataFloat splitComplexDataDouble convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat convertUInt16ToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins computeAccuracyGain computeLaplacian calculateSobolevNorm computeGradientLength splitDataFile lorenzoPredQuantCmpr lorenzoPredQuantDecmpr
+bin_PROGRAMS=printProperty changeDataSize generateRandomData generateRandomData2 convertBytesToTxtFloat convertBytesToTxtDouble splitComplexDataFloat splitComplexDataDouble convertDataToLogFloat convertDataToLogDouble convertTxtToBytesDouble convertTxtToBytesFloat PlotSliceImage convertFloatToDouble convertDoubleToFloat convertUInt16ToFloat compareData extractSliceFrom3D computeDataPDF computeErrPDF calculateSSIM predCR convertDataType simSZ convertEndianType computeDataAutoCorrelation computeErrAutoCorrelation compressQuantBins computeAccuracyGain computeLaplacian calculateSobolevNorm computeGradientLength splitDataFile lorenzoPredQuantCmpr lorenzoPredQuantDecmpr convertInt16ToFloat
 
 printProperty_SOURCES=printProperty.c
 printProperty_LDADD=../qcat/.libs/libqcat.a -lm
@@ -74,3 +74,6 @@ lorenzoPredQuantCmpr_SOURCES=lorenzoPredQuantCmpr.c
 lorenzoPredQuantCmpr_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
 lorenzoPredQuantDecmpr_SOURCES=lorenzoPredQuantDecmpr.c
 lorenzoPredQuantDecmpr_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+convertInt16ToFloat_SOURCES=convertInt16ToFloat.c
+convertInt16ToFloat_LDADD=../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm
+
