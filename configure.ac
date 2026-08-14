@@ -9,6 +9,7 @@ AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 : ${CFLAGS=-O3 -std=gnu99 -Wall}
+: ${CXXFLAGS=-O3 -Wall}
 
 AC_LANG(C++)
 AC_PROG_CXX

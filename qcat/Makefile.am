@@ -6,8 +6,9 @@ include_HEADERS=include/qcat_hashtable.h include/DynamicIntArray.h include/Dynam
 
 lib_LTLIBRARIES=libqcat.la
 libqcat_la_CFLAGS=-I./include -I../zstd/
+libqcat_la_CXXFLAGS=-I./include -I../zstd/
 libqcat_la_LDFLAGS = -version-info  0:1:0
 libqcat_la_LIDADD=../zstd/.libs/libzstd.a
-libqcat_la_SOURCES=src/qcat_hashtable.c src/DynamicIntArray.c src/DynamicByteArray.c src/Huffman.c src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qcat_gnuplot.c src/qcat_dataAnalysis.c src/qcat_compressionAnalysis.c src/sz_dummy_compression.c src/sz_utility.c src/qcat_ssim.c
+libqcat_la_SOURCES=src/qcat_hashtable.c src/DynamicIntArray.c src/DynamicByteArray.c src/Huffman.c src/rw.c src/ByteToolkit.c src/DynamicFloatArray.c src/DynamicDoubleArray.c src/qcat_gnuplot.c src/qcat_dataAnalysis.c src/qcat_entropy_fast.cpp src/qcat_compressionAnalysis.c src/sz_dummy_compression.c src/sz_utility.c src/qcat_ssim.c
 
-libqcat_la_LINK= $(AM_V_CC)$(LIBTOOL) --tag=CC --mode=link $(CCLD) $(libqcat_la_CFLAGS) -O3 $(libqcat_la_LDFLAGS) -o $(lib_LTLIBRARIES)
+libqcat_la_LINK= $(AM_V_CXX)$(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(libqcat_la_CFLAGS) -O3 $(libqcat_la_LDFLAGS) -o $(lib_LTLIBRARIES)

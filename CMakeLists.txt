@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.12)
-project (qcat VERSION 1.5.0)
+project (qcat VERSION 1.5.0 LANGUAGES C CXX)
 include(GNUInstallDirs)
 find_package(PkgConfig)
 

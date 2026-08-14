@@ -1,4 +1,4 @@
-add_library (qcat  
+add_library (qcat
   src/ByteToolkit.c
   src/DynamicByteArray.c
   src/DynamicDoubleArray.c
@@ -7,6 +7,7 @@ add_library (qcat
   src/Huffman.c
   src/qcat_compressionAnalysis.c
   src/qcat_dataAnalysis.c
+  src/qcat_entropy_fast.cpp
   src/qcat_gnuplot.c
   src/qcat_hashtable.c
   src/qcat_ssim.c
@@ -19,7 +20,7 @@ target_include_directories(qcat PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/qcat>
   )
 
-target_link_libraries(qcat PUBLIC m)
+target_link_libraries(qcat PUBLIC m stdc++)
 if(ZSTD_FOUND)
   target_link_libraries(qcat PUBLIC PkgConfig::ZSTD)
 else()
