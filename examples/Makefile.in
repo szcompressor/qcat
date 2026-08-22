@@ -106,7 +106,8 @@ bin_PROGRAMS = printProperty$(EXEEXT) changeDataSize$(EXEEXT) \
 	computeAccuracyGain$(EXEEXT) computeLaplacian$(EXEEXT) \
 	calculateSobolevNorm$(EXEEXT) computeGradientLength$(EXEEXT) \
 	splitDataFile$(EXEEXT) lorenzoPredQuantCmpr$(EXEEXT) \
-	lorenzoPredQuantDecmpr$(EXEEXT) convertInt16ToFloat$(EXEEXT)
+	lorenzoPredQuantDecmpr$(EXEEXT) convertInt16ToFloat$(EXEEXT) \
+	addDataToSDRBench$(EXEEXT)
 subdir = examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -119,6 +120,10 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
+am_addDataToSDRBench_OBJECTS = addDataToSDRBench.$(OBJEXT)
+addDataToSDRBench_OBJECTS = $(am_addDataToSDRBench_OBJECTS)
+addDataToSDRBench_DEPENDENCIES = ../qcat/.libs/libqcat.a \
+	../zstd/.libs/libzstd.a
 am_PlotSliceImage_OBJECTS = PlotSliceImage.$(OBJEXT)
 PlotSliceImage_OBJECTS = $(am_PlotSliceImage_OBJECTS)
 PlotSliceImage_DEPENDENCIES = ../qcat/.libs/libqcat.a
@@ -270,7 +275,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/PlotSliceImage.Po \
+am__depfiles_remade = ./$(DEPDIR)/addDataToSDRBench.Po \
+	./$(DEPDIR)/PlotSliceImage.Po \
 	./$(DEPDIR)/calculateSSIM.Po \
 	./$(DEPDIR)/calculateSobolevNorm.Po \
 	./$(DEPDIR)/changeDataSize.Po ./$(DEPDIR)/compareData.Po \
@@ -321,8 +327,9 @@ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 = 
-SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
+am__v_CCLD_1 =
+SOURCES = $(addDataToSDRBench_SOURCES) \
+	$(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(calculateSobolevNorm_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(compressQuantBins_SOURCES) \
 	$(computeAccuracyGain_SOURCES) \
@@ -344,7 +351,8 @@ SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(printProperty_SOURCES) $(simSZ_SOURCES) \
 	$(splitComplexDataDouble_SOURCES) \
 	$(splitComplexDataFloat_SOURCES) $(splitDataFile_SOURCES)
-DIST_SOURCES = $(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
+DIST_SOURCES = $(addDataToSDRBench_SOURCES) \
+	$(PlotSliceImage_SOURCES) $(calculateSSIM_SOURCES) \
 	$(calculateSobolevNorm_SOURCES) $(changeDataSize_SOURCES) \
 	$(compareData_SOURCES) $(compressQuantBins_SOURCES) \
 	$(computeAccuracyGain_SOURCES) \
@@ -588,6 +596,8 @@ lorenzoPredQuantDecmpr_SOURCES = lorenzoPredQuantDecmpr.c
 lorenzoPredQuantDecmpr_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm -lstdc++
 convertInt16ToFloat_SOURCES = convertInt16ToFloat.c
 convertInt16ToFloat_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm -lstdc++
+addDataToSDRBench_SOURCES = addDataToSDRBench.c
+addDataToSDRBench_LDADD = ../qcat/.libs/libqcat.a ../zstd/.libs/libzstd.a -lm -lstdc++
 all: all-am
 
 .SUFFIXES:
@@ -671,7 +681,11 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-PlotSliceImage$(EXEEXT): $(PlotSliceImage_OBJECTS) $(PlotSliceImage_DEPENDENCIES) $(EXTRA_PlotSliceImage_DEPENDENCIES) 
+addDataToSDRBench$(EXEEXT): $(addDataToSDRBench_OBJECTS) $(addDataToSDRBench_DEPENDENCIES) $(EXTRA_addDataToSDRBench_DEPENDENCIES)
+	@rm -f addDataToSDRBench$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(addDataToSDRBench_OBJECTS) $(addDataToSDRBench_LDADD) $(LIBS)
+
+PlotSliceImage$(EXEEXT): $(PlotSliceImage_OBJECTS) $(PlotSliceImage_DEPENDENCIES) $(EXTRA_PlotSliceImage_DEPENDENCIES)
 	@rm -f PlotSliceImage$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(PlotSliceImage_OBJECTS) $(PlotSliceImage_LDADD) $(LIBS)
 
@@ -821,6 +835,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/addDataToSDRBench.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PlotSliceImage.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSSIM.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calculateSobolevNorm.Po@am__quote@ # am--include-marker
@@ -1021,6 +1036,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
+		-rm -f ./$(DEPDIR)/addDataToSDRBench.Po
 		-rm -f ./$(DEPDIR)/PlotSliceImage.Po
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/calculateSobolevNorm.Po
@@ -1102,6 +1118,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
+		-rm -f ./$(DEPDIR)/addDataToSDRBench.Po
 		-rm -f ./$(DEPDIR)/PlotSliceImage.Po
 	-rm -f ./$(DEPDIR)/calculateSSIM.Po
 	-rm -f ./$(DEPDIR)/calculateSobolevNorm.Po
